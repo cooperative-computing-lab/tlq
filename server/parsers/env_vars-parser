@@ -1,0 +1,95 @@
+#! /usr/bin/env perl
+
+use strict;
+use DateTime;
+use Digest::MD5 qw(md5_hex);
+use List::MoreUtils qw(uniq);
+my $usage = "Files Record Type Log Parser Options:
+
+Required:
+    <log>	    Sets the path to the log file.
+    <app>           Sets the name of the origin application/system of the log.
+
+Example Usage:
+    env_vars-parser ltrace.log testapp
+
+";
+
+if(@ARGV != 2) {
+    print(STDERR $usage);
+    exit 1;
+}
+my ($log, $app) = @ARGV;
+my %env_vars = ();
+my ($cmd, $host, $cmdpid, $cmdppid);
+open(LOG, $log) or die "Could not open specified log file.\n";
+while(my $line = <LOG>) {
+    #Wrote an ltrace for command: "dd if=in.dat of=out.dat bs=4096 count=2500" with PID 12539 from PPID 12538
+    if($line =~ m/Wrote an ltrace for command: \"(?<cmd>.*)\" with PID (?<pid>\d+) from PPID (?<ppid>\d+) on (?<host>\S+)$/) {
+        $cmd = $+{cmd};
+        $cmdpid = $+{pid};
+        $cmdppid = $+{ppid};
+        $host = $+{host};
+        next;
+    }
+    #20546   0.001356 libSDL-1.2.so.0->getenv("SDL_VIDEODRIVER") = nil
+    elsif($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<prog>\S+)->getenv\d*\(\"(?<env_var>\S+)\"\)\s+=\s+(?<result>\S+)$/) {
+        make_record($+{pid}, $+{access}, $+{prog}, $+{env_var}, $+{result}, $+{result});
+        next;
+    }
+    #20546   0.001356 libSDL-1.2.so.0->setenv("SDL_VIDEODRIVER", "testval", 1) = nil
+    elsif($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<prog>\S+)->setenv\d*\(\"(?<env_var>\S+)\", \"(?<value>(\S+\s*)*)\", \d+\)\s+=\s+(?<result>\S+)$/) {
+        make_record($+{pid}, $+{access}, $+{prog}, $+{env_var}, $+{result}, $+{value});
+        next;
+    }
+    #20546   0.001356 libSDL-1.2.so.0->unsetenv("SDL_VIDEODRIVER") = nil
+    elsif($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<prog>\S+)->unsetenv\d*\(\"(?<env_var>\S+)\"\)\s+=\s+(?<result>\S+)$/) {
+        make_record($+{pid}, $+{access}, $+{prog}, $+{env_var}, $+{result});
+        next;
+    }
+}
+
+foreach my $env_var (keys(%env_vars)) {
+    $env_vars{$env_var}{hash} = md5_hex($host, $env_vars{$env_var}{pids}, $env_var);
+    my %r = %{$env_vars{$env_var}};
+    print(STDOUT "INSERT OR REPLACE INTO envVar (hash, name, results, host, log, system) VALUES ('$r{hash}', '$r{name}', '$r{results}', '$host', '$log', '$app');\n");
+}
+
+my @linktypes = ("process");
+foreach my $linktype (@linktypes) {
+    my @tabname = ("envVar", $linktype);
+    @tabname = sort({ $a cmp $b } @tabname);
+    my $table = "$tabname[0]_$tabname[1]";
+    foreach my $env_var (keys(%env_vars)) {
+        my $t1 = "envVar";
+        my $hash = $env_vars{$env_var}{hash};
+        my $t2 = "$linktype";
+        my $insert;
+        if($linktype eq "process") {
+            my @pids = uniq(split(',', $env_vars{$env_var}{pids}));
+            foreach my $pid (@pids) {
+                print(STDOUT "INSERT OR REPLACE INTO $table (envVar_hash, $linktype\_hash, host) SELECT $t1.hash AS envVar_hash, $t2.hash AS $linktype\_hash, $t1.host FROM $t1 JOIN $t2 ON $t1.log = $t2.log WHERE $t1.hash = '$hash' AND $t2.pid = $pid AND $t2.system = '$app';\n");
+            }
+        }
+    }
+}
+
+sub make_record {
+    my ($pid, $access, $prog, $env_var, $result, $value) = @_;
+    if(exists $env_vars{$env_var}{pids}) { $env_vars{$env_var}{pids} = $env_vars{$env_var}{pids} . ',' . $pid; }
+    else { $env_vars{$env_var}{pids} = $pid; }
+    if(exists $env_vars{$env_var}{results} and $value) { $env_vars{$env_var}{results} = $env_vars{$env_var}{results} . ', ' . $value; }
+    elsif($value) { $env_vars{$env_var}{results} = $value; }
+    $env_vars{$env_var}{access} = $access;
+    $env_vars{$env_var}{prog} = $prog;
+    $env_vars{$env_var}{name} = $env_var;
+    $env_vars{$env_var}{result} = $result;
+    $env_vars{$env_var}{system} = $app;
+    return 0;
+}
+
+sub print_help {
+    print $usage;
+    exit(1);
+}
+# vim: tabstop=8 shiftwidth=4 softtabstop=4 expandtab shiftround autoindent

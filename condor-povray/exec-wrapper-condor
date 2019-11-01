@@ -1,0 +1,28 @@
+#!/bin/sh
+
+#Parse arguments
+declare -a args
+i=0
+for arg in "$@"
+do
+    args[$i]="$arg"
+    let i="i+1"
+    shift
+done
+frame=${args[0]}
+log=${args[1]}
+logstring=${args[2]}
+ltrace=${args[3]}
+ltracestring=${args[4]}
+povray=${args[5]}
+input=${args[6]}
+output=${args[7]}
+count=${args[8]}
+height=${args[9]}
+width=${args[10]}
+debug=${args[11]}
+localtrace=${args[12]}
+
+/usr/bin/sh log-define condor_povray $log $logstring $ltrace $ltracestring -- ./ltrace-wrapper-condor $frame $povray +I$input +O$output +K$count +H$height +w$width +GA$debug > log-deposit.$frame\.out ; mv $debug $log ; mv $localtrace $ltrace
+
+exit

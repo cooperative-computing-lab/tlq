@@ -1,0 +1,20 @@
+#!/bin/sh
+
+source /afs/crc.nd.edu/group/ccl/software/cclsetup.sh
+
+cclimport ltrace current
+
+ltrace -f -r -s 4096 -o ltrace.debug -e *open*+*stat*+*getenv*+*setenv*+*fork*+*clone* $@
+
+result=$(grep "+++ exited" ltrace.debug | tail -1 | awk '{print $6}' | cut -d ")" -f 1)
+hostname=$(hostname -f)
+
+echo "Wrote an ltrace for command: \"$@\" with PID $$ from PPID $PPID on $hostname" >> ltrace.debug
+echo "Got result: $result" >> ltrace.debug
+
+printenv >> ltrace.debug
+
+cp ../../worker.debug .
+cp ltrace.debug ../../ltrace.$$.debug
+
+exit $result

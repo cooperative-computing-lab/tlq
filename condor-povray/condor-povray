@@ -1,0 +1,88 @@
+#!/usr/bin/perl
+
+use strict; 
+my $usage = "HTCondor Ray-Tracing Options:
+
+Required:
+    <input path>	        Sets the path to the input file.
+    <output path>               Sets the path to the output file.
+    <frames>                    Sets the number of frames.
+    <xsize>                     Sets the width of each frame.
+    <ysize>                     Sets the height of each frame
+
+Example Usage:
+    condor-povray inputfile.pov outputfile.mpg 600 1920 1080
+
+";
+
+if(@ARGV != 5) {
+    print(STDERR $usage);
+    exit 1;
+}
+
+my ($in, $out, $frames, $width, $height) = @ARGV;
+my $name = "rubiks$width";
+my $tmp = "/tmp/logquery/condor-povray";
+my $povray = "/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/povray/3.7/bin/povray";
+my $troubleshooting = "exec-wrapper-condor,ltrace-wrapper-condor,../log-define";
+my $rubiks = "WRC-RubiksCube.inc";
+my $f = 1;
+while($f <= $frames) {
+    while(length($f) < length($frames) or (length($f) < 3)) { $f = "0" . "$f"; }
+    my $fname = "rubiks$width.$f";
+    my $c = $f / 10.0;
+    my $ss = "$fname.submit";
+    my $submit;
+    if($f != 100) {
+        $submit = "universe = vanilla
+requirements = MachineGroup == \"DISC\" && (MachineShortName == \"disc17\" || MachineShortName == \"disc18\" || MachineShortName == \"disc19\" || MachineShortName == \"disc20\" || MachineShortName == \"disc21\" || MachineShortName == \"disc22\" || MachineShortName == \"disc23\" || MachineShortName == \"disc24\" || MachineShortName == \"disc25\" || MachineShortName == \"disc26\")
+executable = /usr/bin/sh
+arguments = exec-wrapper-condor $f $tmp.$fname.log povray_jobs $tmp.ltrace.$f.log processes,files,env_vars,components $povray $in $fname.png $c $height $width $fname.log ltrace.$f.log
+transfer_input_files = $troubleshooting,$in,$rubiks
+error = condor.$f.error
+should_transfer_files = yes
+when_to_transfer_output = on_exit
+log = condor.$f.log
+queue";
+    }
+    else {
+        $submit = "universe = vanilla
+requirements = MachineGroup == \"DISC\" && (MachineShortName == \"disc17\" || MachineShortName == \"disc18\" || MachineShortName == \"disc19\" || MachineShortName == \"disc20\" || MachineShortName == \"disc21\" || MachineShortName == \"disc22\" || MachineShortName == \"disc23\" || MachineShortName == \"disc24\" || MachineShortName == \"disc25\" || MachineShortName == \"disc26\")
+executable = /usr/bin/sh
+arguments = exec-wrapper-condor $f $tmp.$fname.log povray_jobs $tmp.ltrace.$f.log processes,files,env_vars,components $povray $in $fname.png $c $height $width $fname.log ltrace.$f.log
+transfer_input_files = $troubleshooting,$in
+error = condor.$f.error
+should_transfer_files = yes
+when_to_transfer_output = on_exit
+log = condor.$f.log
+queue";
+    }
+    open(OUTPUT, ">>$ss") or die $!;
+    print(OUTPUT $submit);
+    close(OUTPUT);
+    $f++;
+    my $result = system("condor_submit $ss");
+    while($result) {
+        print(STDERR "Job submission failed.\nWaiting to resubmit\n");
+        sleep(60);
+        $result = system("condor_submit $ss");
+    }
+}
+
+my $complete = 1;
+print(STDERR "Jobs submitted.\nWaiting for jobs to complete.\n");
+while($complete) {
+    sleep(30);
+    my $jobs = `condor_q | grep "nkremerh"`;
+    my @lines = split("\n", $jobs);
+    if(scalar(@lines)) { $complete = 1; }
+    else { $complete = 0; }
+}
+print(STDERR "Jobs completed.\n");
+
+system("ffmpeg -r 10 -i $name.%03d.png -r ntsc $out");
+print(STDERR "Movie $out generated.\n");
+system("rm *.png *.submit");
+exit 0;
+
+# vim: tabstop=8 shiftwidth=4 softtabstop=4 expandtab shiftround autoindent
