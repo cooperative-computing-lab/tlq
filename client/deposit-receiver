@@ -46,7 +46,7 @@ use strict;
         my ($cgi) = @_;
         my @contents = $cgi->param("DEPOSIT");
         open(DEPOSIT, ">>", "deposit-log");
-        foreach my $content (@contents) { print(FILE "$content\n"); }
+        foreach my $content (@contents) { print(DEPOSIT "$content\n"); }
         close(DEPOSIT);
         print(STDOUT "HTTP/1.0 200 OK\n");
         print(STDOUT $cgi->header);

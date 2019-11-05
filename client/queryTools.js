@@ -1,9 +1,7 @@
 const sqlite3 = require('sqlite3');
-//const db = new sqlite3.Database('database.db');
 const db = new sqlite3.Database(':memory:');
 const fs = require('fs');
 const http = require('http');
-const md5 = require('md5');
 const sizeof = require('object-sizeof');
 const stringDecoder = require('string_decoder').StringDecoder;
 
@@ -12,8 +10,8 @@ const queryAttributesRegex = new RegExp(/^\s*([a-zA-Z0-9_]+)\s*\}?$/, 'm');
 const queryOpenRegex = new RegExp(/\{\s*/, 'm');
 const queryCloseRegex = new RegExp(/\}\s*/, 'm');
 
-var hosts = new Object();
-var logs = new Object();
+var components = new Object();
+var tree = new Object();
 
 function compare(a, b) {
   var operator = "";
@@ -125,74 +123,27 @@ function graphqlToQuery(graphQL) {
 }
 
 function logChecker() {
-  var files = fs.readdirSync("./log-deposits");
   var decoder = new stringDecoder("utf8");
   var deposits = new Array();
-  files.map(function(val) { if(val.match(/log-deposit\.\d+\.out/)) { deposits.push(val); } });
-  for(var f in deposits) {
-    var contents = decoder.write(fs.readFileSync(`./log-deposits/${deposits[f]}`));
-    contents = contents.split("\n");
-    var command, sysname, host, port, path, hash, types;
-    //To query log '/tmp/logquery/condor-povray.rubiks1920.001.log' with types 'povray_jobs' from system 'condor_povray' running command './ltrace-wrapper-condor 001 /afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/povray/3.7/bin/povray +Irubiks1920.pov +Orubiks1920.001.png +K0.1 +H1080 +w1920 +GArubiks1920.001.log' use ID '1ab2aa40d3ee7738c4dd23eea7c94d00' and query 'disc24.crc.nd.edu:' to find out more.
-    var regex = /^To query log '(\S+)' with types '(\S+)' from system '(\S+)' running command '(.+)' use ID '(\S+)' and query '(\S+):(\d*)' to find out more.$/m;
-    for(var line in contents) {
-        if(contents[line] === "") { continue; }
-        var args = regex.exec(contents[line]); 
-        path = args[1];
-        types = args[2];
-        sysname = args[3];
-        command = args[4];
-        hash = args[5];
-        host = args[6];
-        port = args[7];
-        if(!port) { port = "11855"; }
-        var lid = md5(`${host}:${port}:${hash}`);
-        var hid = md5(`${host}:${port}`);
-        if(!logs[lid]) {
-            logs[lid] = new Object();
-            logs[lid]["host"] = `${host}:${port}`;
-            logs[lid]["system"] = sysname;
-            logs[lid]["command"] = command;
-            logs[lid]["hash"] = hash;
-            logs[lid]["types"] = types;
-            logs[lid]["path"] = path;
-          }
-        else {
-            var currTypes = logs[lid]["types"];
-            if(currTypes) {
-                var newTypes = types.split(',');
-                var insertTypes = "";
-                for(var t in newTypes) { if(currTypes.indexOf(newTypes[t]) == -1) {  insertTypes = insertTypes.concat(`,${newTypes[t]}`); } }
-                insertTypes = currTypes.concat(insertTypes);
-                logs[lid]["types"] = insertTypes;
-              }
-          }
-  
-          if(!hosts[hid]) {
-              hosts[hid] = new Object();
-              hosts[hid]["host"] = host;
-              hosts[hid]["port"] = port;
-              hosts[hid]["hostname"] = `${host}:${port}`;
-              hosts[hid]["types"] = types;
-              hosts[hid]["systems"] = sysname;
-            }
-          else {
-            var currTypes = hosts[hid]["types"];
-            if(currTypes) {
-                var newTypes = types.split(',');
-                var insertTypes = "";
-                for(var t in newTypes) { if(currTypes.indexOf(newTypes[t]) == -1) {  insertTypes = insertTypes.concat(`,${newTypes[t]}`); } }
-                insertTypes = currTypes.concat(insertTypes);
-                hosts[hid]["types"] = insertTypes;
-              }
-            var currSystems = hosts[hid]["systems"];
-            if(currSystems) {
-                var newSystem = sysname;
-                if(currSystems.indexOf(newSystem) == -1) {  currSystems = currSystems.concat(`,${newSystem}`); }
-                hosts[hid]["systems"] = currSystems;
-              } 
-          }
-      }
+  var contents = decoder.write(fs.readFileSync(`./deposit-log`));
+  contents = contents.split("\n");
+  //Component 8a50c6fa-bcb0-450c-9dcd-c15666c9c6be created log(s) [ls.log test.log] with command ls queryable at http://legion:11855/8a50c6fa-bcb0-450c-9dcd-c15666c9c6be and has parent ABC-123.
+  var regex = /^Component (\S+) created log(s) \[(.+)\] with command (.+) queryable at (\S+) and has parent (\S+).$/m;
+  for(var line in contents) {
+    if(contents[line] === "") { continue; }
+    var args = regex.exec(contents[line]); 
+    var uuid = args[1];
+    var logs = args[2];
+    var cmd = args[3];
+    var uri = args[4];
+    var puuid = args[5];
+    if(components[uuid]) { continue; }
+    components[uuid] = new Object();
+    components[uuid]["uuid"] = uuid;
+    components[uuid]["puuid"] = puuid;
+    components[uuid]["uri"] = uri;
+    components[uuid]["cmd"] = cmd;
+    components[uuid]["logs"] = logs;
   }
   return 0;
 }
@@ -359,6 +310,26 @@ function singularize(plural) {
   return singular;
 }
 
+function treeBuilder(currTree) {
+  var newtree = currTree;
+  for(var c in components) {
+    const curr = components[c];
+    if(!newTree[curr["uuid"]]) {
+      newTree[curr["uuid"]] = new Object();
+      newTree[curr["uuid"]]["parent"] = curr["puuid"];
+      newTree[curr["uuid"]]["children"] = new Array();
+      if(!newtree[curr["puuid"]]) {
+        newTree[curr["puuid"]] = new Object();
+        newTree[curr["puuid"]]["children"] = new Array();
+      }
+      newTree[curr["puuid"]["children"].push(curr["uuid"]);
+    }
+  }
+  console.log(`Constructed component lineage tree:`);
+  console.log(newtree);
+  return newtree;
+}
+
 module.exports = {
   compare,
   db,
@@ -377,7 +348,8 @@ module.exports = {
   queryTablesBuilder,
   sanitizeBody,
   singularize,
-  sizeof
+  sizeof,
+  treeBuilder
 }
 
 // vim: tabstop=4 shiftwidth=2 softtabstop=2 expandtab shiftround autoindent
