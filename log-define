@@ -1,14 +1,16 @@
 #!/bin/sh
 
-sysname=$1
+homehost=$1
 shift
-topuuid=$1
+homeport=$1
 shift
-parentuuid=$TLQPARENTUUID
-if [ "$parentuuid" = "" ]; then
-    let parentuuid="$topuuid"
+sysuuid="$1"
+shift
+home="$homehost:$homeport"
+puuid=$TLQPARENTUUID
+if [ "$puuid" = "" ]; then
+    puuid="$sysuuid"
 fi
-echo "$topuuid $parentuuid"
 dir=/tmp/logquery
 hostname=$(hostname -f)
 declare -a logs
@@ -41,12 +43,16 @@ j=0
 for log in "${logs[@]}"
 do
     logtype=${types[j]}
-    loghash=`echo "$sysname $log $host:$port" | md5sum | cut -d " " -f 1`
-    echo "$sysname $log $logtype $loghash" >> "$dir/deposit-log"
+    loghash=$(uuidgen)
+    echo "$sysuuid $log $logtype $loghash" >> "$dir/deposit-log"
     let j="j+1"
-    echo "Log '$log' has type '$logtype' from system '$sysname' running '$cmd' with ID '$loghash' at '$hostname:$port' log watcher."
-    TLQPARENTUUID="$loghash"
 done
+
+cid=$(uuidgen)
+TLQPARENTUUID="$cid"
+uri="http://$hostname:$port/$cid"
+deposit="Component $cid created log(s) [${logs[*]}] with command $cmd queryable at $uri and has parent $puuid."
+curl --data-urlencode "DEPOSIT=$deposit" http://$home/deposit
+
 result=exec $cmd
-echo "$TLQPARENTUUID"
 exit $result
