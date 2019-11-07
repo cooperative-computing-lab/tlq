@@ -57,7 +57,7 @@ function queryBuilder(graphQLQuery, systemName, firstType) {
   const tablesString = queryTools.queryTablesBuilder(types);
   const sql = `SELECT ${attributesString} FROM ${tablesString} WHERE ${argumentsString}`;
   console.log(sql);
-  const distQueries = queryTools.distributedQuery(sql, systemName);
+  const distQueries = queryTools.distributedQuery(sql);
   const resultSql = `SELECT * FROM result`;
   const queryResult = queryTools.query(resultSql, 0).then((rows) => rows.map(result => {
     var resultObject = new Object();

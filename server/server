@@ -18,9 +18,10 @@ use strict;
     use File::Basename;
     use HTTP::Server::Simple::CGI;
     use JSON;
+    use Sys::Hostname;
     use threads;
     use Thread::Semaphore;
-    use Sys::Hostname;
+    use URI::Encode qw(uri_encode, uri_decode);
     use base qw(HTTP::Server::Simple::CGI);
 
     my $database = "dbi:SQLite:dbname=:memory:";
@@ -141,7 +142,7 @@ use strict;
             $file = $+{file};
         }
         else { return 1; }
-        my $query = query_from_json($cgi->param("JSON"), $component, $file);
+        my $query = query_from_json($cgi->param("PUTDATA"), $component, $file);
         my $json = execute_query($query);
         
         print(STDOUT "HTTP/1.0 200 OK\n");
@@ -272,6 +273,7 @@ use strict;
 
     sub query_from_json {
         my ($json) = @_;
+        $json = uri_decode($json);
         my $query;
         return $query;
     }

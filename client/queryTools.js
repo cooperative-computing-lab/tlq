@@ -26,47 +26,45 @@ function compare(a, b) {
   return `${a} ${operator} ${b}`;
 }
 
-function distributedQuery(query, sysname) {
+function distributedQuery(query) {
   logChecker();
+  tree = treeBuilder();
   var queriesExecuted = 0;
   var totalSize = 0;
   var queriesSize = 0;
-  var queryTokens = query.split(' ');
-  var currHosts = queryGetHosts(queryTokens, sysname);
+  //Get each URI in query (child components, multiple top-level components)
+  const uri = queryGetURI(query);
   var encodedQuery = encodeURIComponent(query);
-  for(var h in currHosts) {
-    host = currHosts[h];
-    queriesExecuted++;
-    console.log(`Querying ${host.host}:${host.port}.`);
-    var url = {
-      encoding: "utf8",
-      method: "GET",
-      hostname: host.host,
-      port: host.port,
-      path: `/query?PUTDATA=${encodedQuery}`,
-      headers: {
-        "Content-Type": "text/plain"
-      }
-    };
-    var sql = "";
-    var req = http.get(url, function(resp) {
-      var decoder = new stringDecoder("utf8");
-      var response = resp.on('data', function(chunk) {
-        queriesSize = sizeof(chunk);
-        totalSize = totalSize + queriesSize;
-        sql = sql.concat(sanitizeBody(decoder.write(chunk)));
-      });
-      resp.on("end", function() {
-        var queries = sql.split("\n");
-        for(q in queries) {
-          if(queries[q] === "") { continue; }
-          oneshot(queries[q]);
-        }
-        console.log(`Total size of returned data: ${totalSize} bytes.`);
-      });
+  queriesExecuted++;
+  console.log(`Querying ${uri.full}.`);
+  var url = {
+    encoding: "utf8",
+    method: "GET",
+    hostname: uri.host,
+    port: uri.port,
+    path: `/${uri.short}?PUTDATA=${encodedQuery}`,
+    headers: {
+      "Content-Type": "text/plain"
+    }
+  };
+  var sql = "";
+  var req = http.get(url, function(resp) {
+    var decoder = new stringDecoder("utf8");
+    var response = resp.on('data', function(chunk) {
+      queriesSize = sizeof(chunk);
+      totalSize = totalSize + queriesSize;
+      sql = sql.concat(sanitizeBody(decoder.write(chunk)));
     });
-    req.on("error", function(err) { console.log("Request error:".concat(err.message)); }); 
-  }
+    resp.on("end", function() {
+      var queries = sql.split("\n");
+      for(q in queries) {
+        if(queries[q] === "") { continue; }
+        oneshot(queries[q]);
+      }
+      console.log(`Total size of returned data: ${totalSize} bytes.`);
+    });
+  });
+  req.on("error", function(err) { console.log("Request error:".concat(err.message)); }); 
   const querySize = sizeof(query);
   console.log(`Sent query ${query} with size of: ${querySize} bytes.`);
   return queriesExecuted;
@@ -228,21 +226,10 @@ function queryAttributesBuilder(types) {
   return attrsString;
 }
 
-function queryGetHosts(queryTokens, sysname) {
-  var currHosts = new Array();
-  for(var t in queryTokens) {
-    var token = queryTokens[t];
-    token = token.replace(/;+$/, '');
-    if(token === "*") { continue; }
-    for(var h in hosts) {
-      var host = hosts[h];
-      var regexToken = new RegExp(token, 'g');
-      var regexSystem = new RegExp(sysname, 'g');
-      if(host["types"].match(regexToken) && host["systems"].match(regexSystem)) { currHosts.push(host); }
-    }
-  }
-  currHosts = currHosts.filter(function(h, i) { return currHosts.indexOf(h) == i; });
-  return currHosts;
+function queryGetURI(query) {
+  //Get and return URI
+  //Find URI in query and compare to current components
+  return 0;
 }
 
 function queryTablesBuilder(types) {
@@ -310,8 +297,8 @@ function singularize(plural) {
   return singular;
 }
 
-function treeBuilder(currTree) {
-  var newtree = currTree;
+function treeBuilder() {
+  var newtree = tree;
   for(var c in components) {
     const curr = components[c];
     if(!newTree[curr["uuid"]]) {
