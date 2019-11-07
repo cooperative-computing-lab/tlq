@@ -4,8 +4,6 @@ use Error qw(:try);
 use Error::Simple;
 use Getopt::Long qw(:config no_ignore_case);
 use IO::Socket::PortState qw(check_ports);
-use JSON;
-use LWP::UserAgent;
 use sigtrap qw/handler signal_handler INT TERM/;
 use Sys::Hostname;
 
@@ -17,11 +15,10 @@ use strict;
     use Data::Dumper;
     use DBD::SQLite;
     use DBI;
-    use Digest::MD5 qw(md5_hex);
     use File::Basename;
     use HTTP::Server::Simple::CGI;
+    use JSON;
     use threads;
-    use threads::shared;
     use Thread::Semaphore;
     use Sys::Hostname;
     use base qw(HTTP::Server::Simple::CGI);
@@ -47,34 +44,27 @@ use strict;
         print(DEPOSIT "$dir/$p $type perl\n");
     }
     close(DEPOSIT);
-    system("cp tables-schema $dir/deposit-queries");
     my $sem = Thread::Semaphore->new();
     my $host = hostname();
     my $log_thread = threads->create("watch_logs");
     $log_thread->detach();
-    my $autoparse_thread = threads->create("autoparse_logs");
-    $autoparse_thread->detach();
     my %dispatch = (
-        "/" => \&motd,
         "/backup" => \&backup_db,
+        "/components" => \&component_query,
         "/exit" => \&cleanup,
         "/files" => \&send_file,
-        "/listfiles" => \&list_files,
-        "/parsers" => \&receive_file,
         "/query" => \&execute_query
     );
-    my %logs : shared = ();
-    my %parsers : shared = ();
-    my %tableschema;
-    update_db();
+    my %logs;
+    my %parsers;
+    my %tables;
 
-    sub motd {
-        my ($cgi) = @_;
-        print(STDOUT "HTTP/1.0 200 OK\n");
-        print(STDOUT $cgi->header);
-        print(STDOUT $cgi->start_html("Welcome"));
-        print(STDOUT $cgi->h1("This is the message of the day."));
-        print(STDOUT $cgi->end_html);
+    sub add_table {
+        my ($cmd) = @_;
+        if($cmd =~ m/CREATE TABLE\s?(IF NOT EXISTS)? (?<table>\S+) \((?<columns>[^\)]+)\);/) {
+            my $table = $+{table};
+            $tables{$table} = 1;
+        }
         return 0;
     }
 
@@ -85,30 +75,47 @@ use strict;
         return send_file($cgi);
     }
 
+    sub check_deposit {
+        my ($printmode) = @_;
+        open(DEPOSIT, "$dir/deposit-log");
+        while(my $line = <DEPOSIT>) {
+            chomp($line);
+            my @parts = split(' ', $line);
+            my ($sys, $log, $type, $hash) = @parts;
+            if(exists($logs{$hash})) { next; }
+            $logs{$hash} = {};
+            $logs{$hash}{sys} = $sys;
+            $logs{$hash}{path} = $log;
+            $logs{$hash}{type} = $type;
+            if($printmode) { submit_lookup($sys, $log, $type, $hash); }
+        }
+        close(DEPOSIT);
+    }
+
     sub check_file {
-        my ($cgi, $file) = @_;
+        my ($file) = @_;
         if(!$file) { return 1; }
         if(exists($logs{$file})) { $file = $logs{$file}{path}; }
         my $result;
-        if(!(-e $file)) {
-            print(STDOUT "HTTP/1.0 500 Internal server error\n");
-            print(STDOUT $cgi->header);
-            print(STDOUT $cgi->start_html("File existence failed"));
-            print(STDOUT $cgi->h1("File '$file' not found"));
-            print(STDOUT $cgi->end_html);
-            return 1;
-        }
+        if(!(-e $file)) { return 1; }
         $result = open(FILE, $file);
         close(FILE);
-        if(!$result) {
-            print(STDOUT "HTTP/1.0 500 Internal server error\n");
-            print(STDOUT $cgi->header);
-            print(STDOUT $cgi->start_html("File open failed"));
-            print(STDOUT $cgi->h1("Could not open '$file' due to '$!' error"));
-            print(STDOUT $cgi->end_html);
-            return 1;
-        }
+        if(!$result) { return 1; }
         return 0;
+    } 
+
+    sub check_parsers {
+        open(DEPOSIT, "$dir/deposit-parser");
+        while(my $line = <DEPOSIT>) {
+            chomp($line);
+            my @parts = split(' ', $line);
+            my ($path, $type, $interpreter) = @parts;
+            if(exists($parsers{$type})) { next; }
+            $parsers{$type} = {};
+            $parsers{$type}{path} = $path;
+            $parsers{$type}{interpreter} = $interpreter;
+        }
+        close(DEPOSIT);
     }
 
     sub cleanup {
@@ -125,10 +132,37 @@ use strict;
         exit 0;
     }
 
+    sub component_query {
+        my ($cgi) = @_;
+        my $component;
+        my $file;
+        if($cgi->path_info() =~ m/components\/(?<uri>\S+)\/(?<file>\S+)/) {
+            $component = $+{uri};
+            $file = $+{file};
+        }
+        else { return 1; }
+        my $query = query_from_json($cgi->param("JSON"), $component, $file);
+        my $json = execute_query($query);
+        
+        print(STDOUT "HTTP/1.0 200 OK\n");
+        print(STDOUT $cgi->header);
+        print(STDOUT $cgi->start_html("Record(s) retrieved."));
+        print(STDOUT "$json");
+        print(STDOUT $cgi->end_html);
+        return 0;
+    }
+
     sub send_file {
         my ($cgi) = @_;
         my $file = $cgi->url_param("file");
-        if(check_file($cgi, $file)) { return 1; }
+        if(check_file($file)) {
+            print(STDOUT "HTTP/1.0 500 Internal server error\n");
+            print(STDOUT $cgi->header);
+            print(STDOUT $cgi->start_html("File not found.."));
+            print(STDOUT $cgi->h1("File '$file' not found"));
+            print(STDOUT $cgi->end_html);
+            return 1;
+        }
         if(exists($logs{$file})) { $file = $logs{$file}{path}; }
         my $rawtext = "";
         open(FILE, $file);
@@ -144,41 +178,6 @@ use strict;
         return 0;
     }
 
-    sub receive_file {
-        my ($cgi) = @_;
-        my $file = $dir . "/" . basename($cgi->url_param("file"));
-        my @contents;
-        if($cgi->param("PUTDATA")) { @contents = $cgi->param("PUTDATA"); }
-        else { @contents = $cgi->param("POSTDATA"); }
-
-        #Character '0' is appended to first line of content in request
-        $contents[0] =~ s/^.//;
-        open(FILE, ">", $file);
-        foreach my $content (@contents) { print(FILE "$content\n"); }
-        close(FILE);
-        my $hash = md5_hex($file, $host, "received_file");
-        my @logparts = split(',', $file, 2);
-        $file = $logparts[0];
-        my $types = $logparts[1];
-        $logs{$hash} = &share({});
-        $logs{$hash}{app} = shared_clone("parser");
-        $logs{$hash}{path} = shared_clone($file);
-        $logs{$hash}{types} = shared_clone($types);
-        $logs{$hash}{size} = shared_clone(0);
-        open(DEPOSIT, ">>", "$dir/deposit-log");
-        print(DEPOSIT "received_file $file\n");
-        close(DEPOSIT);
-        submit_lookup("received_file", $file, $types, $hash);
-
-        print(STDOUT "HTTP/1.0 200 OK\n");
-        print(STDOUT $cgi->header);
-        print(STDOUT $cgi->start_html("Log received"));
-        print(STDOUT $cgi->h1("Storing raw contents of '$file' to server\n"));
-        print(STDOUT $cgi->h2("File '$file' can be accessed using '$hash' as an ID"));
-        print(STDOUT $cgi->end_html);
-        return 0;
-    }
-
     sub parse_type {
         my ($type) = @_;
         my $parser = $parsers{$type}{path};
@@ -186,7 +185,7 @@ use strict;
         my @toparse;
         foreach my $log (keys(%logs)) { if($logs{$log}{types} =~ m/$type/ and ($logs{$log}{size} < -s $logs{$log}{path})) { push(@toparse, $logs{$log}{path}); } }
         foreach my $log (@toparse) {
-            my $parsed = parse_file($log, $parser, $interpreter, 1);
+            my $parsed = parse_file($log, $parser, $interpreter);
             my $queryfile = "$dir/deposit-queries";
             while(!$$sem) { sleep(1); }
             open(QUERIES, ">>", $queryfile);
@@ -197,38 +196,16 @@ use strict;
     }
 
     sub parse_file {
-        my ($file, $parser, $interpreter, $flag) = @_;
+        my ($file, $parser, $interpreter) = @_;
         my $parsed = "";
-        if($flag) {
-            foreach my $log (keys(%logs)) {
-                if($logs{$log}{path} eq $file) {
-                    my $f = $logs{$log}{path};
-                    my $app = $logs{$log}{app};
-                    $parsed = `$interpreter $parser $f $app`;
-                }
+        foreach my $log (keys(%logs)) {
+            if($logs{$log}{path} eq $file) {
+                my $f = $logs{$log}{path};
+                my $sys = $logs{$log}{sys};
+                $parsed = `$interpreter $parser $f $sys`;
             }
         }
-        else { 
-            my $app = $logs{$file}{app};
-            $parsed = `$interpreter $parser $file $app`;
-        }
         return $parsed;
-    }
-
-    sub get_table_schema {
-        my ($cmd) = @_;
-        if($cmd =~ m/CREATE TABLE\s?(IF NOT EXISTS)? (?<table>\S+) \((?<columns>[^\)]+)\);/) {
-            my $table = $+{table};
-            my $columns = $+{columns};
-            my @cols = split(',', $columns);
-            foreach my $c (@cols) {
-                $c =~ s/^\s+|\s+$//g;
-                my @colparts = split(' ', $c);
-                my $name = $colparts[0];
-                $tableschema{$table}{$name} = $c;
-           }
-        }
-        return 0;
     }
 
     sub update_db {
@@ -239,7 +216,7 @@ use strict;
         while(my $line = <QUERIES>) { chomp($line); push(@outstanding, $line); }
         close(QUERIES);
         foreach my $query (@outstanding) {
-            get_table_schema($query);
+            add_table($query);
             my $dbcall = $db->prepare($query);
             $dbcall->execute;
         }
@@ -247,16 +224,16 @@ use strict;
         $sem->up();
     }
 
+    #Return JSON
+    #Match field names to retrieved values
     sub execute_query {
-        my ($cgi) = @_;
-        my @contents = $cgi->param("PUTDATA");
+        my ($query) = @_;
         my $mode = 0;
-        my $query = $contents[0];
         my $result = "";
         print(STDERR "Got query: $query\n");
-        @contents = split(' ', $query);
+        my @contents = split(' ', $query);
         if($contents[0] eq "INSERT" or $contents[0] eq "UPDATE" or $contents[0] eq "CREATE") { $mode = 1; }
-        if($query =~ m/CREATE TABLE/) { get_table_schema($query); }
+        if($query =~ m/CREATE TABLE/) { add_table($query); }
         my $dbcall;
         if($mode) { $dbcall = $db->do($query); }
         else { 
@@ -273,19 +250,19 @@ use strict;
             }
             chomp($result);
         }
-        print(STDOUT "HTTP/1.0 200 OK\n");
-        print(STDOUT $cgi->header);
-        print(STDOUT $cgi->start_html("Log sent"));
-        print(STDOUT $cgi->h1("Dumping results of '$query' to STDOUT"));
-        print(STDOUT "\n$result");
-        print(STDOUT $cgi->end_html);
-        return 0;
+        my $json = "";
+        return $json;
     }
 
     sub watch_logs {
         my $flag = 1;
+        check_parsers();
         while($flag) {
             check_deposit(1);
+            foreach my $type (keys(%parsers)) {
+                parse_type($type);
+            }
+            foreach my $log (keys(%logs)) { $logs{$log}{size} = -s $logs{$log}{path}; }
             sleep(10);
         }
         print(STDERR "\nExiting log watcher thread.\n");
@@ -293,81 +270,24 @@ use strict;
         return 0;
     }
 
-    sub autoparse_logs {
-        my $flag = 1;
-        while($flag) {
-            check_parsers();
-            check_deposit(0);
-            foreach my $type (keys(%parsers)) {
-                parse_type($type);
-                sleep(5);
-            }
-            foreach my $log (keys(%logs)) { $logs{$log}{size} = -s $logs{$log}{path}; }
-        }
-        print(STDERR "\nExiting log autoparser thread.\n");
-        threads->exit();
-        return 0;
-    }
-
-    sub check_deposit {
-        my ($printmode) = @_;
-        open(DEPOSIT, "$dir/deposit-log");
-        while(my $line = <DEPOSIT>) {
-            chomp($line);
-            my @parts = split(' ', $line);
-            my ($app, $log, $types) = @parts;
-            my $hash = md5_hex($app, $log, $types, $host);
-            if(exists($logs{$hash})) { next; }
-            $logs{$hash} = &share({});
-            $logs{$hash}{app} = shared_clone($app);
-            $logs{$hash}{path} = shared_clone($log);
-            $logs{$hash}{types} = shared_clone($types);
-            if($printmode) { submit_lookup($app, $log, $types, $hash); }
-        }
-        close(DEPOSIT);
-    }
-
-    sub check_parsers {
-        open(DEPOSIT, "$dir/deposit-parser");
-        while(my $line = <DEPOSIT>) {
-            chomp($line);
-            my @parts = split(' ', $line);
-            my $path = $parts[0];
-            my $type = $parts[1];
-            my $interpreter = $parts[2];
-            if(exists($parsers{$type})) { next; }
-            $parsers{$type} = &share({});
-            $parsers{$type}{path} = shared_clone($path);
-            $parsers{$type}{interpreter} = shared_clone($interpreter);
-            $parsers{$type}{hash} = md5_hex($path, $interpreter, $type, $host);
-        }
-        close(DEPOSIT);
+    sub query_from_json {
+        my ($json) = @_;
+        my $query;
+        return $query;
     }
 
     sub submit_lookup {
-        my ($app, $log, $types, $hash) = @_;
+        my ($sys, $log, $types, $hash) = @_;
         open(LOOKUP, ">>", "$dir/lookup-log");
-        print(LOOKUP "$app $log $types $hash\n");
+        print(LOOKUP "$sys $log $types $hash\n");
         close(LOOKUP);
-        return 0;
-    }
-
-    sub list_files {
-        my ($cgi) = @_;
-        my $list = "";
-        foreach my $file (keys(%logs)) { $list = $list . "$logs{$file}{path} => $file\n"; }
-        print(STDOUT "HTTP/1.0 200 OK\n");
-        print(STDOUT $cgi->header);
-        print(STDOUT $cgi->start_html("List of tracked files"));
-        print(STDOUT $cgi->h1("Dumping file list to STDOUT"));
-        print(STDOUT "\n$list");
-        print(STDOUT $cgi->end_html);
         return 0;
     }
 
     sub handle_request {
         my ($self, $cgi) = @_;
         my $path = $cgi->path_info();
+        if($path =~ m/components/) { $path = "/components"; }
         my $handler = $dispatch{$path};
         check_deposit(0);
         check_parsers();
@@ -397,7 +317,7 @@ Optional:
 
 Example Usage:
 
-    perl logquery --port 9000
+    perl server --port 9000
 
 ";
 
@@ -418,10 +338,7 @@ my $client = 0;
 my $err = 0;
 my $port = $OPT{port};
 if(!$port) { $port = 9000; }
-if($err) {
-    print(STDERR "Could not find $err required arguments.\n");
-    print_help();
-}
+if($err) { print_help(); }
 
 my %ports = ("tcp" => {});
 my $timeout = 1;
