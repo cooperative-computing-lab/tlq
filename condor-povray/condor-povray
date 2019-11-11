@@ -20,6 +20,8 @@ if(@ARGV != 5) {
     exit 1;
 }
 
+#requirements = MachineGroup == \"DISC\" && (MachineShortName == \"disc17\" || MachineShortName == \"disc18\" || MachineShortName == \"disc19\" || MachineShortName == \"disc20\" || MachineShortName == \"disc21\" || MachineShortName == \"disc22\" || MachineShortName == \"disc23\" || MachineShortName == \"disc24\" || MachineShortName == \"disc25\" || MachineShortName == \"disc26\")
+
 my ($in, $out, $frames, $width, $height) = @ARGV;
 my $name = "rubiks$width";
 my $tmp = "/tmp/logquery/condor-povray";
@@ -27,6 +29,9 @@ my $povray = "/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/povray/3.7/bin/p
 my $troubleshooting = "exec-wrapper-condor,ltrace-wrapper-condor,../log-define";
 my $rubiks = "WRC-RubiksCube.inc";
 my $f = 1;
+my $host = `curl ifconfig.me && echo`;
+my $port = 11855;
+my $uuid = `uuidgen`;
 while($f <= $frames) {
     while(length($f) < length($frames) or (length($f) < 3)) { $f = "0" . "$f"; }
     my $fname = "rubiks$width.$f";
@@ -35,9 +40,9 @@ while($f <= $frames) {
     my $submit;
     if($f != 100) {
         $submit = "universe = vanilla
-requirements = MachineGroup == \"DISC\" && (MachineShortName == \"disc17\" || MachineShortName == \"disc18\" || MachineShortName == \"disc19\" || MachineShortName == \"disc20\" || MachineShortName == \"disc21\" || MachineShortName == \"disc22\" || MachineShortName == \"disc23\" || MachineShortName == \"disc24\" || MachineShortName == \"disc25\" || MachineShortName == \"disc26\")
+requirements = MachineGroup == \"DISC\" && (MachineShortName == \"disc26\")
 executable = /usr/bin/sh
-arguments = exec-wrapper-condor $f $tmp.$fname.log povray_jobs $tmp.ltrace.$f.log processes,files,env_vars,components $povray $in $fname.png $c $height $width $fname.log ltrace.$f.log
+arguments = exec-wrapper-condor $host $port $uuid $f $tmp.$fname.log povray $tmp.ltrace.$f.log ltrace $povray $in $fname.png $c $height $width $fname.log ltrace.$f.log
 transfer_input_files = $troubleshooting,$in,$rubiks
 error = condor.$f.error
 should_transfer_files = yes

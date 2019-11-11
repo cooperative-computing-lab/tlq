@@ -21,7 +21,7 @@ use strict;
     use Sys::Hostname;
     use threads;
     use Thread::Semaphore;
-    use URI::Encode qw(uri_encode, uri_decode);
+    use URI::Encode;
     use base qw(HTTP::Server::Simple::CGI);
 
     my $database = "dbi:SQLite:dbname=:memory:";
@@ -45,6 +45,7 @@ use strict;
         print(DEPOSIT "$dir/$p $type perl\n");
     }
     close(DEPOSIT);
+    my $uri = URI::Encode->new( { encode_reserved => 0 } );
     my $sem = Thread::Semaphore->new();
     my $host = hostname();
     my $log_thread = threads->create("watch_logs");
@@ -273,7 +274,7 @@ use strict;
 
     sub query_from_json {
         my ($json) = @_;
-        $json = uri_decode($json);
+        $json = $uri->decode($json);
         my $query;
         return $query;
     }
