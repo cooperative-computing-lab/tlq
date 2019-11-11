@@ -82,8 +82,7 @@ function queryBuilder(graphQLQuery, systemName, firstType) {
 
 function testing(query) {
   var result = 0;
-  console.log(`Creating component tree:`);
-  result = queryTools.treeBuilder();
+  result = queryTools.distributedQuery(query);
   return result;
 }
 

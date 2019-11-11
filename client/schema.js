@@ -13,7 +13,7 @@ Custom Data Types:
 
 module.exports = `
   type Query {
-    components(system:String!, log:String, host:String, command:String, exitStatus:String): [Component]
+    components(ID: String!, system:String, log:String, host:String, command:String, exitStatus:String): [Component]
     envVars(system:String!, log:String, host:String, name:String, results:String) : [EnvVar]
     files(system:String!, log:String, host:String, path:String, failures:String): [File]
     processes(system:String!, log:String, host:String, pid:Int, ppid:Int): [Process]

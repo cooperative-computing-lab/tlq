@@ -1,5 +1,6 @@
 #! /usr/bin/env perl
 
+use Data::Dumper;
 use Error qw(:try);
 use Error::Simple;
 use Getopt::Long qw(:config no_ignore_case); #Parse options
@@ -16,6 +17,8 @@ Required:
 Optional:
     --log,-l    <path>      Enables logging of all received output.
 
+    --session,-s            Enables logging of all sent queries.
+
     --help                  Display this message.
 
 Example Usage:
@@ -24,16 +27,18 @@ Example Usage:
 
 ";
 
-my $query_usage = "Query structure: <action> <address>[:port] [target] [parser] [interpreter]
+my $query_usage = "Query structure: <action> [URI] [options]
 
-Supported Actions: ALIAS, BACKUP, DELETE, EXIT, GET, LIST, PARSE, PARSEALL, PUT, QUERY, QUIT
+Where <action> is one of: ALIAS, EXIT, LIST, QUERY, QUIT
 
+And [options] is one of: String for action ALIAS or String for action QUERY
 ";
 
 my %OPT;
 try {
     GetOptions(
         "log=s" => \$OPT{log},
+        "session|?" => \$OPT{session},
         "help|?" => sub { print $usage; exit(0); },
     );
 }
@@ -46,85 +51,62 @@ catch Error::Simple with {
 my $client = 0;
 my $err = 0;
 my $log = $OPT{log};
+my $session = $OPT{session};
 if($err) {
     print(STDERR "Could not find $err required arguments.\n");
     print_help();
 }
 
 my %aliases = ();
-my %files = ();
-my %hosts = ();
+my %components = ();
 my $prompt = "Enter Query > ";
 my $term = Term::ReadLine->new("logquery");
 $client = LWP::UserAgent->new(
     protocols_allowed => ["http", "https"],
-    timeout => 60
+    timeout => 10
 );
 $client->env_proxy;
+if($session) {
+    open(HISTORY, ">>", "cli-session") or die "Could not open session log for writing.\n";
+    open(READHIST, "cli-session");
+    while(my $line = <READHIST>) {
+        chomp($line);
+        $term->add_history($line);
+    }
+    close(READHIST);
+}
 print(STDOUT $query_usage);
 while(defined(my $input = $term->readline($prompt))) {
-    opendir(DIR, ".");
-    my @localfiles = grep(/log-deposit.*.out$/,readdir(DIR));
-    closedir(DIR);
-    foreach my $file (@localfiles) {
-        if(exists $files{$file}) { next; }
-        $files{$file} = 1;
-        get_info($file);
-    }
+    get_info("deposit-log");
     $term->add_history($input) if /\S/;
-    if(uc($input) eq "QUIT" or uc($input) eq "EXIT") {
-        print(STDERR "Exit message received. Cleaning up and shutting down.\n");
-        exit(0);
-    }
+    if($session) { print(HISTORY "$input\n"); }
+    if(uc($input) eq "QUIT" or uc($input) eq "EXIT") { exit(0); }
     my @parts = split(' ', $input);
     my $action = uc($parts[0]);
     my $destination = $parts[1];
     my $target = $parts[2];
-    my $parser = $parts[3];
-    my $interpreter = $parts[4];
     my $result = "";
-    if(exists($aliases{$destination})) { $destination = $aliases{$destination}; }
-    if($action eq "QUERY") {
+    if(exists($aliases{$destination})) { $destination = $aliases{$destination}; } 
+    if($action ne "LIST" and !$destination) { print_query_help(); }
+    elsif($action eq "QUERY") {
         my $index = 3;
         while($index < scalar(@parts)) {
             $target = $target . " " . $parts[$index];
             $index++;
         }
+        if(!$target) {
+            print_query_help();
+            next;
+        }
+        $result = request($action, $destination, $target);
     }
-    if($action and !$destination) {
-        print(STDERR "Incorrect query syntax used. Missing field(s).\n\n");
-        print(STDOUT $query_usage);
-    }
-    elsif($action eq "EXIT" or $action eq "QUIT" or $action eq "LIST") { $result = request($action, $destination); }
     elsif($action eq "ALIAS") {
         $aliases{$target} = $destination;
-        print(STDOUT "Please use '$target' to access '$destination' host.\n");
+        print(STDOUT "Please use alias '$target' to access '$destination' URI.\n");
     }
-    elsif($action eq "BACKUP" or $action eq "DELETE" or $action eq "GET" or $action or
-        $action eq "PARSE" or $action eq "PUT" or $action eq "QUERY" or $action eq "PARSEALL") {
-        if(!$target) {
-            print(STDERR "Incorrect query syntax used. Missing field(s).\n\n");
-            print(STDOUT $query_usage);
-            next;
-        }
-        if(($action eq "PARSE" or $action eq "PARSEALL") and !$parser) {
-            print(STDERR "No parser specified. Aborting request.\n\n");
-            print(STDOUT $query_usage);
-            next;
-        }
-        elsif(($action eq "PUT") and !(-e $target)) {
-            print(STDERR "File '$target' not found locally. Aborting request.\n\n");
-            print(STDOUT $query_usage);
-            next;
-        }
-
-        if($action eq "PARSE" or $action eq "PARSEALL") { $result = request($action, $destination, $target, $parser, $interpreter); }
-        else { $result = request($action, $destination, $target); }
-    }
-    else {
-        print(STDERR "Unknown action '$action' specified.\n\n");
-        print(STDOUT $query_usage);
-    }
+    elsif($action eq "EXIT" or $action eq "QUIT") { $result = request($action, $destination); }
+    elsif($action eq "LIST") { $result = list_components(); }
+    else { print_query_help(); }
     chomp($result);
     if($log) {
         open(LOG, ">>", $log);
@@ -134,83 +116,54 @@ while(defined(my $input = $term->readline($prompt))) {
     print(STDOUT "$result\n");
 }
 
+if($session) { close(HISTORY); }
 exit(0);
 
 sub get_info {
     my ($file) = @_;
     open(FILE, $file);
     while(my $line = <FILE>) {
-        if($line =~ m/To query log '(?<file>\S+)' with types '(?<types>\S+)' from system '(?<app>\S+)' use ID '(?<hash>\S+)' and query '(?<host>\S+)' to find out more./) {
-            my $file = $+{file};
-            my $types = $+{types};
-            my $app = $+{app};
-            my $hash = $+{hash};
-            my $host = $+{host};
-            if(exists $hosts{$host}) {
-                my %newapps = ();
-                my %newtypes = ();
-                my @a1 = split(',', $hosts{$host}{apps});
-                my @apps = (@a1, $app);
-                my @t1 = split(',', $hosts{$host}{types});
-                my @t2 = split(',', $types);
-                my @types = (@t1, @t2);
-                foreach my $a (@apps) { $newapps{$a} = 1; }
-                foreach my $t (@types) { $newtypes{$t} = 1; }
-                my $appstring = "";
-                my $typestring = "";
-                foreach my $a (keys(%newapps)) { $appstring = $appstring . $a . ","; }
-                foreach my $t (keys(%newtypes)) { $typestring = $typestring . $t . ","; }
-                chop($appstring);
-                chop($typestring);
-                $hosts{$host}{apps} = $appstring;
-                $hosts{$host}{types} = $typestring;
-                $hosts{$host}{files} = $hosts{$host}{files} . "," . $file;
-                $hosts{$host}{hashes} = $hosts{$host}{hashes} . "," . $hash;
-                next;
+        if($line =~ m/^Component (?<uuid>\S+) created log\(s\) \[(?<logs>.*)\] with command (?<command>.+) queryable at (?<uri>\S+) and has parent (?<puuid>\S+).$/) {
+            my $uuid = $+{uuid};
+            my $puuid = $+{puuid};
+            my $logs = $+{logs};
+            my $command = $+{command};
+            my $uri = $+{uri};
+            my $host = "";
+            if(!exists $components{$uri}) {
+                if($uri =~ m/(?<host>https?:\/\/\S+\/).+/) { $host = $+{host}; }
+                $components{$uri} = {};
+                $components{$uri}{uuid} = $uuid;
+                $components{$uri}{parent} = $puuid;
+                $components{$uri}{logs} = $logs;
+                $components{$uri}{command} = $command;
+                $components{$uri}{uri} = $uri;
+                $components{$uri}{host} = $host;
             }
-            $hosts{$host}{apps} = $app;
-            $hosts{$host}{files} = $file;
-            $hosts{$host}{hashes} = $hash;
-            $hosts{$host}{types} = $types;
         }
     }
     close(FILE);
     return 0;
 }
 
-sub request {
-    my ($action, $destination, $target, $parser, $interpreter) = @_;
-    my $content = 0;
-    my $http = "http://" . $destination;
-    my $response = 0;
-    if($action eq "GET") { $http = $http . "/files?file=" . $target; }
-    elsif($action eq "PARSEALL") {
-        $http = $http . "/parse?parser=" . $parser;
-        if($interpreter) { $http = $http . "&interpreter=" . $interpreter; }
-        $content = $target;
+sub list_components {
+    my $return = "";
+    foreach my $c (keys(%components)) {
+        my $dump = Dumper($components{$c});
+        $return = $return . "$c =>\n" . $dump . "\n";
     }
-    elsif($action eq "PARSE") {
-        $http = $http . "/parse?file=" . $target . "&parser=" . $parser;
-        if($interpreter) { $http = $http . "&interpreter=" . $interpreter; }
-    }
-    elsif($target and ($action eq "PUT")) {
-        $http = $http . "/parsers?file=" . $target;
-        open(FILE, $target);
-        while(my $line = <FILE>) { $content = $content . $line; } 
-        close(FILE);
-    }
-    elsif($action eq "QUERY") {
-        $http = $http . "/query";
-        $content = $target;
-    }
-    elsif($action eq "BACKUP") { $http = $http . "/backup?file=" . $target; }
-    elsif($action eq "DELETE") { $http = $http . "/delete?file=" . $target; }
-    elsif($action eq "QUIT" or $action eq "EXIT") { $http = $http . "/exit"; }
-    elsif($action eq "LIST") { $http = $http . "/listfiles"; }
+    return $return;
+}
 
-    if($action eq "BACKUP" or $action eq "GET" or $action eq "PARSE" or $action eq "QUIT" or $action eq "EXIT" or $action eq "LIST") { $response = $client->get($http); }
-    elsif($action eq "PUT" or $action eq "QUERY" or $action eq "PARSEALL") { $response = $client->put($http, "Content-Type" => "text/plain", Content => $content); }
-    elsif($action eq "DELETE") { $response = $client->delete($http); }
+sub request {
+    my ($action, $destination, $target) = @_;
+    my $content = 0;
+    my $http = $destination;
+    my $response = 0;
+    if($action eq "QUERY") { $content = $target; }
+    elsif($action eq "QUIT" or $action eq "EXIT") { $http = $components{$destination}{host} . "/exit"; }
+    if($action eq "QUIT" or $action eq "EXIT") { $response = $client->get($http); }
+    elsif($action eq "QUERY") { $response = $client->put($http, "Content-Type" => "text/plain", Content => $content); }
     else { return "Request type '$action' not supported."; }
     if($response->is_success) { return $response->decoded_content; }
     else { return $response->status_line; }
@@ -222,8 +175,13 @@ sub signal_handler {
 }
 
 sub print_help {
-    print(STDOUT $usage);
+    print(STDERR $usage);
     exit(1);
+}
+
+sub print_query_help {
+    print(STDERR "Incorrect query syntax used. Missing field(s).\n\n");
+    print(STDERR $query_usage);
 }
 
 # vim: tabstop=8 shiftwidth=4 softtabstop=4 expandtab shiftround autoindent

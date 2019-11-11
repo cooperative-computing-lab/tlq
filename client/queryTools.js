@@ -27,7 +27,6 @@ function compare(a, b) {
 }
 
 function distributedQuery(query) {
-  logChecker();
   tree = treeBuilder();
   var queriesExecuted = 0;
   var totalSize = 0;
@@ -36,6 +35,11 @@ function distributedQuery(query) {
   const uri = queryGetURI(query);
   var encodedQuery = encodeURIComponent(query);
   queriesExecuted++;
+  console.log(tree);
+  console.log(uri);
+  console.log(encodedQuery);
+  return queriesExecuted;
+
   console.log(`Querying ${uri.full}.`);
   var url = {
     encoding: "utf8",
@@ -125,11 +129,12 @@ function logChecker() {
   var deposits = new Array();
   var contents = decoder.write(fs.readFileSync(`./deposit-log`));
   contents = contents.split("\n");
-  //Component 8a50c6fa-bcb0-450c-9dcd-c15666c9c6be created log(s) [ls.log test.log] with command ls queryable at http://legion:11855/8a50c6fa-bcb0-450c-9dcd-c15666c9c6be and has parent ABC-123.
-  var regex = /^Component (\S+) created log(s) \[(.+)\] with command (.+) queryable at (\S+) and has parent (\S+).$/m;
-  for(var line in contents) {
-    if(contents[line] === "") { continue; }
-    var args = regex.exec(contents[line]); 
+  //Component def-456 created log(s) [ls.log test.log] with command ls queryable at http://localhost:11855/components/def-450 and has parent abc-123.
+  var regex = /^Component (\S+) created log\(s\) \[(.+)\] with command (.+) queryable at (\S+) and has parent (\S+).$/m;
+  for(var c in contents) {
+    if(contents[c] === "") { continue; }
+    var args = regex.exec(contents[c]); 
+    if(!args) { continue; }
     var uuid = args[1];
     var logs = args[2];
     var cmd = args[3];
@@ -227,9 +232,18 @@ function queryAttributesBuilder(types) {
 }
 
 function queryGetURI(query) {
-  //Get and return URI
-  //Find URI in query and compare to current components
-  return 0;
+  var uuid;
+  const lines = query.split("\n");
+  var regex = /^\s*components\(.*ID:\s*"(\S+)"/m;
+  for(var l in lines) {
+    const args = regex.exec(lines[l]);
+    if(args) {
+      uuid = args[1];
+      break;
+    }
+  }
+  if(!uuid || !components[uuid]) { return 1; }
+  return components[uuid]["uri"];
 }
 
 function queryTablesBuilder(types) {
@@ -298,23 +312,22 @@ function singularize(plural) {
 }
 
 function treeBuilder() {
-  var newtree = tree;
+  var newTree = tree;
+  logChecker();
   for(var c in components) {
     const curr = components[c];
     if(!newTree[curr["uuid"]]) {
       newTree[curr["uuid"]] = new Object();
       newTree[curr["uuid"]]["parent"] = curr["puuid"];
       newTree[curr["uuid"]]["children"] = new Array();
-      if(!newtree[curr["puuid"]]) {
+      if(!newTree[curr["puuid"]]) {
         newTree[curr["puuid"]] = new Object();
         newTree[curr["puuid"]]["children"] = new Array();
       }
-      newTree[curr["puuid"]["children"].push(curr["uuid"]);
+      newTree[curr["puuid"]]["children"].push(curr["uuid"]);
     }
   }
-  console.log(`Constructed component lineage tree:`);
-  console.log(newtree);
-  return newtree;
+  return newTree;
 }
 
 module.exports = {
@@ -330,13 +343,11 @@ module.exports = {
   queryAttributesBuilder,
   queryAttributesRegex,
   queryCloseRegex,
-  queryGetHosts,
   queryOpenRegex,
   queryTablesBuilder,
   sanitizeBody,
   singularize,
-  sizeof,
-  treeBuilder
+  sizeof
 }
 
 // vim: tabstop=4 shiftwidth=2 softtabstop=2 expandtab shiftround autoindent
