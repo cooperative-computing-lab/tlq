@@ -6,7 +6,7 @@ RUBIKS = WRC-RubiksCube.inc
 all: $(MOVIE)
 
 $(MOVIE): $(POVRAY) rubiks1920.pov $(RUBIKS)
-	perl $(POVRAY) rubiks1920.pov rubiks1920.mpg 300 1920 1080
+	perl $(POVRAY) rubiks1920.pov rubiks1920.mpg 3 1920 1080
 
 1080p: $(MOVIE)
 

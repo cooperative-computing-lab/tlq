@@ -26,6 +26,6 @@ width=${args[13]}
 debug=${args[14]}
 localtrace=${args[15]}
 
-/usr/bin/sh log-define $host $port $uuid condor_povray $log $logstring $ltrace $ltracestring -- ./ltrace-wrapper-condor $frame $povray +I$input +O$output +K$count +H$height +w$width +GA$debug > log-deposit.$frame\.out ; mv $debug $log ; mv $localtrace $ltrace
+/usr/bin/sh log-define $host $port $uuid $log $logstring $ltrace $ltracestring -- ./ltrace-wrapper-condor $frame $povray +I$input +O$output +K$count +H$height +w$width +GA$debug > log-deposit.$frame\.out ; mv $debug $log ; mv $localtrace $ltrace
 
 exit

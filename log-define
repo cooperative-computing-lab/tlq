@@ -50,9 +50,10 @@ done
 
 cid=$(uuidgen)
 TLQPARENTUUID="$cid"
-uri="http://$hostname:$port/$cid"
+uri="http://$hostname:$port/components/$cid"
 deposit="Component $cid created log(s) [${logs[*]}] with command $cmd queryable at $uri and has parent $puuid."
-curl --data-urlencode "DEPOSIT=$deposit" http://$home/deposit
+curl --data-urlencode "DEPOSIT=$deposit" http://$home/deposit > /dev/null
+echo $deposit
 
 result=exec $cmd
 exit $result

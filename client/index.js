@@ -80,13 +80,22 @@ function queryBuilder(graphQLQuery, systemName, firstType) {
   return queryResult;
 }
 
+function testing(query) {
+  var result = 0;
+  console.log(`Creating component tree:`);
+  result = queryTools.treeBuilder();
+  return result;
+}
+
 const root = {
   components: (args, context) => {
-    return queryBuilder(context.body.query, args.system, `components`).then(function(result) {
+    return testing(context.body.query);
+    /*return queryBuilder(context.body.query, args.system, `components`).then(function(result) {
       const resultSize = queryTools.sizeof(result);
       console.log(`Got GraphQL result object size of: ${resultSize} bytes.`);
       return result;
     });
+    */
   },
   envVars: (args, context) => {
     return queryBuilder(context.body.query, args.system, `envVars`).then(function(result) {
