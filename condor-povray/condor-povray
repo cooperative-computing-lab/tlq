@@ -30,8 +30,10 @@ my $troubleshooting = "exec-wrapper-condor,ltrace-wrapper-condor,../log-define";
 my $rubiks = "WRC-RubiksCube.inc";
 my $f = 1;
 my $host = `curl ifconfig.me && echo`;
+chomp($host);
 my $port = 11855;
 my $uuid = `uuidgen`;
+chomp($uuid);
 while($f <= $frames) {
     while(length($f) < length($frames) or (length($f) < 3)) { $f = "0" . "$f"; }
     my $fname = "rubiks$width.$f";
