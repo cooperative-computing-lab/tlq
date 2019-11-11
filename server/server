@@ -143,9 +143,9 @@ use strict;
             $file = $+{file};
         }
         else { return 1; }
-        my $query = query_from_json($cgi->param("PUTDATA"), $component, $file);
-        my $json = execute_query($query);
-        
+        #my $query = query_from_json($cgi->param("PUTDATA"), $component, $file);
+        #my $json = execute_query($query);
+        my $json = "TEST";
         print(STDOUT "HTTP/1.0 200 OK\n");
         print(STDOUT $cgi->header);
         print(STDOUT $cgi->start_html("Record(s) retrieved."));
