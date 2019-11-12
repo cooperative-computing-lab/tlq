@@ -57,6 +57,7 @@ use strict;
         "/files" => \&send_file,
         "/query" => \&execute_query
     );
+    my %components;
     my %logs;
     my %parsers;
     my %tables;
@@ -83,12 +84,18 @@ use strict;
         while(my $line = <DEPOSIT>) {
             chomp($line);
             my @parts = split(' ', $line);
-            my ($sys, $log, $type, $hash) = @parts;
+            my ($sys, $component, $log, $type, $hash) = @parts;
             if(exists($logs{$hash})) { next; }
             $logs{$hash} = {};
-            $logs{$hash}{sys} = $sys;
+            $logs{$hash}{suuid} = $sys;
             $logs{$hash}{path} = $log;
             $logs{$hash}{type} = $type;
+            $logs{$hash}{cuuid} = $component;
+            if(!exists $components{$component}) {
+                $components{$component} = {};
+                $components{$component}{files} = $hash;
+            }
+            else { $components{$component}{files} = $components{$component}{files} . " $hash"; }
             if($printmode) { submit_lookup($sys, $log, $type, $hash); }
         }
         close(DEPOSIT);
@@ -134,15 +141,24 @@ use strict;
         exit 0;
     }
 
+    sub component_get_files {
+        my ($component) = @_;
+        my @array = split($components{$component}{files}, ' ');
+        return @array;
+    }
+
     sub component_query {
         my ($cgi) = @_;
         my $component;
         my $file;
-        if($cgi->path_info() =~ m/components\/(?<uri>\S+)\/(?<file>\S+)/) {
+        if($cgi->path_info() =~ m/components\/(?<uri>\S+)(\/(?<file>\S+))?/) {
             $component = $+{uri};
             $file = $+{file};
         }
         else { return 1; }
+        my @files;
+        if(!$file) { @files = component_get_files($component); }
+        else { push(@files, $file); }
         #my $query = query_from_json($cgi->param("PUTDATA"), $component, $file);
         #my $json = execute_query($query);
         my $json = "TEST";

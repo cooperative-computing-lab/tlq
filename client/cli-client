@@ -109,7 +109,7 @@ while(defined(my $input = $term->readline($prompt))) {
     else { print_query_help(); }
     chomp($result);
     if($log) {
-        open(LOG, ">>", $log);
+        open(LOG, ">>", $log) or die "Could not open $log for log writing.\n";
         print(LOG "$result\n");
         close(LOG);
     } 

@@ -39,16 +39,16 @@ do
     shift
 done
 cmd=$@
+cid=$(uuidgen)
 j=0
 for log in "${logs[@]}"
 do
     logtype=${types[j]}
     loghash=$(uuidgen)
-    echo "$sysuuid $log $logtype $loghash" >> "$dir/deposit-log"
+    echo "$sysuuid $cid $log $logtype $loghash" >> "$dir/deposit-log"
     let j="j+1"
 done
 
-cid=$(uuidgen)
 TLQPARENTUUID="$cid"
 uri="http://$hostname:$port/components/$cid"
 deposit="Component $cid created log(s) [${logs[*]}] with command $cmd queryable at $uri and has parent $puuid."
