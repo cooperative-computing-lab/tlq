@@ -28,49 +28,52 @@ function compare(a, b) {
 
 function distributedQuery(query) {
   tree = treeBuilder();
+  console.log(tree);
   var queriesExecuted = 0;
   var totalSize = 0;
   var queriesSize = 0;
   //Get each URI in query (child components, multiple top-level components)
-  const uri = queryGetURI(query);
-  var encodedQuery = encodeURIComponent(query);
-  queriesExecuted++;
-  console.log(tree);
-  console.log(uri);
-  console.log(encodedQuery);
-  return queriesExecuted;
+  const components = queryGetComponents(query);
+  for(var c in components) {
+    const uri = queryGetURI(components[c]);
+    const encodedQuery = encodeURIComponent(components[c]);
+    queriesExecuted++;
+    console.log(uri);
+    console.log(encodedQuery);
+    return queriesExecuted;
 
-  console.log(`Querying ${uri.full}.`);
-  var url = {
-    encoding: "utf8",
-    method: "GET",
-    hostname: uri.host,
-    port: uri.port,
-    path: `/${uri.short}?PUTDATA=${encodedQuery}`,
-    headers: {
-      "Content-Type": "text/plain"
-    }
-  };
-  var sql = "";
-  var req = http.get(url, function(resp) {
-    var decoder = new stringDecoder("utf8");
-    var response = resp.on('data', function(chunk) {
-      queriesSize = sizeof(chunk);
-      totalSize = totalSize + queriesSize;
-      sql = sql.concat(sanitizeBody(decoder.write(chunk)));
-    });
-    resp.on("end", function() {
-      var queries = sql.split("\n");
-      for(q in queries) {
-        if(queries[q] === "") { continue; }
-        oneshot(queries[q]);
+    console.log(`Querying ${uri.full}.`);
+    var url = {
+      encoding: "utf8",
+      method: "GET",
+      hostname: uri.host,
+      port: uri.port,
+      path: `/${uri.short}?PUTDATA=${encodedQuery}`,
+      headers: {
+        "Content-Type": "text/plain"
       }
-      console.log(`Total size of returned data: ${totalSize} bytes.`);
+    };
+    var sql = "";
+    var req = http.get(url, function(resp) {
+      var decoder = new stringDecoder("utf8");
+      var response = resp.on('data', function(chunk) {
+        queriesSize = sizeof(chunk);
+        totalSize = totalSize + queriesSize;
+        sql = sql.concat(sanitizeBody(decoder.write(chunk)));
+      });
+      resp.on("end", function() {
+        var queries = sql.split("\n");
+        for(q in queries) {
+          if(queries[q] === "") { continue; }
+          oneshot(queries[q]);
+        }
+        console.log(`Total size of returned data: ${totalSize} bytes.`);
+      });
     });
-  });
-  req.on("error", function(err) { console.log("Request error:".concat(err.message)); }); 
-  const querySize = sizeof(query);
-  console.log(`Sent query ${query} with size of: ${querySize} bytes.`);
+    req.on("error", function(err) { console.log("Request error:".concat(err.message)); }); 
+    const querySize = sizeof(query);
+    console.log(`Sent query ${query} with size of: ${querySize} bytes.`);
+  }
   return queriesExecuted;
 }
 
@@ -231,9 +234,26 @@ function queryAttributesBuilder(types) {
   return attrsString;
 }
 
-function queryGetURI(query) {
+//TODO Add query language-specific splitting
+function queryComponentSplit(query) {
+  var pieces = new Array();
+  return pieces;
+}
+
+//TODO push full component context
+function queryGetComponents(query) {
+  var components = new Array();
+  const pieces = queryComponentSplit(query);
+  for(p in pieces) {
+    var component = new Object();
+    components.push(component);
+  }
+  return components;
+}
+
+function queryGetURI(component) {
   var uuid;
-  const lines = query.split("\n");
+  const lines = component.split("\n");
   var regex = /^\s*components\(.*ID:\s*"(\S+)"/m;
   for(var l in lines) {
     const args = regex.exec(lines[l]);
