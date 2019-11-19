@@ -4,6 +4,7 @@ use Data::Dumper;
 use Error qw(:try);
 use Error::Simple;
 use Getopt::Long qw(:config no_ignore_case); #Parse options
+use JSON;
 use LWP::UserAgent; #Send requests and receive responses
 use sigtrap qw/handler signal_handler INT TERM/; #Catch SIGINT and SIGTERM
 use Term::ReadLine; #Use a REPL for querying
@@ -15,9 +16,9 @@ my $usage = "Debug Log Querying Client Options:
 Required:
 
 Optional:
-    --log,-l    <path>      Enables logging of all received output.
+    --log,-l    <path>      Enables logging of all sent requests and received output.
 
-    --session,-s            Enables logging of all sent queries.
+    --session,-s            Enables logging of user input history for next session.
 
     --help                  Display this message.
 
@@ -98,7 +99,11 @@ while(defined(my $input = $term->readline($prompt))) {
             print_query_help();
             next;
         }
-        $result = request($action, $destination, $target);
+        my @subqueries = query_parse_dag($target);
+        foreach my $subquery (@subqueries) {
+            $result = request($action, $destination, query_to_json($subquery));
+            print_result($subquery, $result);
+        }
     }
     elsif($action eq "ALIAS") {
         $aliases{$target} = $destination;
@@ -106,14 +111,8 @@ while(defined(my $input = $term->readline($prompt))) {
     }
     elsif($action eq "EXIT" or $action eq "QUIT") { $result = request($action, $destination); }
     elsif($action eq "LIST") { $result = list_components(); }
-    else { print_query_help(); }
-    chomp($result);
-    if($log) {
-        open(LOG, ">>", $log) or die "Could not open $log for log writing.\n";
-        print(LOG "$result\n");
-        close(LOG);
-    } 
-    print(STDOUT "$result\n");
+    else { print_query_help(); } 
+    if($action ne "QUERY") { print_result($input, $result); }
 }
 
 if($session) { close(HISTORY); }
@@ -153,6 +152,62 @@ sub list_components {
         $return = $return . "$c =>\n" . $dump . "\n";
     }
     return $return;
+}
+
+sub parse_query_dag {
+    my ($query) = @_;
+    my @parts = split($query, ';');
+    my %dag;
+    foreach my $part (@parts) {
+        if($part =~ m/^(?<id>\S+)[uuid="(?<uuid>\S+)"];$/) {
+            $dag{$+{id}} = {};
+            $dag{$+{id}}{uuid} = $+{uuid}; 
+        } 
+        elsif($part =~ m/^(?<id>\S+)[uuid="(?<uuid>\S+)"\s*,\s*(?<conditions>.+)];$/) {
+            $dag{$+{id}} = {};
+            $dag{$+{id}}{uuid} = $+{uuid};
+            #TODO Add extra conditionals
+        }
+        elsif($part =~ m/^(?<id>\S+):(?<selects.*);$/) {
+            #TODO Add selects and conditions
+        }
+        elsif($part =~ m/^(?<source>\S+)\s*->\s*(?<dest>\S+);$/) {
+            if(exists $dag{$+{source}}{children}) { $dag{$+{source}}{children} = $dag{$+{source}}{children} . ',' . $+{dest}; }
+            else { $dag{$+{source}}{children} = $+{dest}; }
+            $dag{$+{dest}}{parent} = $+{source};
+        }
+    }
+    foreach my $key (keys(%dag)) {
+        my %node = $dag{$key};
+        my $nodestring = "$node{uuid};$node{conditions};$node{selects}";
+        push(@subqueries, $nodestring);
+    }
+    my @subqueries;
+    return @subqueries;
+}
+
+sub print_result {
+    my ($input, $result) = @_;
+    chomp($result);
+    if($log) {
+        open(LOG, ">>", $log) or die "Could not open $log for log writing.\n";
+        print(LOG "$input =>\n$result\n");
+        close(LOG);
+    } 
+    print(STDOUT "$result\n");
+}
+
+sub query_to_json {
+    my ($query) = @_;
+    my @subqueries = parse_query_dag($query);
+    my %object;
+    my ($id, $conditions, $selects) = split($query, ';');
+    if(!$selects) { $selects = "*"; }
+    my $query = "SELECT $selects FROM $id";
+    if($conditions) { $query = $query . " WHERE $conditions"; }
+    $object{query} = $query . ";";
+    my $json = encode_json(%object);
+    return $json;
 }
 
 sub request {

@@ -119,10 +119,10 @@ const root = {
   }
 };
 
-expressServer.use('/graphql', graphqlHTTP({schema, rootValue: root, graphiql: true}));
+expressServer.use(`/tlq`, graphqlHTTP({schema, rootValue: root, graphiql: true}));
 expressServer.listen(4201, (err) => {
   if (err) { return console.log(err); }
-  return console.log('GraphiQL interface available at `localhost:4201/graphql` for querying.');
+  return console.log(`GraphiQL interface available at "localhost:4201/tlq" for querying.`);
 });
 
 // vim: tabstop=4 shiftwidth=2 softtabstop=2 expandtab shiftround autoindent
