@@ -159,13 +159,13 @@ use strict;
         my @files;
         if(!$file) { @files = component_get_files($component); }
         else { push(@files, $file); }
-        #my $query = query_from_json($cgi->param("PUTDATA"), $component, $file);
+        my $query = query_from_json($cgi->param("PUTDATA"));
         #my $json = execute_query($query);
         my $json = "TEST";
         print(STDOUT "HTTP/1.0 200 OK\n");
         print(STDOUT $cgi->header);
         print(STDOUT $cgi->start_html("Record(s) retrieved."));
-        print(STDOUT "$json");
+        print(STDOUT "$json from query $query");
         print(STDOUT $cgi->end_html);
         return 0;
     }
@@ -291,8 +291,10 @@ use strict;
     sub query_from_json {
         my ($json) = @_;
         $json = $uri->decode($json);
-        my $query;
-        return $query;
+        my $queryref = JSON->new->decode($json);
+        my %query = %$queryref;
+        my $dump = Dumper(%query);
+        return $query{query};
     }
 
     sub submit_lookup {

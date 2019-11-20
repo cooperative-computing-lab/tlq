@@ -8,6 +8,7 @@ use JSON;
 use LWP::UserAgent; #Send requests and receive responses
 use sigtrap qw/handler signal_handler INT TERM/; #Catch SIGINT and SIGTERM
 use Term::ReadLine; #Use a REPL for querying
+use URI::Encode;
 
 use strict;
 
@@ -101,6 +102,7 @@ while(defined(my $input = $term->readline($prompt))) {
         }
         my @subqueries = query_parse_dag($target);
         foreach my $subquery (@subqueries) {
+            my $jsonified = query_to_json($subquery);
             $result = request($action, $destination, query_to_json($subquery));
             print_result($subquery, $result);
         }
@@ -154,38 +156,6 @@ sub list_components {
     return $return;
 }
 
-sub parse_query_dag {
-    my ($query) = @_;
-    my @parts = split($query, ';');
-    my %dag;
-    foreach my $part (@parts) {
-        if($part =~ m/^(?<id>\S+)[uuid="(?<uuid>\S+)"];$/) {
-            $dag{$+{id}} = {};
-            $dag{$+{id}}{uuid} = $+{uuid}; 
-        } 
-        elsif($part =~ m/^(?<id>\S+)[uuid="(?<uuid>\S+)"\s*,\s*(?<conditions>.+)];$/) {
-            $dag{$+{id}} = {};
-            $dag{$+{id}}{uuid} = $+{uuid};
-            #TODO Add extra conditionals
-        }
-        elsif($part =~ m/^(?<id>\S+):(?<selects.*);$/) {
-            #TODO Add selects and conditions
-        }
-        elsif($part =~ m/^(?<source>\S+)\s*->\s*(?<dest>\S+);$/) {
-            if(exists $dag{$+{source}}{children}) { $dag{$+{source}}{children} = $dag{$+{source}}{children} . ',' . $+{dest}; }
-            else { $dag{$+{source}}{children} = $+{dest}; }
-            $dag{$+{dest}}{parent} = $+{source};
-        }
-    }
-    foreach my $key (keys(%dag)) {
-        my %node = $dag{$key};
-        my $nodestring = "$node{uuid};$node{conditions};$node{selects}";
-        push(@subqueries, $nodestring);
-    }
-    my @subqueries;
-    return @subqueries;
-}
-
 sub print_result {
     my ($input, $result) = @_;
     chomp($result);
@@ -197,16 +167,57 @@ sub print_result {
     print(STDOUT "$result\n");
 }
 
+sub query_parse_dag {
+    my ($query) = @_;
+    my @parts = split($query, ';');
+    my @subqueries;
+    my %dag;
+    foreach my $part (@parts) {
+        if($part =~ m/^(?<id>\S+)[uuid="(?<uuid>\S+)"];$/) {
+            $dag{$+{id}} = {};
+            $dag{$+{id}}{uuid} = $+{uuid}; 
+        } 
+        elsif($part =~ m/^(?<id>\S+)[uuid="(?<uuid>\S+)"\s*,\s*(?<conditions>.+)];$/) {
+            $dag{$+{id}} = {};
+            $dag{$+{id}}{uuid} = $+{uuid};
+            #TODO Add extra conditionals
+        }
+        elsif($part =~ m/^(?<id>\S+):(?<selects>.*);$/) {
+            #TODO Add selects and conditions
+        }
+        elsif($part =~ m/^(?<source>\S+)\s*->\s*(?<dest>\S+);$/) {
+            if(exists $dag{$+{source}}{children}) { $dag{$+{source}}{children} = $dag{$+{source}}{children} . ',' . $+{dest}; }
+            else { $dag{$+{source}}{children} = $+{dest}; }
+            $dag{$+{dest}}{parent} = $+{source};
+        }
+        #Raw storage-layer query
+        else {
+            push(@subqueries, $query);
+        }
+    }
+    foreach my $key (keys(%dag)) {
+        my $mode = 0;
+        my %node = $dag{$key};
+        my $nodestring = "$node{uuid};$node{conditions};$node{selects};$mode";
+        push(@subqueries, $nodestring);
+    }
+    return @subqueries;
+}
+
 sub query_to_json {
     my ($query) = @_;
-    my @subqueries = parse_query_dag($query);
     my %object;
-    my ($id, $conditions, $selects) = split($query, ';');
-    if(!$selects) { $selects = "*"; }
-    my $query = "SELECT $selects FROM $id";
-    if($conditions) { $query = $query . " WHERE $conditions"; }
-    $object{query} = $query . ";";
-    my $json = encode_json(%object);
+    my ($id, $conditions, $selects, $mode) = split($query, ';');
+    if($mode) {
+        if(!$selects) { $selects = "*"; }
+        $query = "SELECT $selects FROM $id";
+        if($conditions) { $query = $query . " WHERE $conditions"; }
+        $object{query} = $query . ";";
+    }
+    else { $object{query} = $query; }
+    my $json = JSON->new->encode(\%object);
+    my $encoder = URI::Encode->new( { encode_reserved => 0 } );
+    $json = $encoder->encode($json);
     return $json;
 }
 
