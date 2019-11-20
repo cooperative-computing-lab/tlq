@@ -103,7 +103,7 @@ while(defined(my $input = $term->readline($prompt))) {
         my @subqueries = query_parse_dag($target);
         foreach my $subquery (@subqueries) {
             my $jsonified = query_to_json($subquery);
-            $result = request($action, $destination, query_to_json($subquery));
+            $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request($action, $destination, query_to_json($subquery)));
             print_result($subquery, $result);
         }
     }
@@ -216,8 +216,7 @@ sub query_to_json {
     }
     else { $object{query} = $query; }
     my $json = JSON->new->encode(\%object);
-    my $encoder = URI::Encode->new( { encode_reserved => 0 } );
-    $json = $encoder->encode($json);
+    $json = URI::Encode->new( { encode_reserved => 0 } )->encode($json);
     return $json;
 }
 

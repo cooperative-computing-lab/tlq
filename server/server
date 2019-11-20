@@ -186,7 +186,6 @@ use strict;
         open(FILE, $file);
         while(my $line = <FILE>) { $rawtext = $rawtext . $line; }
         close(FILE);
-
         print(STDOUT "HTTP/1.0 200 OK\n");
         print(STDOUT $cgi->header);
         print(STDOUT $cgi->start_html("Log sent"));
@@ -242,8 +241,7 @@ use strict;
         $sem->up();
     }
 
-    #Return JSON
-    #Match field names to retrieved values
+    #TODO Match field names to retrieved values
     sub execute_query {
         my ($query) = @_;
         my $mode = 0;
@@ -268,7 +266,10 @@ use strict;
             }
             chomp($result);
         }
-        my $json = "";
+        my %response;
+        $response{result} = $result;
+        my $json = JSON->new->encode(\%response);
+        $json = URI::Encode->new( { encode_reserved => 0 } )->encode($json);
         return $json;
     }
 
