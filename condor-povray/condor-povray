@@ -24,7 +24,7 @@ if(@ARGV != 5) {
 
 my ($in, $out, $frames, $width, $height) = @ARGV;
 my $name = "rubiks$width";
-my $tmp = "/tmp/logquery/condor-povray";
+my $tmp = "/tmp/tlq/condor-povray";
 my $povray = "/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/povray/3.7/bin/povray";
 my $troubleshooting = "exec-wrapper-condor,ltrace-wrapper-condor,../log-define";
 my $rubiks = "WRC-RubiksCube.inc";

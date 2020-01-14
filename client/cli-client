@@ -25,7 +25,7 @@ Optional:
 
 Example Usage:
 
-    perl logquery --log output.log
+    perl cli-client --log output.log
 
 ";
 
@@ -64,7 +64,7 @@ if($err) {
 my %aliases = ();
 my %components = ();
 my $prompt = "Enter Query > ";
-my $term = Term::ReadLine->new("logquery");
+my $term = Term::ReadLine->new("tlq");
 $client = LWP::UserAgent->new(
     protocols_allowed => ["http", "https"],
     timeout => 10

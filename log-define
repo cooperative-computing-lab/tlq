@@ -11,7 +11,7 @@ puuid=$TLQPARENTUUID
 if [ "$puuid" = "" ]; then
     puuid="$sysuuid"
 fi
-dir=/tmp/logquery
+dir=/tmp/tlq
 hostname=$(hostname -f)
 declare -a logs
 declare -a types

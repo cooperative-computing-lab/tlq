@@ -27,7 +27,7 @@ use strict;
 
     my $database = "dbi:SQLite:dbname=:memory:";
     my $db = DBI->connect($database);
-    my $dir = "/tmp/logquery";
+    my $dir = "/tmp/tlq";
     if(!(-e $dir)) { mkdir($dir); }
     else {
         unlink("$dir/lookup-log");
