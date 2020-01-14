@@ -14,6 +14,7 @@ use strict;
     package WebServer;
     use Data::Dumper;
     use DBD::SQLite;
+    use DBD::Pg;
     use DBI;
     use File::Basename;
     use HTTP::Server::Simple::CGI;

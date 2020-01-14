@@ -28,7 +28,6 @@ function compare(a, b) {
 
 function distributedQuery(query) {
   tree = treeBuilder();
-  console.log(tree);
   var queriesExecuted = 0;
   var totalSize = 0;
   var queriesSize = 0;
