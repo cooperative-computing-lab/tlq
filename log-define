@@ -46,7 +46,6 @@ do
     logtype=${types[j]}
     loghash=$(uuidgen)
     echo "$sysuuid $cid $log $logtype $loghash" >> "$dir/deposit-log"
-    echo "TLQ: This log is claimed by component $cid." >> $log
     let j="j+1"
 done
 
