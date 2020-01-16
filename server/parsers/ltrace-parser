@@ -9,20 +9,34 @@ my $usage = "Log Parser for ltrace Options:
 
 Required:
     <log>	    Sets the path to the log file.
-    <app>           Sets the name of the origin application/system of the log.
 
 Example Usage:
-    ltrace-parser log.ltrace testapp
+    ltrace-parser ltrace.log
 
 ";
 
-if(@ARGV != 2) {
+if(@ARGV != 1) {
     print(STDERR $usage);
     exit 1;
 }
-my ($log, $app) = @ARGV;
-my %files = ();
-my ($cmd, $host, $cmdpid, $cmdppid);
+my ($log) = @ARGV;
+my (%env_vars, %files, %processes);
+my ($cmd, $component, $host, $cmdpid, $cmdppid);
+my $deposit = "/tmp/tlq/deposit-log";
+open(DEPOSIT, $deposit);
+while(my $line = <DEPOSIT>) {
+    if($line =~ m/(?<sys>\S+) (?<comp>\S+) (?<path>\S+) (?<types>\S+) (?<logid>\S+)$/) {
+        if($log = $+{path}) {
+            $component = $+{comp};
+            last;
+        }
+    }
+    if(!$component) {
+        print(STDERR "Could not find component matching given log $log, exiting.\n");
+        exit(1);
+    }
+}
+close(DEPOSIT);
 open(LOG, $log) or die "Could not open specified log file.\n";
 while(my $line = <LOG>) {
     #Wrote an ltrace for command: "dd if=in.dat of=out.dat bs=4096 count=2500" with PID 12539 from PPID 12538
@@ -31,68 +45,138 @@ while(my $line = <LOG>) {
         $cmdpid = $+{pid};
         $cmdppid = $+{ppid};
         $host = $+{host};
+        make_proc($cmdpid, $cmd, "");
+        make_ppid($cmdpid, $cmdppid);
         next;
     }
+
+    #ENVIRONMENT VARIABLES
+    #20546   0.001356 libSDL-1.2.so.0->getenv("SDL_VIDEODRIVER") = nil
+    if($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<prog>\S+)->getenv\d*\(\"(?<name>\S+)\"\)\s+=\s+(?<result>\S+)$/) {
+        make_env($+{pid}, $+{name}, $+{result});
+    }
+    #20546   0.001356 libSDL-1.2.so.0->setenv("SDL_VIDEODRIVER", "testval", 1) = nil
+    elsif($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<prog>\S+)->setenv\d*\(\"(?<name>\S+)\", \"(?<value>(\S+\s*)*)\", \d+\)\s+=\s+(?<result>\S+)$/) {
+        make_env($+{pid}, $+{name}, $+{value});
+    }
+    #20546   0.001356 libSDL-1.2.so.0->unsetenv("SDL_VIDEODRIVER") = nil
+    elsif($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<prog>\S+)->unsetenv\d*\(\"(?<name>\S+)\"\)\s+=\s+(?<result>\S+)$/) {
+        make_env($+{pid}, $+{name}, $+{result});
+    }
+
+    #FILES
     #16226   0.000550 fscheck->open("in.dat", 0, 00)  = 3
-    elsif($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<prog>\S+)->open\d*\(\"(?<file>\S+)\", \d+, \d+\)\s+=\s+(?<result>\S+)$/) {
-        my $failure = 0;
-        if($+{result} == -1) { $failure = 1; }
-        make_record($+{pid}, $+{access}, $+{prog}, $+{file}, $+{result}, $failure);
-        next;
+    if($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<prog>\S+)->open\d*\(\"(?<file>\S+)\", \d+, \d+\)\s+=\s+(?<result>\S+)$/) {
+        make_file($+{pid}, $+{access}, $+{prog}, $+{file}, $+{result});
     }
     #3111   0.000672 libpython2.7.so.1.0->fopen64("test.txt", "a+")  = 0x8b22a0
     elsif($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<prog>\S+)->fopen\d*\(\"(?<file>\S+)\", \S+\)\s+=\s+(?<result>\S+)$/) {
-        my $failure = 0;
-        if($+{result} == 0) { $failure = 1; }
-        make_record($+{pid}, $+{access}, $+{prog}, $+{file}, $+{result}, $failure);
-        next;
+        make_file($+{pid}, $+{access}, $+{prog}, $+{file}, $+{result});
     }
     #12396   0.000368 fscheck->__xstat(1, "/disk/", 0x7ffd931d20d0) = 0
     elsif($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<prog>\S+)->__xstat\(\d+, \"(?<file>\S+)\", \S+\)\s+=\s+(?<result>\S+)$/) {
-        my $failure = 0;
-        if($+{result} == -1) { $failure = 1; }
-        make_record($+{pid}, $+{access}, $+{prog}, $+{file}, $+{result}, $failure);
-        next;
+        make_file($+{pid}, $+{access}, $+{prog}, $+{file}, $+{result});
+    }
+
+    #PROCESSES
+    #27851   0.000684 sh->fork()    = 27852
+    if($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<call>\S+->fork)\(.*\)\s+=\s+(?<child>\S+)$/ or
+        $line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<call>\S+->clone)\(.*\)\s+=\s+(?<child>\S+)$/) {
+        make_ppid($+{pid}, $+{child});
+    }
+    #31849   0.068299 libpthread.so.0->__clone(0x2b0619359de0, 0x2b061c221d40, 0x3d0f00, 0x2b061c222700) = 0x7c6b
+    elsif($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<call>\S+->__clone)\(.*\)\s+=\s+(?<child>\S+)$/) {
+        make_ppid($+{pid}, hex($+{child}));
+    }
+    #16226   0.000550 fscheck->open("in.dat", 0, 00)  = 3
+    elsif($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+(?<call>\S+)(?<args>\(.*\))\s+=\s+(?<result>\S+)$/) {
+        make_proc($+{pid}, $+{call}, $+{args});
+    }
+    #31988   1.226661 +++ exited (status 0) +++
+    elsif($line =~ m/(?<pid>\d+)\s+(?<access>\S+)\s+\+\+\+\s+exited\s+\(status\s+(?<exited>\S+)\)\s+\+\+\+$/) {
+        make_exit($+{pid}, $+{exited});
     }
 }
 
 foreach my $file (keys(%files)) {
-    $files{$file}{hash} = md5_hex($host, $files{$file}{pids}, $file);
     my %r = %{$files{$file}};
-    print(STDOUT "INSERT OR REPLACE INTO file (hash, path, failures, host, log, system) VALUES ('$r{hash}', '$r{path}', $r{failures}, '$host', '$log', '$app');\n");
+    my $json = make_json(%r);
+    print(STDOUT "$json\n");
+}
+foreach my $proc (keys(%processes)) {
+    if(!$processes{$proc}{ppid}) { $processes{$proc}{ppid} = $cmdpid; }
+    my %r = %{$processes{$proc}};
+    my $json = make_json(%r);
+    print(STDOUT "$json\n");
+}
+print(STDOUT "\n\n");
+foreach my $env (keys(%env_vars)) {
+    my %r = %{$env_vars{$env}};
+    my $json = make_json(%r);
+    print(STDOUT "$json\n");
 }
 
-my @linktypes = ("process");
-foreach my $linktype (@linktypes) {
-    my @tabname = ("file", $linktype);
-    @tabname = sort({ $a cmp $b } @tabname);
-    my $table = "$tabname[0]_$tabname[1]";
-    foreach my $file (keys(%files)) {
-        my $t1 = "file";
-        my $hash = $files{$file}{hash};
-        my $t2 = "$linktype";
-        my $insert;
-        if($linktype eq "process") {
-            my @pids = uniq(split(',', $files{$file}{pids}));
-            foreach my $pid (@pids) {
-                print(STDOUT "INSERT OR REPLACE INTO $table (file_hash, $linktype\_hash, host) SELECT $t1.hash AS file_hash, $t2.hash AS $linktype\_hash, $t1.host FROM $t1 JOIN $t2 ON $t1.log = $t2.log WHERE $t1.hash = '$hash' AND $t2.pid = $pid AND $t2.system = '$app';\n");
-            }
-        }
-    }
+sub make_json {
+    my (%record) = @_;
+    return JSON->new->utf8->encode(\%record);
 }
 
-sub make_record {
-    my ($pid, $access, $prog, $file, $result, $failure) = @_;
+sub make_env {
+    my ($pid, $name, $value) = @_;
+    if(exists $env_vars{$name}{pids}) { $env_vars{$name}{pids} = $env_vars{$name}{pids} . ',' . $pid; }
+    else { $env_vars{$name}{pids} = $pid; }
+    if(exists $env_vars{$name}{values} and $value) { $env_vars{$name}{values} = $env_vars{$name}{values} . ', ' . $value; }
+    elsif($value) { $env_vars{$name}{values} = $value; }
+    if(exists $env_vars{$name}{accesses}) { $env_vars{$name}{accesses}++; }
+    else { $env_vars{$name}{accesses} = 1; }
+    $env_vars{$name}{name} = $name;
+    return 0;
+}
+
+sub make_file {
+    my ($pid, $access, $prog, $file, $result) = @_;
     if(exists $files{$file}{pids}) { $files{$file}{pids} = $files{$file}{pids} . ',' . $pid; }
     else { $files{$file}{pids} = $pid; }
-    if(exists $files{$file}{failures} and $failure) { $files{$file}{failures}++; }
-    elsif($failure) { $files{$file}{failures} = $failure; }
-    else { $files{$file}{failures} = 0; }
-    $files{$file}{access} = $access;
-    $files{$file}{prog} = $prog;
+    if(exists $files{$file}{accesses}) { $files{$file}{accesses}++; }
+    else { $files{$file}{accesses} = 1; }
     $files{$file}{path} = $file;
-    $files{$file}{result} = $result;
-    $files{$file}{system} = $app;
+    return 0;
+}
+
+sub make_ppid {
+    my ($pid, $child) = @_;
+    if(!exists $processes{$child}) {
+        $processes{$child}{pid} = $child;
+    }
+    $processes{$child}{ppid} = $pid;
+    return 0;
+}
+
+sub make_exit {
+    my ($pid, $exited) = @_;
+    if(!exists $processes{$pid}) {
+        $processes{$pid}{pid} = $pid;
+        $processes{$pid}{ppid} = $cmdpid;
+    }
+    $processes{$pid}{exited} = $exited;
+    return 0;
+}
+
+sub make_proc {
+    my ($pid, $call, $args) = @_;
+    if(!exists $processes{$pid}) {
+        $processes{$pid}{pid} = $pid;
+        $processes{$pid}{ppid} = $cmdpid;
+    }
+    if($args and $call =~ m/\S*open\S*/ and $args =~ m/(?<file>\"\S+\")/) {
+        if(exists $processes{$pid}{files}) { $processes{$pid}{files} = $processes{$pid}{files} . ',' . $+{file}; }
+        else { $processes{$pid}{files} = $+{file}; }
+    }
+    elsif($args and $call =~ m/\S*env\S*/ and $args =~ m/(?<env>\"\S+\")/) {
+        if(exists $processes{$pid}{envs}) { $processes{$pid}{envs} = $processes{$pid}{envs} . ',' . $+{env}; }
+        else { $processes{$pid}{envs} = $+{env}; }
+    }
+    if(!exists $processes{$pid}{files}) { $processes{$pid}{files} = ""; } 
     return 0;
 }
 
