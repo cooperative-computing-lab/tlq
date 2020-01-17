@@ -20,18 +20,18 @@ if(@ARGV != 1) {
     exit 1;
 }
 my ($log) = @ARGV;
-my (%env_vars, %files, %processes);
-my ($cmd, $component, $host, $cmdpid, $cmdppid);
+my (%component, %env_vars, %files, %processes);
+my ($cmd, $uuid, $host, $cmdpid, $cmdppid);
 my $deposit = "/tmp/tlq/deposit-log";
-open(DEPOSIT, $deposit);
+open(DEPOSIT, $deposit) or die "Could not open $deposit for component lookup. Exiting.\n";
 while(my $line = <DEPOSIT>) {
     if($line =~ m/(?<sys>\S+) (?<comp>\S+) (?<path>\S+) (?<types>\S+) (?<logid>\S+)$/) {
         if($log = $+{path}) {
-            $component = $+{comp};
+            $uuid = $+{comp};
             last;
         }
     }
-    if(!$component) {
+    if(!$uuid) {
         print(STDERR "Could not find component matching given log $log, exiting.\n");
         exit(1);
     }
@@ -39,14 +39,15 @@ while(my $line = <DEPOSIT>) {
 close(DEPOSIT);
 open(LOG, $log) or die "Could not open specified log file.\n";
 while(my $line = <LOG>) {
-    #Wrote an ltrace for command: "dd if=in.dat of=out.dat bs=4096 count=2500" with PID 12539 from PPID 12538
-    if($line =~ m/Wrote an ltrace for command: \"(?<cmd>.*)\" with PID (?<pid>\d+) from PPID (?<ppid>\d+) on (?<host>\S+)$/) {
+    #Wrote an ltrace for command: "dd if=in.dat of=out.dat bs=4096 count=2500" with PID 12539 from PPID 12538 with result 0
+    if($line =~ m/Wrote an ltrace for command: \"(?<cmd>.*)\" with PID (?<pid>\d+) from PPID (?<ppid>\d+) on (?<host>\S+) with result (?<exited>\S+)$/) {
         $cmd = $+{cmd};
         $cmdpid = $+{pid};
         $cmdppid = $+{ppid};
         $host = $+{host};
         make_proc($cmdpid, $cmd, "");
         make_ppid($cmdpid, $cmdppid);
+        make_component($uuid);
         next;
     }
 
@@ -109,16 +110,26 @@ foreach my $proc (keys(%processes)) {
     my $json = make_json(%r);
     print(STDOUT "$json\n");
 }
-print(STDOUT "\n\n");
 foreach my $env (keys(%env_vars)) {
     my %r = %{$env_vars{$env}};
     my $json = make_json(%r);
     print(STDOUT "$json\n");
 }
+my $json = make_json(%component);
+print(STDOUT "$json\n");
 
 sub make_json {
     my (%record) = @_;
     return JSON->new->utf8->encode(\%record);
+}
+
+sub make_component {
+    my ($id) = @_;
+    $component{command} = $cmd;
+    $component{uuid} = $id;
+    $component{log} = $log;
+    $component{host} = $host;
+    return 0;
 }
 
 sub make_env {
