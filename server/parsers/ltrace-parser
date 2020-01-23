@@ -2,41 +2,26 @@
 
 use strict;
 use DateTime;
-use Digest::MD5 qw(md5_hex);
 use JSON;
 use List::MoreUtils qw(uniq);
 my $usage = "Log Parser for ltrace Options:
 
 Required:
     <log>	    Sets the path to the log file.
+    <uuid>          Sets the component UUID for the log.
 
 Example Usage:
-    ltrace-parser ltrace.log
+    ltrace-parser ltrace.log ABC-123
 
 ";
 
-if(@ARGV != 1) {
+if(@ARGV != 2) {
     print(STDERR $usage);
     exit 1;
 }
-my ($log) = @ARGV;
+my ($log, $uuid) = @ARGV;
 my (%component, %env_vars, %files, %processes);
-my ($cmd, $uuid, $host, $cmdpid, $cmdppid);
-my $deposit = "/tmp/tlq/deposit-log";
-open(DEPOSIT, $deposit) or die "Could not open $deposit for component lookup. Exiting.\n";
-while(my $line = <DEPOSIT>) {
-    if($line =~ m/(?<sys>\S+) (?<comp>\S+) (?<path>\S+) (?<types>\S+) (?<logid>\S+)$/) {
-        if($log = $+{path}) {
-            $uuid = $+{comp};
-            last;
-        }
-    }
-    if(!$uuid) {
-        print(STDERR "Could not find component matching given log $log, exiting.\n");
-        exit(1);
-    }
-}
-close(DEPOSIT);
+my ($cmd, $host, $cmdpid, $cmdppid);
 open(LOG, $log) or die "Could not open specified log file.\n";
 while(my $line = <LOG>) {
     #Wrote an ltrace for command: "dd if=in.dat of=out.dat bs=4096 count=2500" with PID 12539 from PPID 12538 with result 0
@@ -125,10 +110,12 @@ sub make_json {
 
 sub make_component {
     my ($id) = @_;
+    $component{type} = "component";
     $component{command} = $cmd;
     $component{uuid} = $id;
     $component{log} = $log;
     $component{host} = $host;
+    $component{pid} = $cmdpid;
     return 0;
 }
 
@@ -141,6 +128,7 @@ sub make_env {
     if(exists $env_vars{$name}{accesses}) { $env_vars{$name}{accesses}++; }
     else { $env_vars{$name}{accesses} = 1; }
     $env_vars{$name}{name} = $name;
+    $env_vars{$name}{type} = "environment-variable";
     return 0;
 }
 
@@ -151,24 +139,20 @@ sub make_file {
     if(exists $files{$file}{accesses}) { $files{$file}{accesses}++; }
     else { $files{$file}{accesses} = 1; }
     $files{$file}{path} = $file;
+    $files{$file}{type} = "file";
     return 0;
 }
 
 sub make_ppid {
     my ($pid, $child) = @_;
-    if(!exists $processes{$child}) {
-        $processes{$child}{pid} = $child;
-    }
+    if(!exists $processes{$child}) { make_proc($child); }
     $processes{$child}{ppid} = $pid;
     return 0;
 }
 
 sub make_exit {
     my ($pid, $exited) = @_;
-    if(!exists $processes{$pid}) {
-        $processes{$pid}{pid} = $pid;
-        $processes{$pid}{ppid} = $cmdpid;
-    }
+    if(!exists $processes{$pid}) { make_proc($pid); }
     $processes{$pid}{exited} = $exited;
     return 0;
 }
@@ -178,6 +162,7 @@ sub make_proc {
     if(!exists $processes{$pid}) {
         $processes{$pid}{pid} = $pid;
         $processes{$pid}{ppid} = $cmdpid;
+        $processes{$pid}{type} = "process";
     }
     if($args and $call =~ m/\S*open\S*/ and $args =~ m/(?<file>\"\S+\")/) {
         if(exists $processes{$pid}{files}) { $processes{$pid}{files} = $processes{$pid}{files} . ',' . $+{file}; }

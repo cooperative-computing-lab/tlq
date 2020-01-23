@@ -79,24 +79,21 @@ use strict;
     }
 
     sub check_deposit {
-        my ($printmode) = @_;
         open(DEPOSIT, "$dir/deposit-log");
         while(my $line = <DEPOSIT>) {
             chomp($line);
             my @parts = split(' ', $line);
-            my ($sys, $component, $log, $type, $hash) = @parts;
+            my ($component, $log, $type, $hash) = @parts;
             if(exists($logs{$hash})) { next; }
             $logs{$hash} = {};
-            $logs{$hash}{suuid} = $sys;
             $logs{$hash}{path} = $log;
             $logs{$hash}{type} = $type;
-            $logs{$hash}{cuuid} = $component;
+            $logs{$hash}{uuid} = $component;
             if(!exists $components{$component}) {
                 $components{$component} = {};
                 $components{$component}{files} = $hash;
             }
             else { $components{$component}{files} = $components{$component}{files} . " $hash"; }
-            if($printmode) { submit_lookup($sys, $log, $type, $hash); }
         }
         close(DEPOSIT);
     }
@@ -196,50 +193,21 @@ use strict;
         return 0;
     }
 
-    sub parse_type {
+    sub parse_logs {
         my ($type) = @_;
         my $parser = $parsers{$type}{path};
         my $interpreter = $parsers{$type}{interpreter};
         my @toparse;
-        foreach my $log (keys(%logs)) { if($logs{$log}{types} =~ m/$type/ and ($logs{$log}{size} < -s $logs{$log}{path})) { push(@toparse, $logs{$log}{path}); } }
+        foreach my $log (keys(%logs)) { if($logs{$log}{type} =~ m/$type/ and ($logs{$log}{size} < -s $logs{$log}{path})) { push(@toparse, $logs{$log}{path}); } }
         foreach my $log (@toparse) {
-            my $parsed = parse_file($log, $parser, $interpreter);
-            my $queryfile = "$dir/deposit-queries";
-            while(!$$sem) { sleep(1); }
+            my $component = $logs{$log}{uuid};
+            my $parsed = `$interpreter $parser $log $component`;
+            my $queryfile = "$dir/$component.json";
             open(QUERIES, ">>", $queryfile);
             print(QUERIES $parsed);
             close(QUERIES);
         }
         return 0;
-    }
-
-    sub parse_file {
-        my ($file, $parser, $interpreter) = @_;
-        my $parsed = "";
-        foreach my $log (keys(%logs)) {
-            if($logs{$log}{path} eq $file) {
-                my $f = $logs{$log}{path};
-                my $sys = $logs{$log}{sys};
-                $parsed = `$interpreter $parser $f $sys`;
-            }
-        }
-        return $parsed;
-    }
-
-    sub update_db {
-        my $queryfile = "$dir/deposit-queries";
-        $sem->down();
-        my @outstanding;
-        open(QUERIES, $queryfile);
-        while(my $line = <QUERIES>) { chomp($line); push(@outstanding, $line); }
-        close(QUERIES);
-        foreach my $query (@outstanding) {
-            add_table($query);
-            my $dbcall = $db->prepare($query);
-            $dbcall->execute;
-        }
-        unlink($queryfile);
-        $sem->up();
     }
 
     #TODO Match field names to retrieved values
@@ -278,8 +246,8 @@ use strict;
         my $flag = 1;
         check_parsers();
         while($flag) {
-            check_deposit(1);
-            foreach my $type (keys(%parsers)) { parse_type($type); }
+            check_deposit();
+            foreach my $type (keys(%parsers)) { parse_logs($type); }
             foreach my $log (keys(%logs)) { $logs{$log}{size} = -s $logs{$log}{path}; }
             sleep(10);
         }
@@ -297,22 +265,13 @@ use strict;
         return $query{query};
     }
 
-    sub submit_lookup {
-        my ($sys, $log, $types, $hash) = @_;
-        open(LOOKUP, ">>", "$dir/lookup-log");
-        print(LOOKUP "$sys $log $types $hash\n");
-        close(LOOKUP);
-        return 0;
-    }
-
     sub handle_request {
         my ($self, $cgi) = @_;
         my $path = $cgi->path_info();
         if($path =~ m/components/) { $path = "/components"; }
         my $handler = $dispatch{$path};
-        check_deposit(0);
+        check_deposit();
         check_parsers();
-        update_db();
         if(ref($handler) eq "CODE") { $handler->($cgi); }
         else {
             print(STDOUT "HTTP/1.0 404 Not found\n");
