@@ -107,8 +107,8 @@ if($err) {
 }
 
 my $host = hostname();
-my $server = WebServer->new(11855);
-print(STDOUT "Server established at $host:11855.\n\n");
+my $server = WebServer->new(11871);
+print(STDOUT "Server established at $host:11871.\n\n");
 $server->run();
 exit(0);
 
