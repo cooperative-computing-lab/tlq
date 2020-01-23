@@ -55,5 +55,5 @@ deposit="Component $cid created log(s) [${logs[*]}] with command $cmd queryable 
 curl --data-urlencode "DEPOSIT=$deposit" http://$home/deposit > /dev/null
 echo $deposit
 
-result=exec $cmd
-exit $result
+$cmd
+exit $?
