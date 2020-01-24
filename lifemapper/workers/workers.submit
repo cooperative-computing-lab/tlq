@@ -1,0 +1,20 @@
+universe = vanilla
+executable = /usr/bin/sh
+arguments = log-define disc01.crc.nd.edu 11871 lifemapper /tmp/tlq/worker.$(PROCESS).debug work-queue-worker -- work_queue_worker --cores $$([TARGET.Cpus]) --memory $$([TARGET.Memory]) --disk $$([TARGET.Disk/1024])  -M wq-trace -d all -o /tmp/tlq/worker.$(PROCESS).debug --debug-rotate-max 0 -t 900 
+transfer_input_files = work_queue_worker, cctools_gpu_autodetect, log-define
+should_transfer_files = yes
+when_to_transfer_output = on_exit
+output = worker.$(PROCESS).output
+error = worker.$(PROCESS).error
+log = workers.log
++JobMaxSuspendTime = 0
+
+# Some programs assume some variables are set, like HOME, so we export the
+# environment variables with the job.  Comment the next line if you do not want
+# the environment exported.
+getenv = true
+requirements =  MachineGroup == "DISC" && (MachineShortName == "disc17" || MachineShortName == "disc18" || MachineShortName == "disc19" || MachineShortName == "disc20" || MachineShortName == "disc21" || MachineShortName == "disc22" || MachineShortName == "disc23" || MachineShortName == "disc24" || MachineShortName == "disc25" || MachineShortName == "disc26")
+request_cpus = 1
+request_memory = 2048
+request_disk = 1048576
+queue 15
