@@ -25,14 +25,23 @@ if(@ARGV != 2) {
 }
 my ($log, $uuid) = @ARGV;
 
+my %component;
+$component{command} = "work_queue_worker ...";
+$component{log} = $log;
+$component{pid} = "COULD NOT SET";
+$component{type} = "component";
+$component{uuid} = $uuid;
+
 my %worker;
 $worker{failures} = 0;
 $worker{files};
+$worker{type} = "worker";
 
 open(LOG, $log);
 while(my $line = <LOG>) {
     #wq: connected to master 10.32.74.140:9000 via local address 10.32.74.164:36500
     if($line =~ m/wq: connected to master (?<master>\S+) via local address (?<ip>\S+):(?<port>\d+)/) {
+        $component{host} = $+{ip};
         $worker{master} = $+{master};
         $worker{ip} = $+{ip};
         $worker{port} = $+{port};
