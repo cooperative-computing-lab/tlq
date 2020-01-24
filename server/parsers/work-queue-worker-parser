@@ -1,0 +1,82 @@
+#! /usr/bin/env perl
+
+use 5.10.0;
+use DateTime;
+use Error qw(:try);
+use Error::Simple;
+use Getopt::Long qw(:config no_ignore_case);
+use JSON;
+use strict;
+
+my $usage = "Work Queue Workers Record Type Log Parser Options:
+
+Required:
+    <log>	    Sets the path to the log file.
+    <uuid>          Sets the component UUID for the log.
+
+Example Usage:
+    work-queue-worker-parser worker.debug ABC-123
+
+";
+
+if(@ARGV != 2) {
+    print(STDERR $usage);
+    exit 1;
+}
+my ($log, $uuid) = @ARGV;
+
+my %worker;
+$worker{failures} = 0;
+$worker{files};
+
+open(LOG, $log);
+while(my $line = <LOG>) {
+    #wq: connected to master 10.32.74.140:9000 via local address 10.32.74.164:36500
+    if($line =~ m/wq: connected to master (?<master>\S+) via local address (?<ip>\S+):(?<port>\d+)/) {
+        $worker{master} = $+{master};
+        $worker{ip} = $+{ip};
+        $worker{port} = $+{port};
+    }
+    #dns: finding my hostname: uname = disc13.crc.nd.edu, address = 10.32.74.164, hostname = disc13.crc.nd.edu
+    elsif($line =~ m/dns: finding my hostname: uname = \S+, address = \S+, hostname = (?<addr>\S+)/) {
+        $worker{address} = $+{addr};
+    }
+    #wq: rx from master: task 10
+    elsif($line =~ m/wq: rx from master: task (?<taskid>\d+)/) {
+        my $task = $+{taskid};
+        $worker{tasks}{$task}{exited} = "COULD NOT SET";
+        #if(exists $worker{tasks}) { $worker{tasks} = $worker{tasks} . ',' . $+{taskid}; }
+        #else { $worker{tasks} = $+{taskid}; }
+    }
+    #wq: task 82 (pid 1110) exited normally with exit code 1
+    elsif($line =~ m/wq: task (?<taskid>\d+) \(pid \d+\) exited \S+ with exit code (?<exited>\d+)/) {
+        my $task = $+{taskid};
+        $worker{tasks}{$task}{exited} = $+{exited};
+    }
+    #wq: could not rename output file /var/condor/execute/dir_20022/worker-213124-20026/t.2/out.dat to cache/file-10-7a6fc525356ac795b582a230c9e31976-out.2.dat: No such file or directory
+    elsif($line =~ m/wq: could not rename output file/) {
+        $worker{failures}++;
+    }
+    #wq: started process 23264: ./ltrace-wrapper ./fscheck runtime.config && sleep 1
+    elsif($line =~ m/wq: started process (?<pid>\d+): (?<command>[^\n]+)/) {
+        #if(exists $worker{pids}) { $worker{pids} = $worker{pids} . ',' . $+{pid}; }
+        #else { $worker{pids} = $+{pid}; }
+    }
+}
+close(LOG);
+
+my $json = make_json(%worker);
+print(STDOUT "$json\n");
+
+exit(0);
+
+sub make_json {
+    my (%record) = @_;
+    return JSON->new->utf8->encode(\%record);
+}
+
+sub print_help {
+    print $usage;
+    exit(1);
+}
+# vim: tabstop=8 shiftwidth=4 softtabstop=4 expandtab shiftround autoindent
