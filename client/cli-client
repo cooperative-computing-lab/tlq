@@ -31,9 +31,14 @@ Example Usage:
 
 my $query_usage = "Query structure: <action> [URI] [options]
 
-Where <action> is one of: ALIAS, EXIT, LIST, QUERY, QUIT
+Where <action> is one of: ALIAS, EXIT, LIST, PRINT, QUERY, QUIT, SEND, SET, UNSET
 
-And [options] is one of: String for action ALIAS or String for action QUERY
+And [options] is one of:
+  ALIAS <URI> <STRING>
+  PRINT <VARIABLE>
+  QUERY <URI/ALIAS> <JSON>
+  SET <VARIABLE> <VALUE>
+  UNSET <VARIABLE>
 ";
 
 my %OPT;
@@ -54,6 +59,7 @@ my $client = 0;
 my $debug = 0;
 my $err = 0;
 my $jx = "";
+my $server = "";
 my $log = $OPT{log};
 my $session = $OPT{session};
 if($err) {
@@ -63,7 +69,8 @@ if($err) {
 
 my %aliases = ();
 my %components = ();
-my $prompt = "Enter Query > ";
+my %variables = ();
+my $prompt = " \$ ";
 my $term = Term::ReadLine->new("tlq");
 $client = LWP::UserAgent->new(
     protocols_allowed => ["http", "https"],
@@ -82,49 +89,55 @@ if($session) {
 print(STDOUT $query_usage);
 while(defined(my $input = $term->readline($prompt))) {
     get_info("deposit-log");
-    if($debug) {
-        if(uc($input) eq "QUIT" or uc($input) eq "EXIT") {
-            $prompt = "Enter Query > ";
-            $debug = 0;
-            $jx = resolve_jx($jx);
-            print_result("JX Resolved to ", $jx);
-            next;
-        }
-        $jx = $jx . $input;
-    }
-    $term->add_history($input) if /\S/;
-    if($session) { print(HISTORY "$input\n"); }
-    if(uc($input) eq "QUIT" or uc($input) eq "EXIT") { exit(0); }
     my @parts = split(' ', $input);
     my $action = uc($parts[0]);
     my $destination = $parts[1];
     my $target = $parts[2];
     my $result = "";
-    if(exists($aliases{$destination})) { $destination = $aliases{$destination}; } 
-    if($action ne "LIST" and $action ne "DEBUG" and !$destination) { print_query_help(); }
-    elsif($action eq "DEBUG") {
-        $debug = 1;
-        $jx = "";
-        $prompt = "JX > ";
+    if($debug) {
+        if($action eq "SEND") {
+            $prompt = " \$ ";
+            $debug = 0;
+            print(STDOUT "$jx\n");
+            if(exists($aliases{$server})) { $server = $aliases{$server}; }
+            $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("QUERY", $server, query_to_json($target)));
+            print_result($target, $result);
+            next;
+        }
+        $jx = $jx . $input;
         next;
     }
+    $term->add_history($input) if /\S/;
+    if($session) { print(HISTORY "$input\n"); }
+    if(uc($input) eq "QUIT" or uc($input) eq "EXIT") { exit(0); } 
+    if($action ne "LIST" and !$destination) { print_query_help(); }
     elsif($action eq "QUERY") {
-        my $index = 3;
-        while($index < scalar(@parts)) {
-            $target = $target . " " . $parts[$index];
-            $index++;
-        }
-        if(!$target) {
+        if(!$destination) {
             print_query_help();
             next;
         }
-        $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request($action, $destination, query_to_json($target)));
-        print_result($target, $result);
+        $server = $destination;
+        $debug = 1;
+        $jx = "";
+        $prompt = " > ";
+        next; 
     }
     elsif($action eq "ALIAS") {
         $aliases{$target} = $destination;
-        print(STDOUT "Please use alias '$target' to access '$destination' URI.\n");
+        print(STDOUT "Please use alias $target to access $destination.\n");
     }
+    elsif($action eq "PRINT") {
+        if(exists $variables{$destination}) {
+            print(STDOUT "$destination = $variables{$destination}\n");
+        }
+    }
+    elsif($action eq "SET") {
+        if($target eq "VALUE") { print(STDERR "Cannot overwrite magic variable VALUE.\n"); }
+        else {
+            $variables{$destination} = $target;
+        }
+    }
+    elsif($action eq "UNSET") { delete($variables{$target}); }
     elsif($action eq "EXIT" or $action eq "QUIT") { $result = request($action, $destination); }
     elsif($action eq "LIST") { $result = list_components(); }
     else { print_query_help(); } 
@@ -178,7 +191,6 @@ sub print_result {
         print(LOG "$input =>\n$result\n");
         close(LOG);
     } 
-    print(STDOUT "$result\n");
 }
 
 sub query_to_json {
@@ -190,24 +202,20 @@ sub query_to_json {
     return $json;
 }
 
-sub resolve_jx {
-    my ($jx) = @_;
-    my $resolved = "";
-    #TODO Resolve JX queries
-    $resolved = "PLACEHOLDER JX RESOLUTION";
-    return $resolved;
-}
-
 sub request {
     my ($action, $destination, $target) = @_;
     my $content = 0;
     my $http = $destination;
     my $response = 0;
-    if($action eq "QUERY") { $content = $target; }
-    elsif($action eq "QUIT" or $action eq "EXIT") { $http = $components{$destination}{host} . "/exit"; }
-    if($action eq "QUIT" or $action eq "EXIT") { $response = $client->get($http); }
-    elsif($action eq "QUERY") { $response = $client->put($http, "Content-Type" => "text/plain", Content => $content); }
-    else { return "Request type '$action' not supported."; }
+    if($action eq "QUERY") {
+        $content = $target;
+        $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
+    }
+    elsif($action eq "QUIT" or $action eq "EXIT") {
+        $http = $components{$destination}{host} . "/exit";
+        $response = $client->get($http);
+    }
+    else { return "Request type $action not supported."; }
     if($response->is_success) { return $response->decoded_content; }
     else { return $response->status_line; }
 }
