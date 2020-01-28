@@ -34,7 +34,6 @@ $component{uuid} = $uuid;
 
 my %worker;
 $worker{failures} = 0;
-$worker{files};
 $worker{type} = "worker";
 
 open(LOG, $log);
@@ -50,6 +49,10 @@ while(my $line = <LOG>) {
     elsif($line =~ m/dns: finding my hostname: uname = \S+, address = \S+, hostname = (?<addr>\S+)/) {
         $worker{address} = $+{addr};
     }
+    #wq: WORK_QUEUE_SANDBOX set to /var/condor/execute/dir_10583/worker-213124-10614.
+    elsif($line =~ m/wq: WORK_QUEUE_SANDBOX set to \S+-\d+-(?<pid>\d+)/) {
+        $component{pid} = $+{pid};
+    }
     #wq: rx from master: task 10
     elsif($line =~ m/wq: rx from master: task (?<taskid>\d+)/) {
         my $task = $+{taskid};
@@ -57,24 +60,30 @@ while(my $line = <LOG>) {
         #if(exists $worker{tasks}) { $worker{tasks} = $worker{tasks} . ',' . $+{taskid}; }
         #else { $worker{tasks} = $+{taskid}; }
     }
+    #wq: started process 23264: ./ltrace-wrapper ./fscheck runtime.config && sleep 1
+    elsif($line =~ m/wq: started process (?<pid>\d+): (?<command>[^\n]+)/) {
+        my $pid = $+{pid};
+        $worker{pids}{$pid}{command} = $+{command};
+    }
     #wq: task 82 (pid 1110) exited normally with exit code 1
-    elsif($line =~ m/wq: task (?<taskid>\d+) \(pid \d+\) exited \S+ with exit code (?<exited>\d+)/) {
+    elsif($line =~ m/wq: task (?<taskid>\d+) \(pid (?<pid>\d+)\) exited \S+ with exit code (?<exited>\d+)/) {
         my $task = $+{taskid};
+        my $pid = $+{pid};
+        $worker{tasks}{$task}{pid} = $pid;
+        $worker{tasks}{$task}{command} = $worker{pids}{$pid}{command};
         $worker{tasks}{$task}{exited} = $+{exited};
     }
     #wq: could not rename output file /var/condor/execute/dir_20022/worker-213124-20026/t.2/out.dat to cache/file-10-7a6fc525356ac795b582a230c9e31976-out.2.dat: No such file or directory
     elsif($line =~ m/wq: could not rename output file/) {
         $worker{failures}++;
-    }
-    #wq: started process 23264: ./ltrace-wrapper ./fscheck runtime.config && sleep 1
-    elsif($line =~ m/wq: started process (?<pid>\d+): (?<command>[^\n]+)/) {
-        #if(exists $worker{pids}) { $worker{pids} = $worker{pids} . ',' . $+{pid}; }
-        #else { $worker{pids} = $+{pid}; }
-    }
+    } 
 }
 close(LOG);
 
+delete($worker{pids});
 my $json = make_json(%worker);
+print(STDOUT "$json\n");
+$json = make_json(%component);
 print(STDOUT "$json\n");
 
 exit(0);
