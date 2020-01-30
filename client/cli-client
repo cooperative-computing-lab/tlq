@@ -3,11 +3,11 @@
 use Data::Dumper;
 use Error qw(:try);
 use Error::Simple;
-use Getopt::Long qw(:config no_ignore_case); #Parse options
+use Getopt::Long qw(:config no_ignore_case);
 use JSON;
-use LWP::UserAgent; #Send requests and receive responses
-use sigtrap qw/handler signal_handler INT TERM/; #Catch SIGINT and SIGTERM
-use Term::ReadLine; #Use a REPL for querying
+use LWP::UserAgent;
+use sigtrap qw/handler signal_handler INT TERM/;
+use Term::ReadLine;
 use URI::Encode;
 
 use strict;
@@ -31,10 +31,11 @@ Example Usage:
 
 my $query_usage = "Query structure: <action> [URI] [options]
 
-Where <action> is one of: ALIAS, EXIT, LIST, PRINT, QUERY, QUIT, SEND, SET, UNSET
+Where <action> is one of: ALIAS, EXIT, LIST, PRINT, QUERY, SET, UNSET
 
 And [options] is one of:
   ALIAS <URI> <STRING>
+  EXIT [URI]
   PRINT <VARIABLE>
   QUERY <URI/ALIAS> <JSON>
   SET <VARIABLE> <VALUE>
@@ -95,18 +96,23 @@ while(defined(my $input = $term->readline($prompt))) {
     my $target = $parts[2];
     my $result = "";
     if($debug) {
-        if($action eq "SEND") {
+        if($action eq "") {
             $prompt = " \$ ";
             $debug = 0;
-            print(STDOUT "$jx\n");
+            $jx = expand_jx($jx);
+            my $json = eval { JSON->new->decode($jx) };
+            if($@) { print(STDERR "Encountered improper JSON: $@"); }
             if(exists($aliases{$server})) { $server = $aliases{$server}; }
-            $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("QUERY", $server, query_to_json($target)));
-            print_result($target, $result);
+            $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("QUERY", $server, query_to_json($jx)));
+            print(STDOUT "$result\n");
+            print_result("QUERY $jx", $result);
             next;
         }
         $jx = $jx . $input;
         next;
     }
+    $input = uc($action) . " $destination $target";
+    $input =~ s/\s+$//;
     $term->add_history($input) if /\S/;
     if($session) { print(HISTORY "$input\n"); }
     if(uc($input) eq "QUIT" or uc($input) eq "EXIT") { exit(0); } 
@@ -132,12 +138,20 @@ while(defined(my $input = $term->readline($prompt))) {
         }
     }
     elsif($action eq "SET") {
-        if($target eq "VALUE") { print(STDERR "Cannot overwrite magic variable VALUE.\n"); }
+        if($target eq "VALUE" or $target eq "KEY") {
+            my $err = "Cannot overwrite magic variable $target.\n";
+            print(STDERR $err);
+            $result = $err;
+        }
         else {
             $variables{$destination} = $target;
+            $result = "Set variable $destination = $target.\n";
         }
     }
-    elsif($action eq "UNSET") { delete($variables{$target}); }
+    elsif($action eq "UNSET") {
+        delete($variables{$target});
+        $result = "Unset variable $target.\n";
+    }
     elsif($action eq "EXIT" or $action eq "QUIT") { $result = request($action, $destination); }
     elsif($action eq "LIST") { $result = list_components(); }
     else { print_query_help(); } 
@@ -146,6 +160,21 @@ while(defined(my $input = $term->readline($prompt))) {
 
 if($session) { close(HISTORY); }
 exit(0);
+
+sub expand_jx {
+    my ($jx) = @_;
+    my $expanded = "";
+    my @parts = split('\n', $jx);
+    foreach my $p (@parts) {
+        foreach my $v (keys(%variables)) {
+            if($p =~ m/^(?<pre>.*)$v(?<post>.*)$/) {
+                $p = $+{pre} . $variables{$v} . $+{post};
+            }
+        }
+        $expanded = $expanded . $p;
+    }
+    return $expanded;
+}
 
 sub get_info {
     my ($file) = @_;
@@ -190,7 +219,7 @@ sub print_result {
         open(LOG, ">>", $log) or die "Could not open $log for log writing.\n";
         print(LOG "$input =>\n$result\n");
         close(LOG);
-    } 
+    }
 }
 
 sub query_to_json {
