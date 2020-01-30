@@ -13,9 +13,6 @@ use strict;
 {
     package WebServer;
     use Data::Dumper;
-    use DBD::SQLite;
-    #use DBD::Pg;
-    use DBI;
     use File::Basename;
     use HTTP::Server::Simple::CGI;
     use JSON;
@@ -25,8 +22,6 @@ use strict;
     use URI::Encode;
     use base qw(HTTP::Server::Simple::CGI);
 
-    my $database = "dbi:SQLite:dbname=:memory:";
-    my $db = DBI->connect($database);
     my $dir = "/tmp/tlq";
     if(!(-e $dir)) { mkdir($dir); }
     else {
@@ -51,32 +46,14 @@ use strict;
     my $log_thread = threads->create("watch_logs");
     $log_thread->detach();
     my %dispatch = (
-        "/backup" => \&backup_db,
         "/components" => \&component_query,
         "/exit" => \&cleanup,
         "/files" => \&send_file,
-        "/query" => \&execute_query
     );
     my %components;
     my %logs;
     my %parsers;
     my %tables;
-
-    sub add_table {
-        my ($cmd) = @_;
-        if($cmd =~ m/CREATE TABLE\s?(IF NOT EXISTS)? (?<table>\S+) \((?<columns>[^\)]+)\);/) {
-            my $table = $+{table};
-            $tables{$table} = 1;
-        }
-        return 0;
-    }
-
-    sub backup_db {
-        my ($cgi) = @_;
-        my $backup = $cgi->url_param("file");
-        $db->sqlite_backup_to_file($backup);
-        return send_file($cgi);
-    }
 
     sub check_deposit {
         open(DEPOSIT, "$dir/deposit-log");
@@ -157,15 +134,52 @@ use strict;
         if(!$file) { @files = component_get_files($component); }
         else { push(@files, $file); }
         my $query = query_from_json($cgi->param("PUTDATA"));
-        #TODO Query execution
-        #my $json = execute_query($query);
-        my $json = "TEST";
+        my $json = "";
+        foreach my $f (@files) {
+            my $manifest = $logs{$f}{json};
+            my $result = execute_json_query($query, $manifest);
+            if($result) { $json = $json . "$result\n"; }
+        }
         print(STDOUT "HTTP/1.0 200 OK\n");
         print(STDOUT $cgi->header);
         print(STDOUT $cgi->start_html("Record(s) retrieved."));
         print(STDOUT "$json from query $query");
         print(STDOUT $cgi->end_html);
         return 0;
+    }
+
+    sub execute_json_query {
+        my ($query, $manifest) = @_;
+        my $result;
+        my $json = "";
+        open(MANIFEST, $manifest);
+        while(my $line = <MANIFEST>) { $json = $json . $line; }
+        close(MANIFEST);
+        $json = JSON->new->encode($json);
+        my %obj = %$json;
+        $json = JSON->new->encode($query);
+        my %qobj = %$json;
+        my %final;
+        my $allflag = 0;
+        foreach my $q (keys(%qobj)) {
+            if($q eq "KEY" and $qobj{$q} eq "VALUE") { $allflag = 1; }
+            elsif(exists $obj{$q} and $qobj{$q} eq "VALUE") {
+                $final{$q} = $obj{$q};
+            }
+            elsif(exists $obj{$q} and $obj{$q} != $qobj{$q}) {
+                return 0;
+            }
+            elsif(exists $obj{$q} and $obj{$q} == $qobj{$q}) { 
+                $final{$q} = $obj{$q};
+            } 
+        }
+        if($allflag) {
+            foreach my $o (keys(%obj)) {
+                if(!exists $final{$o}) { $final{$o} = $obj{$o}; }
+            }
+        }
+        if(scalar(keys(%final))) { $result = JSON->new->encode(\%final); }
+        return $result;
     }
 
     sub send_file {
@@ -203,43 +217,12 @@ use strict;
             my $component = $logs{$log}{uuid};
             my $parsed = `$interpreter $parser $log $component`;
             my $queryfile = "$dir/$component.json";
+            $logs{$log}{json} = $queryfile;
             open(QUERIES, ">>", $queryfile);
             print(QUERIES $parsed);
             close(QUERIES);
         }
         return 0;
-    }
-
-    #TODO Match field names to retrieved values
-    sub execute_query {
-        my ($query) = @_;
-        my $mode = 0;
-        my $result = "";
-        print(STDERR "Got query: $query\n");
-        my @contents = split(' ', $query);
-        if($contents[0] eq "INSERT" or $contents[0] eq "UPDATE" or $contents[0] eq "CREATE") { $mode = 1; }
-        if($query =~ m/CREATE TABLE/) { add_table($query); }
-        my $dbcall;
-        if($mode) { $dbcall = $db->do($query); }
-        else { 
-            $dbcall = $db->prepare($query);
-            $dbcall->execute;
-            my @fieldnames = @{ $dbcall->{NAME} };
-            my $fields = join(" TEXT, ", @fieldnames);
-            $fields = $fields . " TEXT";
-            my $insfields = join(", ", @fieldnames);
-            $result = $result . "CREATE TABLE IF NOT EXISTS result (ID INTEGER PRIMARY KEY AUTOINCREMENT, $fields);\n";
-            while(my @row = $dbcall->fetchrow_array) {
-                my $r = join(', ', map { "'$_'" } @row);
-                $result = $result . "INSERT OR REPLACE INTO result ($insfields) VALUES ($r);\n";
-            }
-            chomp($result);
-        }
-        my %response;
-        $response{result} = $result;
-        my $json = JSON->new->encode(\%response);
-        $json = URI::Encode->new( { encode_reserved => 0 } )->encode($json);
-        return $json;
     }
 
     sub watch_logs {
