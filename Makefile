@@ -36,12 +36,9 @@ $(PERLS):
 	cpan install Term::ReadLine || true >> $(PERLS) 2>&1
 	cpan install Term::ReadLine::Gnu || true >> $(PERLS) 2>&1
 	cpan install Sys::Hostname || true >> $(PERLS) 2>&1
-	cpan install DBI || true >> $(PERLS) 2>&1
-	cpan install DBD::SQLite || true >> $(PERLS) 2>&1
 	cpan install HTTP::Server::Simple::CGI || true >> $(PERLS) 2>&1
 	cpan install Digest::MD5 || true >> $(PERLS) 2>&1
 	cpan install File::Basename || true >> $(PERLS) 2>&1
-	cpan install Thread::Semaphore || true >> $(PERLS) 2>&1
 
 
 $(SHAREDFS):
