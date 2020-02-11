@@ -74,8 +74,8 @@ $client = LWP::UserAgent->new(
 );
 $client->env_proxy;
 if($session) {
-    open(HISTORY, ">>", "cli-session") or die "Could not open session log for writing.\n";
-    open(READHIST, "cli-session");
+    open(HISTORY, ">>", "session.log") or die "Could not open session log for writing.\n";
+    open(READHIST, "session.log");
     while(my $line = <READHIST>) {
         chomp($line);
         $term->add_history($line);

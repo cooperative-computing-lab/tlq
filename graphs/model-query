@@ -1,0 +1,68 @@
+#! /usr/bin/env perl
+
+use Error qw(:try);
+use Error::Simple;
+use Getopt::Long qw(:config no_ignore_case);
+use strict;
+
+my $usage = "Query Cost Modeling Options:
+
+Required:
+
+Optional:
+    --logsize,-l    <integer>   Set size of logs (in MB).
+    --netspeed,-n   <integer>   Set the transfer speed (in MB/s).
+
+    --help                  Display this message.
+
+Example Usage:
+
+    perl model-query --netspeed 100 --logsize 1000
+
+";
+
+my %OPT;
+try {
+    GetOptions(
+        "logsize=s" => \$OPT{logsize},
+        "netspeed=s" => \$OPT{netspeed},
+        "help|?" => sub { print $usage; exit(0); },
+    );
+}
+catch Error::Simple with {
+    my $E = shift;
+    print STDERR $E->{-text};
+    die "Failed to parse command line options.\n";
+};
+
+my $logsize = $OPT{logsize};
+my $netspeed = $OPT{netspeed};
+if(!$logsize) { $logsize = 1000; }
+if(!$netspeed) { $netspeed = 100; }
+my $netcost = 1;
+my $readspeed = 100;
+my $logcount = 10000;
+my $resultsize = 10;
+
+my $totaltransfer = 0;
+my $totalquery = 0;
+my $totaltime = 0;
+my $totalsize = 0;
+
+my $i = 0;
+while($i < $logcount) {
+    $totalsize += $logsize;
+    $totaltransfer += $netcost + ($logsize / $netspeed) + ($logsize / $readspeed);
+    $totalquery += (2 * $netcost) + ($logsize / $readspeed) + ($resultsize / $netspeed);
+    $i++;
+    print(STDOUT "$i $totalsize $totaltransfer $totalquery\n");
+}
+
+exit(0);
+
+sub print_help {
+    print(STDERR $usage);
+    exit(1);
+}
+
+# vim: tabstop=8 shiftwidth=4 softtabstop=4 expandtab shiftround autoindent
