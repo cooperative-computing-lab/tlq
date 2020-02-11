@@ -136,7 +136,7 @@ use strict;
         my $query = query_from_json($cgi->param("PUTDATA"));
         my $json = "";
         foreach my $f (@files) {
-            my $manifest = $logs{$f}{json};
+            my $manifest = "$dir/$component.json";
             my $result = execute_json_query($query, $manifest);
             if($result) { $json = $json . "$result\n"; }
         }
@@ -151,40 +151,17 @@ use strict;
     sub execute_json_query {
         my ($query, $manifest) = @_;
         my $result;
-        my $json = "";
-        open(MANIFEST, $manifest);
-        while(my $line = <MANIFEST>) { $json = $json . $line; }
-        close(MANIFEST);
-        $json = JSON->new->encode($json);
-        my %obj = %$json;
-        $json = JSON->new->encode($query);
-        my %qobj = %$json;
         my %final;
-        my $allflag = 0;
-        foreach my $q (keys(%qobj)) {
-            if($q eq "KEY" and $qobj{$q} eq "VALUE") { $allflag = 1; }
-            elsif(exists $obj{$q} and $qobj{$q} eq "VALUE") {
-                $final{$q} = $obj{$q};
-            }
-            elsif(exists $obj{$q} and $obj{$q} != $qobj{$q}) {
-                return 0;
-            }
-            elsif(exists $obj{$q} and $obj{$q} == $qobj{$q}) { 
-                $final{$q} = $obj{$q};
-            } 
-        }
-        if($allflag) {
-            foreach my $o (keys(%obj)) {
-                if(!exists $final{$o}) { $final{$o} = $obj{$o}; }
-            }
-        }
+        $final{query} = $query;
+        $final{log} = $manifest;
+        $final{result} = `$query`;
         if(scalar(keys(%final))) { $result = JSON->new->encode(\%final); }
         return $result;
     }
 
     sub send_file {
         my ($cgi) = @_;
-        my $file = $cgi->url_param("file");
+        my $file = query_from_json($cgi->param("PUTDATA"));
         if(check_file($file)) {
             print(STDOUT "HTTP/1.0 500 Internal server error\n");
             print(STDOUT $cgi->header);
@@ -215,6 +192,7 @@ use strict;
         foreach my $log (keys(%logs)) { if($logs{$log}{type} =~ m/$type/ and ($logs{$log}{size} < -s $logs{$log}{path})) { push(@toparse, $logs{$log}{path}); } }
         foreach my $log (@toparse) {
             my $component = $logs{$log}{uuid};
+            print(STDERR "Calling $interpreter $parser $log $component\n");
             my $parsed = `$interpreter $parser $log $component`;
             my $queryfile = "$dir/$component.json";
             $logs{$log}{json} = $queryfile;

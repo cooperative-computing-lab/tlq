@@ -31,15 +31,13 @@ Example Usage:
 
 my $query_usage = "Query structure: <action> [URI] [options]
 
-Where <action> is one of: ALIAS, EXIT, LIST, PRINT, QUERY, SET, UNSET
+Where <action> is one of: ALIAS, EXIT, LIST, PULL, QUERY
 
 And [options] is one of:
   ALIAS <URI> <STRING>
   EXIT [URI]
-  PRINT <VARIABLE>
-  QUERY <URI/ALIAS> <JSON>
-  SET <VARIABLE> <VALUE>
-  UNSET <VARIABLE>
+  PULL <URI/ALIAS>
+  QUERY <URI/ALIAS> <STRING>
 ";
 
 my %OPT;
@@ -57,9 +55,7 @@ catch Error::Simple with {
 };
 
 my $client = 0;
-my $debug = 0;
 my $err = 0;
-my $jx = "";
 my $server = "";
 my $log = $OPT{log};
 my $session = $OPT{session};
@@ -70,7 +66,6 @@ if($err) {
 
 my %aliases = ();
 my %components = ();
-my %variables = ();
 my $prompt = " \$ ";
 my $term = Term::ReadLine->new("tlq");
 $client = LWP::UserAgent->new(
@@ -95,86 +90,56 @@ while(defined(my $input = $term->readline($prompt))) {
     my $destination = $parts[1];
     my $target = $parts[2];
     my $result = "";
-    if($debug) {
-        if($action eq "") {
-            $prompt = " \$ ";
-            $debug = 0;
-            $jx = expand_jx($jx);
-            my $json = eval { JSON->new->decode($jx) };
-            if($@) { print(STDERR "Encountered improper JSON: $@"); }
-            if(exists($aliases{$server})) { $server = $aliases{$server}; }
-            $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("QUERY", $server, query_to_json($jx)));
-            print(STDOUT "$result\n");
-            print_result("QUERY $jx", $result);
-            next;
-        }
-        $jx = $jx . $input;
-        next;
-    }
     $input = uc($action) . " $destination $target";
     $input =~ s/\s+$//;
     $term->add_history($input) if /\S/;
     if($session) { print(HISTORY "$input\n"); }
     if(uc($input) eq "QUIT" or uc($input) eq "EXIT") { exit(0); } 
     if($action ne "LIST" and !$destination) { print_query_help(); }
-    elsif($action eq "QUERY") {
+    elsif($action eq "PULL") {
         if(!$destination) {
             print_query_help();
             next;
         }
         $server = $destination;
-        $debug = 1;
-        $jx = "";
-        $prompt = " > ";
+        if(exists($aliases{$server})) { $server = $aliases{$server}; }
+        $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("PULL", $server, query_to_json($target)));
+        print(STDOUT "$result\n");
+        print_result("PULL $server $target", $result);
+        next;
+    }
+    elsif($action eq "QUERY") {
+        if(!$destination) {
+            print_query_help();
+            next;
+        }
+        my $i = 3;
+        while(scalar(@parts) > $i) {
+            $target = $target . " $parts[$i]";
+            $i++;
+        }
+        $server = $destination;
+        if(exists($aliases{$server})) { $server = $aliases{$server}; }
+        $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("QUERY", $server, query_to_json($target)));
+        print(STDOUT "$result\n");
+        print_result("QUERY $server $target", $result);
         next; 
     }
     elsif($action eq "ALIAS") {
         $aliases{$target} = $destination;
         print(STDOUT "Please use alias $target to access $destination.\n");
     }
-    elsif($action eq "PRINT") {
-        if(exists $variables{$destination}) {
-            print(STDOUT "$destination = $variables{$destination}\n");
-        }
-    }
-    elsif($action eq "SET") {
-        if($target eq "VALUE" or $target eq "KEY") {
-            my $err = "Cannot overwrite magic variable $target.\n";
-            print(STDERR $err);
-            $result = $err;
-        }
-        else {
-            $variables{$destination} = $target;
-            $result = "Set variable $destination = $target.\n";
-        }
-    }
-    elsif($action eq "UNSET") {
-        delete($variables{$target});
-        $result = "Unset variable $target.\n";
-    }
     elsif($action eq "EXIT" or $action eq "QUIT") { $result = request($action, $destination); }
-    elsif($action eq "LIST") { $result = list_components(); }
+    elsif($action eq "LIST") {
+        $result = list_components();
+        print(STDOUT "$result\n");
+    }
     else { print_query_help(); } 
     if($action ne "QUERY") { print_result($input, $result); }
 }
 
 if($session) { close(HISTORY); }
 exit(0);
-
-sub expand_jx {
-    my ($jx) = @_;
-    my $expanded = "";
-    my @parts = split('\n', $jx);
-    foreach my $p (@parts) {
-        foreach my $v (keys(%variables)) {
-            if($p =~ m/^(?<pre>.*)$v(?<post>.*)$/) {
-                $p = $+{pre} . $variables{$v} . $+{post};
-            }
-        }
-        $expanded = $expanded . $p;
-    }
-    return $expanded;
-}
 
 sub get_info {
     my ($file) = @_;
@@ -236,7 +201,12 @@ sub request {
     my $content = 0;
     my $http = $destination;
     my $response = 0;
-    if($action eq "QUERY") {
+    if($action eq "PULL") {
+        $http = $destination . "/files";
+        $content = $target;
+        $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
+    }
+    elsif($action eq "QUERY") {
         $content = $target;
         $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
     }

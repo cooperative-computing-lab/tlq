@@ -81,9 +81,10 @@ while(my $line = <LOG>) {
 close(LOG);
 
 delete($worker{pids});
-my $json = make_json(%worker);
-print(STDOUT "$json\n");
-$json = make_json(%component);
+#my $json = make_json(%worker);
+#print(STDOUT "$json\n");
+$component{metadata} = \%worker;
+my $json = make_json(%component);
 print(STDOUT "$json\n");
 
 exit(0);
