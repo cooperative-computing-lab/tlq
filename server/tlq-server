@@ -189,13 +189,15 @@ use strict;
         my $parser = $parsers{$type}{path};
         my $interpreter = $parsers{$type}{interpreter};
         my @toparse;
-        foreach my $log (keys(%logs)) { if($logs{$log}{type} =~ m/$type/ and ($logs{$log}{size} < -s $logs{$log}{path})) { push(@toparse, $logs{$log}{path}); } }
+        foreach my $log (keys(%logs)) { if($logs{$log}{type} =~ m/$type/ and ($logs{$log}{size} < -s $logs{$log}{path})) { push(@toparse, $log); } }
         foreach my $log (@toparse) {
             my $component = $logs{$log}{uuid};
-            print(STDERR "Calling $interpreter $parser $log $component\n");
-            my $parsed = `$interpreter $parser $log $component`;
+            my $path = $logs{$log}{path};
+            print(STDERR "Calling $interpreter $parser $path $component\n");
+            my $parsed = `$interpreter $parser $path $component`;
             my $queryfile = "$dir/$component.json";
             $logs{$log}{json} = $queryfile;
+            if(-e $queryfile) { unlink($queryfile); }
             open(QUERIES, ">>", $queryfile);
             print(QUERIES $parsed);
             close(QUERIES);
