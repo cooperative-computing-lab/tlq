@@ -19,7 +19,7 @@
         {
             #LTRACE ENABLED PROCESS_POINTS
             "command": format(
-                "sh %s %s %s %s %s.process.points.%s.out components,env_vars,files,processes -- %s %s.process.points.%s.out ( mkdir -p outputs && %s points/%s.csv outputs/%s.csv )",
+                "sh %s %s %s %s %s.process.points.%s.out components,env_vars,files,processes -- mkdir -p outputs && %s %s.process.points.%s.out %s points/%s.csv outputs/%s.csv",
                 LD, HOME, PORT, LM, LTL, t, LT, LTL, t, PROCESS_POINTS, t, t
             ),
             #"command": format(
@@ -36,8 +36,8 @@
         } for t in TAXA, {
             #LTRACE ENABLED MAXENT
             "command": format(
-                "sh %s %s %s %s %s.maxent.%s.out -- %s %s.maxent.%s.out mkdir -p outputs/%s && %s -cp %s density.MaxEnt -s outputs/%s.csv -e %s -o outputs/%s nowarnings nocache autorun -z",
-                LD, HOME, PORT, LM, LTL, t, LT, LTL, t, t, JAVA, MAXENT, t, MODEL, t
+                "sh %s %s %s %s %s.maxent.%s.out -- mkdir -p outputs/%s && %s %s.maxent.%s.out %s -cp %s density.MaxEnt -s outputs/%s.csv -e %s -o outputs/%s nowarnings nocache autorun -z",
+                LD, HOME, PORT, LM, LTL, t, t, LT, LTL, t, JAVA, MAXENT, t, MODEL, t
             ),
             #"command": format(
             #    "mkdir -p outputs/%s && %s -cp %s density.MaxEnt -s outputs/%s.csv -e %s -o outputs/%s nowarnings nocache autorun -z",
