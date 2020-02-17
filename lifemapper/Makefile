@@ -55,15 +55,15 @@ all: $(CCTOOLS) $(NOTRACE) $(TRACE)
 build: $(GENERATOR) $(LOGDEF) $(POINTS)
 
 clean:
-	condor_rm $(USER)
 	../cctools/bin/makeflow -c --jx $(NOTRACEMAKE) || true
 	../cctools/bin/makeflow -c --jx $(TRACEMAKE) || true
 	rm -rf $(CLEANUP)
+	condor_rm $(USER)
 
 lean:
-	condor_rm $(USER)
 	../cctools/bin/makeflow -c --jx $(NOTRACEMAKE) || true
 	../cctools/bin/makeflow -c --jx $(TRACEMAKE) || true
+	condor_rm $(USER)
 
 trace: $(TRACE)
 

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+i=17
+
+while [ $i -le 26 ]
+do
+    time -p -o time.data -a scp -r disc$i\.crc.nd.edu:/tmp/tlq ./disc$i
+    i=$(( $i + 1 ))
+done
+
+exit 0

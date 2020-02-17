@@ -19,7 +19,7 @@
         {
             #LTRACE ENABLED PROCESS_POINTS
             "command": format(
-                "sh %s %s %s %s %s.process.points.%s.out components,env_vars,files,processes -- mkdir -p outputs && %s %s.process.points.%s.out %s points/%s.csv outputs/%s.csv",
+                "sh %s %s %s %s %s.process.points.%s.out ltrace -- mkdir -p outputs && %s %s.process.points.%s.out python %s points/%s.csv outputs/%s.csv",
                 LD, HOME, PORT, LM, LTL, t, LT, LTL, t, PROCESS_POINTS, t, t
             ),
             #"command": format(
@@ -36,7 +36,7 @@
         } for t in TAXA, {
             #LTRACE ENABLED MAXENT
             "command": format(
-                "sh %s %s %s %s %s.maxent.%s.out -- mkdir -p outputs/%s && %s %s.maxent.%s.out %s -cp %s density.MaxEnt -s outputs/%s.csv -e %s -o outputs/%s nowarnings nocache autorun -z",
+                "sh %s %s %s %s %s.maxent.%s.out ltrace -- mkdir -p outputs/%s && %s %s.maxent.%s.out %s -cp %s density.MaxEnt -s outputs/%s.csv -e %s -o outputs/%s nowarnings nocache autorun -z",
                 LD, HOME, PORT, LM, LTL, t, t, LT, LTL, t, JAVA, MAXENT, t, MODEL, t
             ),
             #"command": format(
@@ -54,7 +54,7 @@
         } for t in TAXA, {
             #LTRACE ENABLED MAXENT PROJECTION
             "command": format(
-                "sh %s %s %s %s %s.project.%s.out -- %s %s.project.%s.out %s -cp %s density.Project outputs/%s/%s.lambdas %s outputs/%s_%s.asc nowarnings nocache autorun -z; touch outputs/%s_%s.asc; touch outputs/%s_%s_clamping.asc",
+                "sh %s %s %s %s %s.project.%s.out ltrace -- %s %s.project.%s.out %s -cp %s density.Project outputs/%s/%s.lambdas %s outputs/%s_%s.asc nowarnings nocache autorun -z; touch outputs/%s_%s.asc; touch outputs/%s_%s_clamping.asc",
                 LD, HOME, PORT, LM, LTL, t, LT, LTL, t, JAVA, MAXENT, t, t, p, t, basename(p), t, basename(p), t, basename(p)
             ),
             #"command": format(
