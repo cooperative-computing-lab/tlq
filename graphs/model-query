@@ -10,22 +10,24 @@ my $usage = "Query Cost Modeling Options:
 Required:
 
 Optional:
-    --logsize,-l    <integer>   Set size of logs (in MB).
-    --netspeed,-n   <integer>   Set the transfer speed (in MB/s).
+    --datasize,-d    <integer>   Set total size of log data (in MB).
+    --netspeed,-n    <integer>   Set the transfer speed (in MB/s).
+    --readspeed, -r  <integer>   Set the local read speed (in MB/s).
 
     --help                  Display this message.
 
 Example Usage:
 
-    perl model-query --netspeed 100 --logsize 1000
+    perl model-query --netspeed 100 --datasize 1000
 
 ";
 
 my %OPT;
 try {
     GetOptions(
-        "logsize=s" => \$OPT{logsize},
+        "datasize=s" => \$OPT{datasize},
         "netspeed=s" => \$OPT{netspeed},
+        "readspeed=s" => \$OPT{readspeed},
         "help|?" => sub { print $usage; exit(0); },
     );
 }
@@ -35,27 +37,26 @@ catch Error::Simple with {
     die "Failed to parse command line options.\n";
 };
 
-my $logsize = $OPT{logsize};
+my $datasize = $OPT{datasize};
 my $netspeed = $OPT{netspeed};
-if(!$logsize) { $logsize = 1000; }
+my $readspeed = $OPT{readspeed};
+if(!$datasize) { $datasize = 10000; }
 if(!$netspeed) { $netspeed = 100; }
-my $netcost = 1;
-my $readspeed = 100;
-my $logcount = 10000;
-my $resultsize = 10;
+if(!$readspeed) { $readspeed = 100; }
 
+my $netcost = 1;
+my $totalsize = 0;
 my $totaltransfer = 0;
 my $totalquery = 0;
-my $totaltime = 0;
-my $totalsize = 0;
 
 my $i = 0;
-while($i < $logcount) {
-    $totalsize += $logsize;
-    $totaltransfer += $netcost + ($logsize / $netspeed) + ($logsize / $readspeed);
-    $totalquery += (2 * $netcost) + ($logsize / $readspeed) + ($resultsize / $netspeed);
+while($i <= $datasize) {
+    my $onepercent = (2 * $netcost) + ($i / $readspeed) + (($i * 0.01) / $netspeed);
+    my $tenpercent = (2 * $netcost) + ($i / $readspeed) + (($i * 0.10) / $netspeed);
+    $totaltransfer = $netcost + ($i / $netspeed) + ($i / $readspeed);
+    $totalquery = (2 * $netcost) + ($i / $readspeed) + ($i / $netspeed);
+    print(STDOUT "$i $totaltransfer $totalquery $tenpercent $onepercent\n");
     $i++;
-    print(STDOUT "$i $totalsize $totaltransfer $totalquery\n");
 }
 
 exit(0);

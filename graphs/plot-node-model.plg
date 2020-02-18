@@ -1,0 +1,14 @@
+set terminal pdfcairo size 3.75,2.25 font 'Times New Roman,14'
+set mono
+set output
+
+#set title "Throughput of Single-Node Log Streaming"
+set xlabel "Data to be Collected (MB)"
+set ylabel "Throughput (MB/s)"
+set xtics rotate by -90
+#set key top left
+set key off
+set yrange[0:105]
+set xrange[0:]
+
+plot 'node-model.dat' using 1:2 title "Throughput at Node" with lines

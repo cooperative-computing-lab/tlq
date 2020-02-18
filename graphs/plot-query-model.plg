@@ -1,18 +1,15 @@
-set terminal pdfcairo size 3.75,2.25 font 'Times New Roman,20'
+set terminal pdfcairo size 3.75,2.25 font 'Times New Roman,14'
 set mono
 set output
 
 #set title "Cost of Collect-and-Query vs. Distributed Query"
-set xlabel "Files Queried"
+set xlabel "Data Queried (MB)"
 set ylabel "Time Elapsed (s)"
 set xtics rotate by -90
-#set key top left
-set key off
-set yrange[0:215000]
-set xrange[0:10000]
+set key top left
+set yrange[0:210]
+set xrange[0:]
 
-#plot 'query-model.dat' using 1:3 title "Collect-and-Query" with lines,\
-#     '' u 1:4 title "Distributed Query" with lines
-
-plot 'query-model.dat' using 1:3 with lines,\
-     '' u 1:4 with lines
+plot 'query-model.dat' using 1:2 title "Collect-and-Query" with lines,\
+     '' u 1:4 title "Distributed Query (10%)" with lines,\
+     '' u 1:5 title "Distributed Query (1%)" with lines
