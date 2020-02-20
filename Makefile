@@ -43,6 +43,7 @@ $(PERLS):
 	cpan install JSON || true >> $(PERLS) 2>&1
 	cpan install Thread::Semaphore || true >> $(PERLS) 2>&1
 	cpan install URI::Encode || true >> $(PERLS) 2>&1
+	cpan install Time::HiRes || true >> $(PERLS) 2>&1
 
 $(SHAREDFS):
 	cd testing/shared-fs && make

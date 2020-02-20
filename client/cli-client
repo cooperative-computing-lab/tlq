@@ -8,6 +8,7 @@ use JSON;
 use LWP::UserAgent;
 use sigtrap qw/handler signal_handler INT TERM/;
 use Term::ReadLine;
+use Time::HiRes qw(time);
 use URI::Encode;
 
 use strict;
@@ -120,8 +121,11 @@ while(defined(my $input = $term->readline($prompt))) {
         }
         $server = $destination;
         if(exists($aliases{$server})) { $server = $aliases{$server}; }
+        my $time = time();
         $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("QUERY", $server, query_to_json($target)));
+        $time = time() - $time;
         print(STDOUT "$result\n");
+        print(STDERR "Query duration: $time\n");
         print_result("QUERY $server $target", $result);
         next; 
     }
