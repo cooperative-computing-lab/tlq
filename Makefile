@@ -19,7 +19,7 @@ $(CONDORPOVRAY): $(CCTOOLS) $(PERLBASE)
 $(LIFEMAPPER): $(CCTOOLS) $(PERLBASE)
 	cd lifemapper && make
 
-$(PERLBASE):
+$(PERLBASE): $(PERLS)
 	mkdir .perl5
 	mkdir .perl5/lib
 	cp -r ~/.perl5/lib/perl5 .perl5/lib/
@@ -39,12 +39,15 @@ $(PERLS):
 	cpan install HTTP::Server::Simple::CGI || true >> $(PERLS) 2>&1
 	cpan install Digest::MD5 || true >> $(PERLS) 2>&1
 	cpan install File::Basename || true >> $(PERLS) 2>&1
-
+	cpan install Data::Dumper || true >> $(PERLS) 2>&1
+	cpan install JSON || true >> $(PERLS) 2>&1
+	cpan install Thread::Semaphore || true >> $(PERLS) 2>&1
+	cpan install URI::Encode || true >> $(PERLS) 2>&1
 
 $(SHAREDFS):
 	cd testing/shared-fs && make
 
-all: $(CCTOOLS) $(CONDORPOVRAY) $(LIFEMAPPER) $(PERLBASE) $(SOURCE)
+all: $(CCTOOLS) $(CONDORPOVRAY) $(LIFEMAPPER) $(PERLBASE) $(PERLS) $(SOURCE)
 
 clean:
 	cd condor-povray && make clean
