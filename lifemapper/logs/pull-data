@@ -1,11 +1,14 @@
 #!/bin/sh
 
-i=17
+i=20
 
 while [ $i -le 26 ]
 do
+    mkdir disc$i
     time -p -o time.data -a scp -r disc$i\.crc.nd.edu:/tmp/tlq ./disc$i
     i=$(( $i + 1 ))
 done
+mkdir remote308
+time -p -o time.data -a scp -r remote308.helios.nd.edu:/tmp/tlq ./remote308
 
 exit 0

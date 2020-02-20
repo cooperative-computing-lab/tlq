@@ -3,6 +3,7 @@ DATA = data
 FAILED = makeflow.failed.*
 GENERATOR = split.py
 LIFEMAPPER = makeflow-examples/lifemapper
+LOGCOLLECT = logs/disc20 logs/disc21 logs/disc22 logs/disc23 logs/disc24 logs/disc25 logs/disc26 logs/student10
 LOGS = *.wqlog *.debug *.trace
 LTRACE = ltrace-wrapper-lifemapper
 LOGDEF = log-define
@@ -13,12 +14,13 @@ OUTPUTS = outputs
 PERL = test
 POINTS = points
 SOURCE = ../cctools-source
+TIME = logs/time.dat
 TOOLS = tools
 TRACE = trace.debug
 TRACEMAKE = trace.jx
 WORKERS = workers/cctools_gpu_autodetect workers/log-define workers/work_queue_worker workers/worker.*.error workers/worker.*.output workers/workers.log
 
-CLEANUP = $(DATA) $(FAILED) $(GENERATOR) $(LOGS) $(LOGDEF) $(NOTRACE) $(OUTPUTS) $(POINTS) $(TOOLS) $(TRACE) $(WORKERS)
+CLEANUP = $(DATA) $(FAILED) $(GENERATOR) $(LOGCOLLECT) $(LOGS) $(LOGDEF) $(NOTRACE) $(OUTPUTS) $(POINTS) $(TOOLS) $(TRACE) $(WORKERS)
 
 $(CCTOOLS): /usr/bin/git
 	git clone git@github.com:cooperative-computing-lab/cctools.git $(SOURCE) || git clone https://github.com/cooperative-computing-lab/cctools.git $(SOURCE)
@@ -29,6 +31,9 @@ $(GENERATOR): $(CCTOOLS)
 	git clone git@github.com:cooperative-computing-lab/makeflow-examples.git || git clone https://github.com/cooperative-computing-lab/makeflow-examples.git
 	mv $(LIFEMAPPER)/data $(LIFEMAPPER)/tools $(LIFEMAPPER)/$(GENERATOR) .
 	rm -rf makeflow-examples
+
+$(LOGCOLLECT): $(TRACE)
+	cd logs && sh pull-data
 
 $(LOGDEF):
 	cp ../$(LOGDEF) .
