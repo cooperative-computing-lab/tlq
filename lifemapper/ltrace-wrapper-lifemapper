@@ -1,7 +1,7 @@
 #!/bin/sh
 
-source /afs/crc.nd.edu/group/ccl/software/cclsetup.sh || true
-cclimport ltrace current || true
+#source /afs/crc.nd.edu/group/ccl/software/cclsetup.sh || true
+#cclimport ltrace current || true
 tracelog=$1
 shift
 ltrace -f -r -s 4096 -o $tracelog -e *open*+*stat*+*getenv*+*setenv*+*fork*+*clone* $@
