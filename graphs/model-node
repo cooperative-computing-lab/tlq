@@ -37,15 +37,31 @@ catch Error::Simple with {
 
 my $datasize = $OPT{datasize};
 my $maxspeed = $OPT{maxspeed};
-if(!$datasize) { $datasize = 1000; }
+if(!$datasize) { $datasize = 100000; }
 if(!$maxspeed) { $maxspeed = 100; }
 
+
 my $i = 0;
-my $throughput;
+my $jobs = 0;
+my $jobtime = 3;
+my $bandwidth = $maxspeed;
+my $maxjobs = 50;
+my $throughput = 0;
 while($i <= $datasize) {
-    if($i > $maxspeed) { $throughput = $maxspeed; }
-    else { $throughput = $i; }
-    print(STDOUT "$i $throughput\n");
+    if($bandwidth > 0 and $jobs < $maxjobs) {
+        $jobs++;
+    }
+    if($i % 3 == 0 and $jobs > 0) {
+        $bandwidth++;
+        $jobs--;
+    }
+    if($bandwidth != 0) { $bandwidth--; }
+    #if($i > 0) { $throughput = ($jobs / $i); }
+    #if(($i / $maxspeed) > $maxspeed and ($jobs / $i) > $maxspeed) { $throughput = $maxspeed; }
+    #elsif($i == 0) { $throughput = $jobs; }
+    #else { $throughput = $jobs / $i; }
+    
+    print(STDOUT "$i $bandwidth $jobs\n");
     $i++;
 }
 

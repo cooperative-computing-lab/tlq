@@ -14,10 +14,10 @@ $(NODE): /usr/bin/perl
 $(QUERY): /usr/bin/perl
 	perl model-query > $(QUERY)
 
-$(PDF1): /usr/bin/gnuplot
+$(PDF1): /usr/bin/gnuplot $(NODE)
 	gnuplot plot-node-model.plg > $(PDF1)
 
-$(PDF2): /usr/bin/gnuplot
+$(PDF2): /usr/bin/gnuplot $(QUERY)
 	gnuplot plot-query-model.plg > $(PDF2)
 
 all: $(DATA) $(PDFS)
