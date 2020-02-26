@@ -40,7 +40,7 @@ catch Error::Simple with {
 my $datasize = $OPT{datasize};
 my $netspeed = $OPT{netspeed};
 my $readspeed = $OPT{readspeed};
-if(!$datasize) { $datasize = 10000; }
+if(!$datasize) { $datasize = 500; }
 if(!$netspeed) { $netspeed = 100; }
 if(!$readspeed) { $readspeed = 100; }
 

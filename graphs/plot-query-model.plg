@@ -7,7 +7,8 @@ set xlabel "Data Queried (MB)"
 set ylabel "Time Elapsed (s)"
 set xtics rotate by -90
 set key top left
-set yrange[0:210]
+#set yrange[0:210]
+set yrange[0:]
 set xrange[0:]
 
 plot 'query-model.dat' using 1:2 title "Collect-and-Query" with lines,\
