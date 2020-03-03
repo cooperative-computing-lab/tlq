@@ -30,13 +30,10 @@ Example Usage:
 
 ";
 
-my $query_usage = "Query structure: <action> [URI] [options]
-
-Where <action> is one of: ALIAS, EXIT, LIST, PULL, QUERY
-
-And [options] is one of:
+my $command_usage = "Available commands:
   ALIAS <URI> <STRING>
-  EXIT [URI]
+  EXIT
+  JX <URI/ALIAS>
   PULL <URI/ALIAS>
   QUERY <URI/ALIAS> <STRING>
 ";
@@ -57,6 +54,8 @@ catch Error::Simple with {
 
 my $client = 0;
 my $err = 0;
+my $jx = "";
+my $jxmode = 0;
 my $server = "";
 my $log = $OPT{log};
 my $session = $OPT{session};
@@ -83,7 +82,7 @@ if($session) {
     }
     close(READHIST);
 }
-print(STDOUT $query_usage);
+print(STDOUT $command_usage);
 while(defined(my $input = $term->readline($prompt))) {
     get_info("deposit-log");
     my @parts = split(' ', $input);
@@ -91,15 +90,42 @@ while(defined(my $input = $term->readline($prompt))) {
     my $destination = $parts[1];
     my $target = $parts[2];
     my $result = "";
+    if($jxmode) {
+        if($action eq "") {
+            $prompt = " \$ ";
+            $jxmode = 0;
+            if(exists($aliases{$server})) { $server = $aliases{$server}; }
+            $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("JX", $server, query_to_json($jx)));
+            #print(STDOUT "$result\n");
+            my $json = parse_json_from_html($result);
+            print(STDOUT "Got JSON and JX: $json\n");
+            $result = `./jx_query '$json' '$jx'`;
+            print_result("JX $jx", $result);
+            next;
+        }
+        $jx = $jx . $input;
+        next;
+    }
     $input = uc($action) . " $destination $target";
     $input =~ s/\s+$//;
     $term->add_history($input) if /\S/;
     if($session) { print(HISTORY "$input\n"); }
     if(uc($input) eq "QUIT" or uc($input) eq "EXIT") { exit(0); } 
-    if($action ne "LIST" and !$destination) { print_query_help(); }
+    if($action ne "LIST" and !$destination) { print_command_help(); }
+    elsif($action eq "JX") {
+        if(!$destination) {
+            print_command_help();
+            next;
+        }
+        $server = $destination;
+        $jxmode = 1;
+        $jx = "";
+        $prompt = " > ";
+        next; 
+    }
     elsif($action eq "PULL") {
         if(!$destination) {
-            print_query_help();
+            print_command_help();
             next;
         }
         $server = $destination;
@@ -111,7 +137,7 @@ while(defined(my $input = $term->readline($prompt))) {
     }
     elsif($action eq "QUERY") {
         if(!$destination) {
-            print_query_help();
+            print_command_help();
             next;
         }
         my $i = 3;
@@ -138,7 +164,7 @@ while(defined(my $input = $term->readline($prompt))) {
         $result = list_components();
         print(STDOUT "$result\n");
     }
-    else { print_query_help(); } 
+    else { print_command_help(); } 
     if($action ne "QUERY") { print_result($input, $result); }
 }
 
@@ -181,6 +207,17 @@ sub list_components {
     return $return;
 }
 
+sub parse_json_from_html {
+    my ($html) = @_;
+    my @lines = split("\n", $html);
+    my $flag = 0;
+    foreach my $line (@lines) {
+        if($flag) { return $line; }
+        elsif($line =~ m/<h1>Dumping raw contents of/) { $flag = 1; }
+    }
+    return 1;
+}
+
 sub print_result {
     my ($input, $result) = @_;
     chomp($result);
@@ -205,7 +242,11 @@ sub request {
     my $content = 0;
     my $http = $destination;
     my $response = 0;
-    if($action eq "PULL") {
+    if($action eq "JX") {
+        $content = $target;
+        $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
+    }
+    elsif($action eq "PULL") {
         $http = $destination . "/files";
         $content = $target;
         $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
@@ -233,9 +274,9 @@ sub print_help {
     exit(1);
 }
 
-sub print_query_help {
-    print(STDERR "Incorrect query syntax used. Missing field(s).\n\n");
-    print(STDERR $query_usage);
+sub print_command_help {
+    print(STDERR "Incorrect command syntax used. Missing field(s).\n\n");
+    print(STDERR $command_usage);
 }
 
 # vim: tabstop=8 shiftwidth=4 softtabstop=4 expandtab shiftround autoindent

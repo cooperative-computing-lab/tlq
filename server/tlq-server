@@ -3,7 +3,6 @@
 use Error qw(:try);
 use Error::Simple;
 use Getopt::Long qw(:config no_ignore_case);
-use IO::Socket::PortState qw(check_ports);
 use sigtrap qw/handler signal_handler INT TERM/;
 use Sys::Hostname;
 
@@ -13,15 +12,16 @@ use strict;
 {
     package WebServer;
     use Data::Dumper;
-    use File::Basename;
     use HTTP::Server::Simple::CGI;
     use JSON;
     use Sys::Hostname;
     use threads;
-    use Thread::Semaphore;
     use URI::Encode;
     use base qw(HTTP::Server::Simple::CGI);
 
+    my %components; #Components have a UUID and a list of files
+    my %logs; #Logs have a UUID, path, JSON path, type, component, and size
+    my %parsers; #Parsers have an type ID, path, and executor
     my $dir = "/tmp/tlq";
     if(!(-e $dir)) { mkdir($dir); }
     else {
@@ -33,87 +33,55 @@ use strict;
     opendir(DIR, "parsers");
     my @localparsers = grep(/-parser$/,readdir(DIR));
     closedir(DIR);
-    open(DEPOSIT, ">>", "$dir/deposit-parser");
     foreach my $p (@localparsers) {
         system("cp parsers/$p $dir/$p");
-        my @parseparts = split('-', $p);
-        my $type = $parseparts[0];
-        print(DEPOSIT "$dir/$p $type perl\n");
+        my $parseparts =~ m/(?<type>\S+)-parser$/;
+        my $type = $+{type};
+        $parsers{$type} = {};
+        $parsers{$type}{path} = "$dir/$p";
+        $parsers{$type}{exec} = "perl";
     }
-    close(DEPOSIT);
-    my $sem = Thread::Semaphore->new();
     my $host = hostname();
     my $log_thread = threads->create("watch_logs");
     $log_thread->detach();
     my %dispatch = (
-        "/components" => \&component_query,
-        "/exit" => \&cleanup,
+        "/query" => \&run_query,
+        "/jx" => \&send_json,
         "/files" => \&send_file,
     );
-    my %components;
-    my %logs;
-    my %parsers;
-    my %tables;
 
     sub check_deposit {
         open(DEPOSIT, "$dir/deposit-log");
         while(my $line = <DEPOSIT>) {
             chomp($line);
             my @parts = split(' ', $line);
-            my ($component, $log, $type, $hash) = @parts;
-            if(exists($logs{$hash})) { next; }
-            $logs{$hash} = {};
-            $logs{$hash}{path} = $log;
-            $logs{$hash}{type} = $type;
-            $logs{$hash}{uuid} = $component;
+            my ($component, $log, $type, $uuid) = @parts;
+            if(exists($logs{$uuid})) { next; }
+            $logs{$uuid} = {};
+            $logs{$uuid}{component} = $component;
+            $logs{$uuid}{json} = "$dir/$uuid.json";
+            $logs{$uuid}{path} = $log;
+            $logs{$uuid}{size} = 0;
+            $logs{$uuid}{type} = $type;
             if(!exists $components{$component}) {
                 $components{$component} = {};
-                $components{$component}{files} = $hash;
+                $components{$component}{files} = $uuid;
             }
-            else { $components{$component}{files} = $components{$component}{files} . " $hash"; }
+            else { $components{$component}{files} = $components{$component}{files} . " $uuid"; }
         }
         close(DEPOSIT);
     }
 
     sub check_file {
         my ($file) = @_;
-        if(!$file) { return 1; }
+        if(!$file) { return 0; }
         if(exists($logs{$file})) { $file = $logs{$file}{path}; }
-        my $result;
-        if(!(-e $file)) { return 1; }
-        $result = open(FILE, $file);
+        if(!(-e $file)) { return 0; }
+        my $result = open(FILE, $file);
         close(FILE);
-        if(!$result) { return 1; }
-        return 0;
+        if(!$result) { return 0; }
+        return $file;
     } 
-
-    sub check_parsers {
-        open(DEPOSIT, "$dir/deposit-parser");
-        while(my $line = <DEPOSIT>) {
-            chomp($line);
-            my @parts = split(' ', $line);
-            my ($path, $type, $interpreter) = @parts;
-            if(exists($parsers{$type})) { next; }
-            $parsers{$type} = {};
-            $parsers{$type}{path} = $path;
-            $parsers{$type}{interpreter} = $interpreter;
-        }
-        close(DEPOSIT);
-    }
-
-    sub cleanup {
-        my ($cgi) = @_;
-        print(STDOUT "HTTP/1.0 200 OK\n");
-        print(STDOUT $cgi->header);
-        print(STDOUT $cgi->start_html("Shutdown request"));
-        print(STDOUT $cgi->h1("Received shutdown request"));
-        print(STDOUT $cgi->end_html);
-        unlink("$dir/deposit-parser");
-        unlink("$dir/deposit-queries");
-        kill(-15, $$);
-        kill(-15, getppid());
-        exit 0;
-    }
 
     sub component_get_files {
         my ($component) = @_;
@@ -121,56 +89,47 @@ use strict;
         return @array;
     }
 
-    sub component_query {
+    sub run_query {
         my ($cgi) = @_;
-        my $component;
-        my $file;
-        if($cgi->path_info() =~ m/components\/(?<uri>\S+)(\/(?<file>\S+))?/) {
-            $component = $+{uri};
-            $file = $+{file};
-        }
-        else { return 1; }
-        my @files;
-        if(!$file) { @files = component_get_files($component); }
-        else { push(@files, $file); }
         my $query = query_from_json($cgi->param("PUTDATA"));
-        my $json = "";
-        foreach my $f (@files) {
-            my $manifest = "$dir/$component.json";
-            my $result = execute_json_query($query, $manifest);
-            if($result) { $json = $json . "$result\n"; }
-        }
+        my $data = "";
+        my %encode;
+        $encode{query} = $query;
+        $encode{result} = `$query`;
+        my $result = JSON->new->encode(\%encode);
         print(STDOUT "HTTP/1.0 200 OK\n");
         print(STDOUT $cgi->header);
         print(STDOUT $cgi->start_html("Record(s) retrieved."));
-        print(STDOUT "$json from query $query");
+        print(STDOUT "$result from query $query");
         print(STDOUT $cgi->end_html);
         return 0;
     }
 
-    sub execute_json_query {
-        my ($query, $manifest) = @_;
-        my $result;
-        my %final;
-        $final{query} = $query;
-        $final{log} = $manifest;
-        $final{result} = `$query`;
-        if(scalar(keys(%final))) { $result = JSON->new->encode(\%final); }
-        return $result;
+    sub send_json {
+        my ($cgi) = @_;
+        my ($uuid, $json);
+        if($cgi->path_info() =~ m/jx\/(?<uuid>\S+)/) { $uuid = $+{uuid}; }
+        foreach my $l (keys(%logs)) { if($logs{$l}{component} == $uuid) { $json = $logs{$l}{json}; } }
+        $json = check_file($json);
+        return transfer($cgi, $json);
     }
 
     sub send_file {
         my ($cgi) = @_;
         my $file = query_from_json($cgi->param("PUTDATA"));
-        if(check_file($file)) {
+        $file = check_file($file);
+        return transfer($cgi, $file);
+    }
+
+    sub transfer {
+        my ($cgi, $file) = @_;
+        if(!$file) {
             print(STDOUT "HTTP/1.0 500 Internal server error\n");
             print(STDOUT $cgi->header);
-            print(STDOUT $cgi->start_html("File not found.."));
-            print(STDOUT $cgi->h1("File '$file' not found"));
+            print(STDOUT $cgi->start_html("File not found."));
             print(STDOUT $cgi->end_html);
             return 1;
         }
-        if(exists($logs{$file})) { $file = $logs{$file}{path}; }
         my $rawtext = "";
         open(FILE, $file);
         while(my $line = <FILE>) { $rawtext = $rawtext . $line; }
@@ -187,18 +146,17 @@ use strict;
     sub parse_logs {
         my ($type) = @_;
         my $parser = $parsers{$type}{path};
-        my $interpreter = $parsers{$type}{interpreter};
+        my $exec = $parsers{$type}{exec};
         my @toparse;
-        foreach my $log (keys(%logs)) { if($logs{$log}{type} =~ m/$type/ and ($logs{$log}{size} < -s $logs{$log}{path})) { push(@toparse, $log); } }
-        foreach my $log (@toparse) {
-            my $component = $logs{$log}{uuid};
-            my $path = $logs{$log}{path};
-            print(STDERR "Calling $interpreter $parser $path $component\n");
-            my $parsed = `$interpreter $parser $path $component`;
-            my $queryfile = "$dir/$component.json";
-            $logs{$log}{json} = $queryfile;
-            if(-e $queryfile) { unlink($queryfile); }
-            open(QUERIES, ">>", $queryfile);
+        foreach my $uuid (keys(%logs)) { if($logs{$uuid}{type} eq $type and ($logs{$uuid}{size} < -s $logs{$uuid}{path})) { push(@toparse, $uuid); } }
+        foreach my $uuid (@toparse) {
+            my $component = $logs{$uuid}{component};
+            my $path = $logs{$uuid}{path};
+            print(STDERR "Calling $exec $parser $path $component\n");
+            my $parsed = `$exec $parser $path $component`;
+            my $json = $logs{$uuid}{json};
+            if(-e $json) { unlink($json); }
+            open(QUERIES, ">>", $json);
             print(QUERIES $parsed);
             close(QUERIES);
         }
@@ -207,11 +165,10 @@ use strict;
 
     sub watch_logs {
         my $flag = 1;
-        check_parsers();
         while($flag) {
             check_deposit();
             foreach my $type (keys(%parsers)) { parse_logs($type); }
-            foreach my $log (keys(%logs)) { $logs{$log}{size} = -s $logs{$log}{path}; }
+            foreach my $uuid (keys(%logs)) { $logs{$uuid}{size} = -s $logs{$uuid}{path}; }
             sleep(10);
         }
         print(STDERR "\nExiting log watcher thread.\n");
@@ -231,10 +188,10 @@ use strict;
     sub handle_request {
         my ($self, $cgi) = @_;
         my $path = $cgi->path_info();
-        if($path =~ m/components/) { $path = "/components"; }
+        if($path =~ m/jx/) { $path = "/jx"; }
+        elsif($path =~ m/query/) { $path = "/query"; }
         my $handler = $dispatch{$path};
         check_deposit();
-        check_parsers();
         if(ref($handler) eq "CODE") { $handler->($cgi); }
         else {
             print(STDOUT "HTTP/1.0 404 Not found\n");
@@ -247,20 +204,19 @@ use strict;
     }
 }
 
-my $usage = "Debug Log Querying Server Options:
+my $usage = "TLQ Log Watch Server Options:
 
 Required:
 
 Optional:
     --port,-p   <integer>   Attempt to use selected port when server mode is used.
-                            If attempt fails, the next available port will be used.
                             Default: 9000.
 
     --help                  Display this message.
 
 Example Usage:
 
-    perl server --port 9000
+    perl tlq-server --port 9000
 
 ";
 
@@ -282,28 +238,6 @@ my $err = 0;
 my $port = $OPT{port};
 if(!$port) { $port = 9000; }
 if($err) { print_help(); }
-
-my %ports = ("tcp" => {});
-my $timeout = 1;
-my $start = $port;
-my $end = $port + 500;
-while($start < $end) {
-    $ports{tcp}{$start} = {};
-    $start++;
-}
-my $checked = check_ports("localhost", $timeout, \%ports);
-my $valid = 0;
-if($checked->{tcp}{$port}{open} == 1) {
-    for my $p (sort(keys(%{$checked->{tcp}}))) {
-        if($checked->{tcp}{$p}{open} == 0) {
-            $port = $p;
-            $valid = 1;
-            last;
-        }
-    }
-}
-else { $valid = 1; }
-if(!$valid) { print(STDERR "No available port found in range $port to $end. Terminating server.\n"); }
 my $host = hostname();
 my $server = WebServer->new($port);
 print(STDOUT "Server established at $host:$port.\n\n");
