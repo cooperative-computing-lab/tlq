@@ -98,8 +98,13 @@ while(defined(my $input = $term->readline($prompt))) {
             $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("JX", $server, query_to_json($jx)));
             #print(STDOUT "$result\n");
             my $json = parse_json_from_html($result);
-            print(STDOUT "Got JSON and JX: $json\n");
-            $result = `./jx_query '$json' '$jx'`;
+            open(JX, ">>", "tmp.json");
+            print(JX "$json");
+            close(JX);
+            #$result = `./jx_query $json '$jx'`;
+            $result = `./jx_query ./tmp.json '$jx'`;
+            print(STDOUT "$result\n");
+            unlink("tmp.json");
             print_result("JX $jx", $result);
             next;
         }
