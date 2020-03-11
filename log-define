@@ -45,7 +45,12 @@ for log in "${logs[@]}"
 do
     logtype=${types[j]}
     loghash=$(uuidgen)
-    echo "$cid $log $logtype $loghash" >> "$dir/deposit-log"
+    exists=$(grep "$log")
+    flag=0
+    if [ "$exists" ]; then
+        let flag=1
+    fi
+    echo "$cid $log $logtype $loghash $flag" >> "$dir/deposit-log"
     let j="j+1"
 done
 
