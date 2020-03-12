@@ -50,6 +50,7 @@ do
     if [ "$exists" ]; then
         let flag=1
     fi
+    cmd="${$cmd//$log/$loghash}"
     echo "$cid $log $logtype $loghash $flag" >> "$dir/deposit-log"
     let j="j+1"
 done
