@@ -12,6 +12,7 @@ use strict;
 {
     package WebServer;
     use Data::Dumper;
+    use File::Copy;
     use HTTP::Server::Simple::CGI;
     use JSON;
     use Sys::Hostname;
@@ -55,14 +56,17 @@ use strict;
         while(my $line = <DEPOSIT>) {
             chomp($line);
             my @parts = split(' ', $line);
-            my ($component, $log, $type, $uuid) = @parts;
+            my ($component, $log, $type, $uuid, $flag) = @parts;
             if(exists($logs{$uuid})) { next; }
             $logs{$uuid} = {};
             $logs{$uuid}{component} = $component;
+            $logs{$uuid}{flag} = $flag;
             $logs{$uuid}{json} = "$dir/$uuid.json";
+            $logs{$uuid}{original} = $log;
             $logs{$uuid}{path} = $log;
             $logs{$uuid}{size} = 0;
             $logs{$uuid}{type} = $type;
+            if($flag) { $logs{$uuid}{path} = "$dir/$uuid.log"; }
             if(!exists $components{$component}) {
                 $components{$component} = {};
                 $components{$component}{files} = $uuid;
@@ -168,7 +172,10 @@ use strict;
         while($flag) {
             check_deposit();
             foreach my $type (keys(%parsers)) { parse_logs($type); }
-            foreach my $uuid (keys(%logs)) { $logs{$uuid}{size} = -s $logs{$uuid}{path}; }
+            foreach my $uuid (keys(%logs)) {
+                if(!$logs{$uuid}{flag} and -e $logs{$uuid}{original} and $logs{$uuid}{size} < -s $logs{$uuid}{original}) { copy($logs{$uuid}{original}, $logs{$uuid}{path}); }
+                $logs{$uuid}{size} = -s $logs{$uuid}{path};
+            }
             sleep(10);
         }
         print(STDERR "\nExiting log watcher thread.\n");

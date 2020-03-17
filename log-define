@@ -39,25 +39,25 @@ do
     shift
 done
 cmd=$@
-cid=$(uuidgen)
+cuuid=$(uuidgen)
 j=0
 for log in "${logs[@]}"
 do
     logtype=${types[j]}
-    loghash=$(uuidgen)
+    loguuid=$(uuidgen)
     exists=$(grep "$log")
     flag=0
     if [ "$exists" ]; then
         let flag=1
     fi
-    cmd="${$cmd//$log/$loghash}"
-    echo "$cid $log $logtype $loghash $flag" >> "$dir/deposit-log"
+    cmd="${$cmd//$log/\/tmp\/tlq\/$loguuid.log}"
+    echo "$cuuid $log $logtype $loguuid $flag" >> "$dir/deposit-log"
     let j="j+1"
 done
 
-TLQPARENTUUID="$cid"
-uri="http://$hostname:$port/components/$cid"
-deposit="Component $cid created log(s) [${logs[*]}] with command $cmd queryable at $uri and has parent $puuid."
+TLQPARENTUUID="$cuuid"
+uri="http://$hostname:$port/components/$cuuid"
+deposit="Component $cuuid created log(s) [${logs[*]}] with command $cmd queryable at $uri and has parent $puuid."
 curl --data-urlencode "DEPOSIT=$deposit" http://$home/deposit > /dev/null
 echo $deposit
 
