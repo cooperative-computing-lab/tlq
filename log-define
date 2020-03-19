@@ -50,7 +50,7 @@ do
     if [ "$exists" ]; then
         let flag=1
     fi
-    cmd="${$cmd//$log/\/tmp\/tlq\/$loguuid.log}"
+    cmd="${cmd//$log//disk/d11/tlq/${loguuid}.log}"
     echo "$cuuid $log $logtype $loguuid $flag" >> "$dir/deposit-log"
     let j="j+1"
 done

@@ -8,6 +8,47 @@ use Sys::Hostname;
 
 use strict;
 
+my $usage = "TLQ Log Watch Server Options:
+
+Required:
+
+Optional:
+    --dir,-d    <path<      Use the specified path for TLQ's working directory.
+                            Default: /tmp/tlq
+    --port,-p   <integer>   Attempt to use selected port when server mode is used.
+                            Default: 9000.
+
+    --help                  Display this message.
+
+Example Usage:
+
+    perl tlq-server --port 9000
+
+";
+
+my %OPT;
+try {
+    GetOptions(
+        "dir=s" => \$OPT{dir},
+        "port=s" => \$OPT{port},
+        "help|?" => sub { print $usage; exit(0); },
+    );
+}
+catch Error::Simple with {
+    my $E = shift;
+    print STDERR $E->{-text};
+    die "Failed to parse command line options.\n";
+};
+
+my $client = 0;
+my $err = 0;
+our $dir = $OPT{dir};
+my $port = $OPT{port};
+if(!$dir) { $dir = "/tmp/tlq"; }
+if(!$port) { $port = 9000; }
+if($err) { print_help(); }
+my $host = hostname();
+
 #Define application-specific web server handling
 {
     package WebServer;
@@ -23,7 +64,7 @@ use strict;
     my %components; #Components have a UUID and a list of files
     my %logs; #Logs have a UUID, path, JSON path, type, component, and size
     my %parsers; #Parsers have an type ID, path, and executor
-    my $dir = "/tmp/tlq";
+    #my $dir = "/disk/d11/tlq";
     if(!(-e $dir)) { mkdir($dir); }
     else {
         unlink("$dir/lookup-log");
@@ -211,41 +252,6 @@ use strict;
     }
 }
 
-my $usage = "TLQ Log Watch Server Options:
-
-Required:
-
-Optional:
-    --port,-p   <integer>   Attempt to use selected port when server mode is used.
-                            Default: 9000.
-
-    --help                  Display this message.
-
-Example Usage:
-
-    perl tlq-server --port 9000
-
-";
-
-my %OPT;
-try {
-    GetOptions(
-        "port=s" => \$OPT{port},
-        "help|?" => sub { print $usage; exit(0); },
-    );
-}
-catch Error::Simple with {
-    my $E = shift;
-    print STDERR $E->{-text};
-    die "Failed to parse command line options.\n";
-};
-
-my $client = 0;
-my $err = 0;
-my $port = $OPT{port};
-if(!$port) { $port = 9000; }
-if($err) { print_help(); }
-my $host = hostname();
 my $server = WebServer->new($port);
 print(STDOUT "Server established at $host:$port.\n\n");
 $server->run();
