@@ -9,9 +9,10 @@ Required:
     <frames>                    Sets the number of frames.
     <xsize>                     Sets the width of each frame.
     <ysize>                     Sets the height of each frame
+    <tlqdir path>               Sets the expected working directory for the TLQ log server.
 
 Example Usage:
-    condor-povray inputfile.pov outputfile.mpg 600 1920 1080
+    condor-povray inputfile.pov outputfile.mpg 600 1920 1080 /tmp/tlq
 
 ";
 
@@ -22,9 +23,9 @@ if(@ARGV != 5) {
 
 #requirements = MachineGroup == \"DISC\" && (MachineShortName == \"disc17\" || MachineShortName == \"disc18\" || MachineShortName == \"disc19\" || MachineShortName == \"disc20\" || MachineShortName == \"disc21\" || MachineShortName == \"disc22\" || MachineShortName == \"disc23\" || MachineShortName == \"disc24\" || MachineShortName == \"disc25\" || MachineShortName == \"disc26\")
 
-my ($in, $out, $frames, $width, $height) = @ARGV;
+my ($in, $out, $frames, $width, $height, $dir) = @ARGV;
 my $name = "rubiks$width";
-my $tmp = "/tmp/tlq/condor-povray";
+my $tmp = "$dir/condor-povray";
 my $povray = "/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/povray/3.7/bin/povray";
 my $troubleshooting = "exec-wrapper-condor,ltrace-wrapper-condor,../log-define";
 my $rubiks = "WRC-RubiksCube.inc";
@@ -44,7 +45,7 @@ while($f <= $frames) {
         $submit = "universe = vanilla
 requirements = MachineGroup == \"DISC\" && (MachineShortName == \"disc26\")
 executable = /usr/bin/sh
-arguments = exec-wrapper-condor $host $port $uuid $f $tmp.$fname.log povray $tmp.ltrace.$f.log ltrace $povray $in $fname.png $c $height $width $fname.log ltrace.$f.log
+arguments = exec-wrapper-condor $host $port $uuid $dir $f $tmp.$fname.log povray $tmp.ltrace.$f.log ltrace $povray $in $fname.png $c $height $width $fname.log ltrace.$f.log
 transfer_input_files = $troubleshooting,$in,$rubiks
 error = condor.$f.error
 should_transfer_files = yes

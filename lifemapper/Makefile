@@ -13,6 +13,7 @@ PERL = test
 POINTS = points
 SOURCE = ../cctools-source
 TIME = logs/time.dat
+TLQDIR = /disk/d11/tlq
 TOOLS = tools
 TRACE = trace.debug
 TRACEMAKE = trace.jx
@@ -31,7 +32,7 @@ $(GENERATOR): $(CCTOOLS)
 	rm -rf makeflow-examples
 
 $(LOGCOLLECT): $(TRACE)
-	cd logs && sh pull-data
+	cd logs && sh pull-data $(TLQDIR)
 
 $(LOGDEF):
 	cp ../$(LOGDEF) .

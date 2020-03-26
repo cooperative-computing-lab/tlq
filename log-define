@@ -6,13 +6,19 @@ homeport=$1
 shift
 sysuuid="$1"
 shift
+dir="$1"
+shift
 home="$homehost:$homeport"
 puuid=$TLQPARENTUUID
 if [ "$puuid" = "" ]; then
     puuid="$sysuuid"
 fi
-dir=/tmp/tlq
 hostname=$(hostname -f)
+if [ ! -d $dir ]; then
+    errmsg="Command $cmd aborted at $hostname. No TLQ log server running."
+    curl --data-urlencode "DEPOSIT=$errmsg" http://$home/deposit > /dev/null
+    exit 1
+fi
 declare -a logs
 declare -a types
 proc=$(ps -AF | grep "tlq-server" | head -1 | awk '{print $2}')
@@ -60,6 +66,5 @@ uri="http://$hostname:$port/components/$cuuid"
 deposit="Component $cuuid created log(s) [${logs[*]}] with command $cmd queryable at $uri and has parent $puuid."
 curl --data-urlencode "DEPOSIT=$deposit" http://$home/deposit > /dev/null
 echo $deposit
-
 $cmd
 exit $?

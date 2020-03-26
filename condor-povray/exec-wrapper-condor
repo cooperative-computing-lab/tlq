@@ -12,20 +12,21 @@ done
 host=${args[0]}
 port=${args[1]}
 uuid=${args[2]}
-frame=${args[3]}
-log=${args[4]}
-logstring=${args[5]}
-ltrace=${args[6]}
-ltracestring=${args[7]}
-povray=${args[8]}
-input=${args[9]}
-output=${args[10]}
-count=${args[11]}
-height=${args[12]}
-width=${args[13]}
-debug=${args[14]}
-localtrace=${args[15]}
+dir=${args[3]}
+frame=${args[4]}
+log=${args[5]}
+logstring=${args[6]}
+ltrace=${args[7]}
+ltracestring=${args[8]}
+povray=${args[9]}
+input=${args[10]}
+output=${args[11]}
+count=${args[12]}
+height=${args[13]}
+width=${args[14]}
+debug=${args[15]}
+localtrace=${args[16]}
 
-/usr/bin/sh log-define $host $port $uuid $log $logstring $ltrace $ltracestring -- ./ltrace-wrapper-condor $frame $povray +I$input +O$output +K$count +H$height +w$width +GA$debug > log-deposit.$frame\.out ; mv $debug $log ; mv $localtrace $ltrace
+/usr/bin/sh log-define $host $port $uuid $dir $log $logstring $ltrace $ltracestring -- ./ltrace-wrapper-condor $frame $povray +I$input +O$output +K$count +H$height +w$width +GA$debug > log-deposit.$frame\.out ; mv $debug $log ; mv $localtrace $ltrace
 
 exit
