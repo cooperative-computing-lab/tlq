@@ -90,6 +90,7 @@ my $host = hostname();
         "/query" => \&run_query,
         "/jx" => \&send_json,
         "/files" => \&send_file,
+        "/rm" => \&rm_component
     );
 
     sub check_deposit {
@@ -164,6 +165,42 @@ my $host = hostname();
         my $file = query_from_json($cgi->param("PUTDATA"));
         $file = check_file($file);
         return transfer($cgi, $file);
+    }
+
+    sub rm_component {
+        my ($cgi) = @_;
+        my $component = query_from_json($cgi->param("PUTDATA"));
+        my ($err, $flag) = 0;
+        my @files = split(' ', $components{$component}{files});
+        my @failures;
+        foreach my $f (@files) {
+            $f = check_file($f);
+            my $result = unlink($f);
+            if(!$result) {
+                $err = $!;
+                $flag = 1;
+                push(@failures, $f);
+            }
+        }
+        if($flag) {
+            print(STDOUT "HTTP/1.0 200 OK\n");
+            print(STDOUT $cgi->header);
+            print(STDOUT $cgi->start_html("Component $component not deleted"));
+            print(STDOUT $cgi->h1("Could not delete the following files:\n"));
+            foreach my $f (@failures) { print(STDOUT "$f\n"); }
+            print(STDOUT "Error: $err\n");
+            print(STDOUT $cgi->end_html);
+            return 1;
+        }
+        else {
+            print(STDOUT "HTTP/1.0 200 OK\n");
+            print(STDOUT $cgi->header);
+            print(STDOUT $cgi->start_html("Component $component deleted"));
+            print(STDOUT $cgi->h1("Deleted the following files:\n"));
+            foreach my $f (@files) { print(STDOUT "$f\n"); }
+            print(STDOUT $cgi->end_html);
+            return 0;
+        }
     }
 
     sub transfer {

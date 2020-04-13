@@ -36,6 +36,7 @@ my $command_usage = "Available commands:
   JX <URI/ALIAS>
   PULL <URI/ALIAS>
   QUERY <URI/ALIAS> <STRING>
+  RM <URI/ALIAS>
 ";
 
 my %OPT;
@@ -160,6 +161,18 @@ while(defined(my $input = $term->readline($prompt))) {
         print_result("QUERY $server $target", $result);
         next; 
     }
+    elsif($action eq "RM") {
+        if(!$destination) {
+            print_command_help();
+            next;
+        }
+        $server = $destination;
+        if(exists($aliases{$server})) { $server = $aliases{$server}; }
+        $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("RM", $server, query_to_json($target)));
+        print(STDOUT "$result\n");
+        print_result("RM $server $target", $result);
+        next;
+    }
     elsif($action eq "ALIAS") {
         $aliases{$target} = $destination;
         print(STDOUT "Please use alias $target to access $destination.\n");
@@ -263,6 +276,10 @@ sub request {
     elsif($action eq "QUIT" or $action eq "EXIT") {
         $http = $components{$destination}{host} . "/exit";
         $response = $client->get($http);
+    }
+    elsif($action eq "RM") {
+        $http = $destination . "/rm";
+        $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
     }
     else { return "Request type $action not supported."; }
     if($response->is_success) { return $response->decoded_content; }
