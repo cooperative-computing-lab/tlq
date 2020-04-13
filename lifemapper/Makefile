@@ -12,6 +12,7 @@ OUTPUTS = outputs
 PERL = test
 POINTS = points
 SOURCE = ../cctools-source
+STDOUT = trace.stdout
 TIME = logs/time.dat
 TLQDIR = /disk/d11/tlq
 TOOLS = tools
@@ -19,7 +20,7 @@ TRACE = trace.debug
 TRACEMAKE = trace.jx
 WORKERS = workers/cctools_gpu_autodetect workers/log-define workers/work_queue_worker workers/worker.*.error workers/worker.*.output workers/workers.log
 
-CLEANUP = $(DATA) $(FAILED) $(GENERATOR) $(LOGCOLLECT) $(LOGS) $(LOGDEF) $(OUTPUTS) $(POINTS) $(TOOLS) $(TRACE) $(WORKERS)
+CLEANUP = $(DATA) $(FAILED) $(GENERATOR) $(LOGCOLLECT) $(LOGS) $(LOGDEF) $(OUTPUTS) $(POINTS) $(STDOUT) $(TOOLS) $(TRACE) $(WORKERS)
 
 $(CCTOOLS): /usr/bin/git
 	git clone git@github.com:cooperative-computing-lab/cctools.git $(SOURCE) || git clone https://github.com/cooperative-computing-lab/cctools.git $(SOURCE)

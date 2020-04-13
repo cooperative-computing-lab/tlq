@@ -15,32 +15,7 @@ use strict;
     use Sys::Hostname;
     use base qw(HTTP::Server::Simple::CGI);
 
-    my %dispatch = (
-        "/" => \&motd,
-        "/deposit" => \&get_deposit
-    );
-    my $llogs = 0;
-
-    sub motd {
-        my ($cgi) = @_;
-        print(STDOUT "HTTP/1.0 200 OK\n");
-        print(STDOUT $cgi->header);
-        print(STDOUT $cgi->start_html("Welcome."));
-        print(STDOUT $cgi->h1("This is the message of the day."));
-        print(STDOUT $cgi->end_html);
-        return 0;
-    }
-
-    sub cleanup {
-        my ($cgi) = @_;
-        print(STDOUT "HTTP/1.0 200 OK\n");
-        print(STDOUT $cgi->header);
-        print(STDOUT $cgi->start_html("Shutdown request received."));
-        print(STDOUT $cgi->end_html);
-        kill(-15, $$);
-        kill(-15, getppid());
-        exit 0;
-    }
+    my %dispatch = ("/deposit" => \&get_deposit);
 
     sub get_deposit {
         my ($cgi) = @_;
@@ -76,11 +51,14 @@ Required:
 
 Optional:
 
+    --port,-p   <integer>   Attempt to use selected port.
+                            Default: 9001.
+
     --help                  Display this message.
 
 Example Usage:
 
-    perl deposit-receiver
+    perl deposit-receiver --port 12345
 
 ";
 
@@ -97,19 +75,11 @@ catch Error::Simple with {
     die "Failed to parse command line options.\n";
 };
 
-my $client = 0;
-my $err = 0;
 my $port = $OPT{port};
-if(!$port) { $port = 9000; }
-if($err) {
-    print(STDERR "Could not find $err required arguments.\n");
-    print_help();
-}
-
+if(!$port) { $port = 9001; }
 my $host = hostname();
-#my $server = WebServer->new(11871);
-my $server = WebServer->new(9001);
-print(STDOUT "Server established at $host:11871.\n\n");
+my $server = WebServer->new($port);
+if($server) { print(STDOUT "Server established at $host:$port.\n\n"); }
 $server->run();
 exit(0);
 

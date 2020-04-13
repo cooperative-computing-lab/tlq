@@ -20,7 +20,7 @@
         {
             #LTRACE ENABLED PROCESS_POINTS
             "command": format(
-                "sh %s %s %s %s %s, %s.process.points.%s.out ltrace -- mkdir -p outputs && %s %s.process.points.%s.out python %s points/%s.csv outputs/%s.csv",
+                "sh %s %s %s %s %s %s.process.points.%s.out ltrace -- mkdir -p outputs && %s %s.process.points.%s.out python %s points/%s.csv outputs/%s.csv",
                 LD, HOME, PORT, LM, TLQDIR, LTL, t, LT, LTL, t, PROCESS_POINTS, t, t
             ),
             #"command": format(

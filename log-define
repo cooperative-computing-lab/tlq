@@ -14,11 +14,7 @@ if [ "$puuid" = "" ]; then
     puuid="$sysuuid"
 fi
 hostname=$(hostname -f)
-if [ ! -d $dir ]; then
-    errmsg="Command $cmd aborted at $hostname. No TLQ log server running."
-    curl --data-urlencode "DEPOSIT=$errmsg" http://$home/deposit > /dev/null
-    exit 1
-fi
+
 declare -a logs
 declare -a types
 proc=$(ps -AF | grep "tlq-server" | head -1 | awk '{print $2}')
@@ -46,6 +42,13 @@ do
 done
 cmd=$@
 cuuid=$(uuidgen)
+if [ ! -d $dir ]; then
+    errmsg="Command $cmd aborted at $hostname. No TLQ log server running at working directory $dir."
+    curl --data-urlencode "DEPOSIT=$errmsg" http://$home/deposit > /dev/null
+    exit 1
+fi
+TLQPARENTUUID="$cuuid"
+uri="http://$hostname:$port/components/$cuuid"
 j=0
 for log in "${logs[@]}"
 do
@@ -57,14 +60,12 @@ do
         let flag=1
     fi
     cmd="${cmd//$log//disk/d11/tlq/${loguuid}.log}"
-    echo "$cuuid $log $logtype $loguuid $flag" >> "$dir/deposit-log"
+    echo "$cuuid $log $logtype $loguuid $flag $cmd" >> "$dir/deposit-log"
+    deposit="Component $cuuid created log $log with command $cmd queryable at $uri."
+    curl --data-urlencode "DEPOSIT=$deposit" http://$home/deposit > /dev/null
+    echo $deposit
     let j="j+1"
 done
 
-TLQPARENTUUID="$cuuid"
-uri="http://$hostname:$port/components/$cuuid"
-deposit="Component $cuuid created log(s) [${logs[*]}] with command $cmd queryable at $uri and has parent $puuid."
-curl --data-urlencode "DEPOSIT=$deposit" http://$home/deposit > /dev/null
-echo $deposit
 $cmd
 exit $?

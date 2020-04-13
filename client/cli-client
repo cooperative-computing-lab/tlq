@@ -193,9 +193,8 @@ sub get_info {
     my ($file) = @_;
     open(FILE, $file);
     while(my $line = <FILE>) {
-        if($line =~ m/^Component (?<uuid>\S+) created log\(s\) \[(?<logs>.*)\] with command (?<command>.+) queryable at (?<uri>\S+) and has parent (?<puuid>\S+).$/) {
+        if($line =~ m/^Component (?<uuid>\S+) created log (?<logs>\S+) with command (?<command>.+) queryable at (?<uri>\S+).$/) {
             my $uuid = $+{uuid};
-            my $puuid = $+{puuid};
             my $logs = $+{logs};
             my $command = $+{command};
             my $uri = $+{uri};
@@ -204,12 +203,12 @@ sub get_info {
                 if($uri =~ m/(?<host>https?:\/\/\S+\/).+/) { $host = $+{host}; }
                 $components{$uri} = {};
                 $components{$uri}{uuid} = $uuid;
-                $components{$uri}{parent} = $puuid;
                 $components{$uri}{logs} = $logs;
                 $components{$uri}{command} = $command;
                 $components{$uri}{uri} = $uri;
                 $components{$uri}{host} = $host;
             }
+            else { $components{$uri}{logs} = $components{$uri}{logs} . " $logs"; }
         }
     }
     close(FILE);

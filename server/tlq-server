@@ -13,9 +13,9 @@ my $usage = "TLQ Log Watch Server Options:
 Required:
 
 Optional:
-    --dir,-d    <path<      Use the specified path for TLQ's working directory.
+    --dir,-d    <path>      Use the specified path for TLQ's working directory.
                             Default: /tmp/tlq
-    --port,-p   <integer>   Attempt to use selected port when server mode is used.
+    --port,-p   <integer>   Attempt to use selected port.
                             Default: 9000.
 
     --help                  Display this message.
@@ -53,7 +53,6 @@ my $host = hostname();
 {
     package WebServer;
     use Data::Dumper;
-    use File::Copy;
     use HTTP::Server::Simple::CGI;
     use JSON;
     use Sys::Hostname;
@@ -251,7 +250,7 @@ my $host = hostname();
             check_deposit();
             foreach my $type (keys(%parsers)) { parse_logs($type); }
             foreach my $uuid (keys(%logs)) {
-                if(!$logs{$uuid}{flag} and -e $logs{$uuid}{original} and $logs{$uuid}{size} < -s $logs{$uuid}{original}) { copy($logs{$uuid}{original}, $logs{$uuid}{path}); }
+                if(!$logs{$uuid}{flag} and -e $logs{$uuid}{original} and $logs{$uuid}{size} < -s $logs{$uuid}{original}) { system("cp $logs{$uuid}{original} $logs{$uuid}{path}"); }
                 $logs{$uuid}{size} = -s $logs{$uuid}{path};
             }
             sleep(10);
