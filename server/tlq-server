@@ -108,7 +108,11 @@ my $host = hostname();
             $logs{$uuid}{size} = 0;
             $logs{$uuid}{type} = $type;
             $logs{$uuid}{command} = $cmd;
-            if($redirect eq "NONE") { $logs{$uuid}{path} = "$dir/$uuid.log"; }
+            $logs{$uuid}{flag} = 0;
+            if($redirect eq "NONE") {
+                $logs{$uuid}{path} = "$dir/$uuid.log";
+                $logs{$uuid}{flag} = 1;
+            }
             if(!exists $components{$component}) {
                 $components{$component} = {};
                 $components{$component}{files} = $uuid;
@@ -230,7 +234,10 @@ my $host = hostname();
         my $parser = $parsers{$type}{path};
         my $exec = $parsers{$type}{exec};
         my @toparse;
-        foreach my $uuid (keys(%logs)) { if($logs{$uuid}{type} eq $type and ($logs{$uuid}{size} < -s $logs{$uuid}{path})) { push(@toparse, $uuid); } }
+        foreach my $uuid (keys(%logs)) {
+            if($logs{$uuid}{type} eq $type and ($logs{$uuid}{size} < -s $logs{$uuid}{path})) { push(@toparse, $uuid); }
+            $logs{$uuid}{size} = -s $logs{$uuid}{path};
+        }
         foreach my $uuid (@toparse) {
             my $component = $logs{$uuid}{component};
             my $path = $logs{$uuid}{path};
@@ -249,11 +256,10 @@ my $host = hostname();
         my $flag = 1;
         while($flag) {
             check_deposit();
-            foreach my $type (keys(%parsers)) { parse_logs($type); }
             foreach my $uuid (keys(%logs)) {
-                if(!$logs{$uuid}{flag} and -e $logs{$uuid}{original} and $logs{$uuid}{size} < -s $logs{$uuid}{original}) { system("cp $logs{$uuid}{original} $logs{$uuid}{path}"); }
-                $logs{$uuid}{size} = -s $logs{$uuid}{path};
+                if($logs{$uuid}{flag} and -e $logs{$uuid}{original} and $logs{$uuid}{size} < -s $logs{$uuid}{original}) { system("cp $logs{$uuid}{original} $logs{$uuid}{path}"); }
             }
+            foreach my $type (keys(%parsers)) { parse_logs($type); }
             sleep(10);
         }
         print(STDERR "\nExiting log watcher thread.\n");
