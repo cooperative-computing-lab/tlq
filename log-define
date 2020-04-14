@@ -17,6 +17,7 @@ hostname=$(hostname -f)
 
 declare -a logs
 declare -a types
+declare -a finals
 proc=$(ps -AF | grep "tlq-server" | head -1 | awk '{print $2}')
 port=$(netstat -tlpn 2> /dev/null | grep "$proc/perl" | tail -1 | awk '{print $4}' | cut -d ":" -f 2)
 if [ "$port" = "" ]; then
@@ -58,8 +59,11 @@ do
     flag=0
     if [ "$exists" ]; then
         let flag=1
+        finals[$j]="$log"
+    else
+        finals[$j]="$dir/${loguuid}.log"
     fi
-    cmd="${cmd//$log//disk/d11/tlq/${loguuid}.log}"
+    cmd="${cmd//$log/$dir/${loguuid}.log}"
     echo "$cuuid $log $logtype $loguuid $flag $cmd" >> "$dir/deposit-log"
     deposit="Component $cuuid created log $log with command $cmd queryable at $uri."
     curl --data-urlencode "DEPOSIT=$deposit" http://$home/deposit > /dev/null
@@ -68,4 +72,9 @@ do
 done
 
 $cmd
-exit $?
+result=$?
+for log in "${finals[@]}"
+do
+    echo "Component $cuuid created log $log with command $cmd queryable at $uri." >> $log
+done
+exit $result
