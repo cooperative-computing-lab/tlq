@@ -17,7 +17,6 @@ hostname=$(hostname -f)
 
 declare -a logs
 declare -a types
-declare -a finals
 proc=$(ps -AF | grep "tlq-server" | head -1 | awk '{print $2}')
 port=$(netstat -tlpn 2> /dev/null | grep "$proc/perl" | tail -1 | awk '{print $4}' | cut -d ":" -f 2)
 if [ "$port" = "" ]; then
@@ -59,10 +58,8 @@ do
     exists=$(grep "$log")
     cmd="${cmd//$log/$dir/${loguuid}.log}"
     if [[ "$cmd" == "$prevcmd" ]]; then
-        finals[$j]="$log"
         echo "$cuuid $log NONE $logtype $loguuid $cmd" >> "$dir/deposit-log"
     else
-        finals[$j]="$dir/${loguuid}.log"
         echo "$cuuid $log $dir/${loguuid}.log $logtype $loguuid $cmd" >> "$dir/deposit-log"
     fi
     prevcmd=$cmd
@@ -73,9 +70,4 @@ do
 done
 
 $cmd
-result=$?
-for log in "${finals[@]}"
-do
-    echo "Component $cuuid created log $log with command $cmd queryable at $uri." >> $log
-done
-exit $result
+exit $?

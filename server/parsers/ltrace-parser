@@ -24,7 +24,7 @@ my (%component, %env_vars, %files, %processes);
 my ($cmd, $host, $cmdpid, $cmdppid);
 open(LOG, $log) or die "Could not open specified log file.\n";
 while(my $line = <LOG>) {
-    #Wrote an ltrace for command: "dd if=in.dat of=out.dat bs=4096 count=2500" with PID 12539 from PPID 12538 with result 0
+    #Wrote an ltrace for command: "dd if=in.dat of=out.dat bs=4096 count=2500" with PID 12539 from PPID 12538 on host.lab.edu with result 0
     if($line =~ m/Wrote an ltrace for command: \"(?<cmd>.*)\" with PID (?<pid>\d+) from PPID (?<ppid>\d+) on (?<host>\S+) with result (?<exited>\S+)$/) {
         $cmd = $+{cmd};
         $cmdpid = $+{pid};
@@ -86,19 +86,16 @@ while(my $line = <LOG>) {
 
 foreach my $file (keys(%files)) {
     my %r = %{$files{$file}};
-    my $json = make_json(%r);
-    print(STDOUT "$json\n");
+    $component{metadata}{files}{$file} = \%r;
 }
 foreach my $proc (keys(%processes)) {
     if(!$processes{$proc}{ppid}) { $processes{$proc}{ppid} = $cmdpid; }
     my %r = %{$processes{$proc}};
-    my $json = make_json(%r);
-    print(STDOUT "$json\n");
+    $component{metadata}{processes}{$proc} = \%r;
 }
 foreach my $env (keys(%env_vars)) {
     my %r = %{$env_vars{$env}};
-    my $json = make_json(%r);
-    print(STDOUT "$json\n");
+    $component{metadata}{"environment-variables"}{$env} = \%r;
 }
 my $json = make_json(%component);
 print(STDOUT "$json\n");
