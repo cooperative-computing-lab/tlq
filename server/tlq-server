@@ -98,7 +98,7 @@ my $host = hostname();
             chomp($line);
             my @parts = split(' ', $line);
             my ($component, $log, $redirect, $type, $uuid) = @parts;
-            my $cmd = join(' ', @parts[4..$#parts]);
+            my $cmd = join(' ', @parts[5..$#parts]);
             if(exists($logs{$uuid})) { next; }
             $logs{$uuid} = {};
             $logs{$uuid}{component} = $component;
@@ -108,7 +108,7 @@ my $host = hostname();
             $logs{$uuid}{size} = 0;
             $logs{$uuid}{type} = $type;
             $logs{$uuid}{command} = $cmd;
-            if($redirect eq "NONE") { $logs{$uuid}{path} = $log; }
+            if($redirect eq "NONE") { $logs{$uuid}{path} = "$dir/$uuid.log"; }
             if(!exists $components{$component}) {
                 $components{$component} = {};
                 $components{$component}{files} = $uuid;
