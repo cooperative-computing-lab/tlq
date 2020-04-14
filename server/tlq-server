@@ -97,17 +97,17 @@ my $host = hostname();
         while(my $line = <DEPOSIT>) {
             chomp($line);
             my @parts = split(' ', $line);
-            my ($component, $log, $type, $uuid, $flag) = @parts;
+            my ($component, $log, $redirect, $type, $uuid, $flag) = @parts;
             if(exists($logs{$uuid})) { next; }
             $logs{$uuid} = {};
             $logs{$uuid}{component} = $component;
             $logs{$uuid}{flag} = $flag;
             $logs{$uuid}{json} = "$dir/$uuid.json";
             $logs{$uuid}{original} = $log;
-            $logs{$uuid}{path} = $log;
+            $logs{$uuid}{path} = $redirect;
             $logs{$uuid}{size} = 0;
             $logs{$uuid}{type} = $type;
-            if($flag) { $logs{$uuid}{path} = "$dir/$uuid.log"; }
+            if($flag) { $logs{$uuid}{path} = $log; }
             if(!exists $components{$component}) {
                 $components{$component} = {};
                 $components{$component}{files} = $uuid;

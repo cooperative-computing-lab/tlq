@@ -51,20 +51,22 @@ fi
 TLQPARENTUUID="$cuuid"
 uri="http://$hostname:$port/components/$cuuid"
 j=0
+prevcmd="$cmd"
 for log in "${logs[@]}"
 do
     logtype=${types[j]}
     loguuid=$(uuidgen)
     exists=$(grep "$log")
     flag=0
-    if [ "$exists" ]; then
+    cmd="${cmd//$log/$dir/${loguuid}.log}"
+    if [ "$cmd" = $prevcmd ]; then
         let flag=1
         finals[$j]="$log"
+        echo "$cuuid $log NONE $logtype $loguuid $flag $cmd" >> "$dir/deposit-log"
     else
         finals[$j]="$dir/${loguuid}.log"
+        echo "$cuuid $log $dir/${loguuid}.log $logtype $loguuid $flag $cmd" >> "$dir/deposit-log"
     fi
-    cmd="${cmd//$log/$dir/${loguuid}.log}"
-    echo "$cuuid $log $logtype $loguuid $flag $cmd" >> "$dir/deposit-log"
     deposit="Component $cuuid created log $log with command $cmd queryable at $uri."
     curl --data-urlencode "DEPOSIT=$deposit" http://$home/deposit > /dev/null
     echo $deposit
