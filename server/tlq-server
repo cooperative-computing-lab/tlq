@@ -60,16 +60,15 @@ my $host = hostname();
     use URI::Encode;
     use base qw(HTTP::Server::Simple::CGI);
 
-    my %components; #Components have a UUID and a list of files
     my %logs; #Logs have a UUID, path, JSON path, type, component, and size
     my %parsers; #Parsers have an type ID, path, and executor
     #my $dir = "/disk/d11/tlq";
     if(!(-e $dir)) { mkdir($dir); }
-    else {
-        unlink("$dir/lookup-log");
-        unlink("$dir/deposit-queries");
-        unlink("$dir/deposit-parser");
-    }
+    else { check_deposit(); }
+    #    unlink("$dir/lookup-log");
+    #    unlink("$dir/deposit-queries");
+    #    unlink("$dir/deposit-parser");
+    #}
     chmod(0766, $dir);
     opendir(DIR, "parsers");
     my @localparsers = grep(/-parser$/,readdir(DIR));
@@ -111,35 +110,32 @@ my $host = hostname();
             $logs{$uuid}{command} = $cmd;
             $logs{$uuid}{flag} = 0;
             $logs{$uuid}{parsed} = 0;
+            if(-e $logs{$uuid}{json}) { $logs{$uuid}{parsed} = 1; }
             if($redirect eq "NONE") {
                 $logs{$uuid}{path} = "$dir/$uuid.log";
                 $logs{$uuid}{flag} = 1;
             }
-            if(!exists $components{$component}) {
-                $components{$component} = {};
-                $components{$component}{files} = $uuid;
-            }
-            else { $components{$component}{files} = $components{$component}{files} . " $uuid"; }
         }
         close(DEPOSIT);
     }
 
     sub check_file {
-        my ($file) = @_;
-        if(!$file) { return 0; }
-        if(exists($logs{$file})) { $file = $logs{$file}{path}; }
-        if(!(-e $file)) { return 0; }
+        my ($file, $mode) = @_;
+        if(!$file) { 
+            print(STDERR "File not specified.\n");
+            return 0; }
+        if(exists($logs{$file}) and !$mode) { $file = $logs{$file}{path}; }
+        elsif(exists($logs{$file}) and $mode) { $file = $logs{$file}{json}; }
+        if(!(-e $file)) { 
+            print(STDERR "File $file does not exist.\n");
+            return 0; }
         my $result = open(FILE, $file);
         close(FILE);
-        if(!$result) { return 0; }
+        if(!$result) { 
+            print(STDERR "Could not open file $file.\n");
+            return 0; }
         return $file;
     } 
-
-    sub component_get_files {
-        my ($component) = @_;
-        my @array = split($components{$component}{files}, ' ');
-        return @array;
-    }
 
     sub run_query {
         my ($cgi) = @_;
@@ -160,16 +156,19 @@ my $host = hostname();
     sub send_json {
         my ($cgi) = @_;
         my ($uuid, $json);
-        if($cgi->path_info() =~ m/jx\/(?<uuid>\S+)/) { $uuid = $+{uuid}; }
-        foreach my $l (keys(%logs)) { if($logs{$l}{component} == $uuid) { $json = $logs{$l}{json}; } }
-        $json = check_file($json);
+        if($cgi->path_info() =~ m/jx\/(?<uuid>[a-f0-9\-]+)(.json)?/) { $uuid = $+{uuid}; }
+        $json = "$uuid.json";
+        #foreach my $l (keys(%logs)) { if($logs{$l}{component} == $uuid) { $json = $logs{$l}{json}; } }
+        print(STDERR "Checking for file $json.\n");
+        $json = check_file($uuid, 1);
+        print(STDERR "Attempting to transfer file $json.\n");
         return transfer($cgi, $json);
     }
 
     sub send_file {
         my ($cgi) = @_;
         my $file = query_from_json($cgi->param("PUTDATA"));
-        $file = check_file($file);
+        $file = check_file($file, 0);
         return transfer($cgi, $file);
     }
 
@@ -177,15 +176,18 @@ my $host = hostname();
         my ($cgi) = @_;
         my $component = query_from_json($cgi->param("PUTDATA"));
         my ($err, $flag) = 0;
-        my @files = split(' ', $components{$component}{files});
-        my @failures;
-        foreach my $f (@files) {
-            $f = check_file($f);
-            my $result = unlink($f);
-            if(!$result) {
-                $err = $!;
-                $flag = 1;
-                push(@failures, $f);
+        my (@failures, @files);
+        foreach my $l (keys(%logs)) {
+            if($logs{$l}{component} eq $component) {
+                $l = check_file($l, 0);
+                my $result = unlink($logs{$l}{json});
+                $result = unlink($logs{$l}{path});
+                if(!$result) {
+                    $err = $!;
+                    $flag = 1;
+                    push(@failures, $l);
+                }
+                else { push(@files, $l); }
             }
         }
         if($flag) {
@@ -284,6 +286,7 @@ my $host = hostname();
     sub handle_request {
         my ($self, $cgi) = @_;
         my $path = $cgi->path_info();
+        print(STDERR "Got path: $path\n");
         if($path =~ m/jx/) { $path = "/jx"; }
         elsif($path =~ m/query/) { $path = "/query"; }
         my $handler = $dispatch{$path};
