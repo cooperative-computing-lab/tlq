@@ -47,6 +47,8 @@ $(SHAREDFS):
 
 all: $(CCTOOLS) $(CONDORPOVRAY) $(LIFEMAPPER) $(PERLBASE) $(PERLS) $(SOURCE)
 
+build: $(CCTOOLS) $(PERLBASE) $(PERLS) $(SOURCE)
+
 clean:
 	cd condor-povray && make clean
 	cd lifemapper && make clean
