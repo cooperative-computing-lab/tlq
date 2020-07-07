@@ -145,11 +145,7 @@ my $host = hostname();
         $encode{query} = $query;
         $encode{result} = `$query`;
         my $result = JSON->new->encode(\%encode);
-        print(STDOUT "HTTP/1.0 200 OK\n");
-        print(STDOUT $cgi->header);
-        print(STDOUT $cgi->start_html("Record(s) retrieved."));
-        print(STDOUT "$result from query $query");
-        print(STDOUT $cgi->end_html);
+        print(STDOUT "$result");
         return 0;
     }
 
@@ -224,12 +220,7 @@ my $host = hostname();
         open(FILE, $file);
         while(my $line = <FILE>) { $rawtext = $rawtext . $line; }
         close(FILE);
-        print(STDOUT "HTTP/1.0 200 OK\n");
-        print(STDOUT $cgi->header);
-        print(STDOUT $cgi->start_html("Log sent"));
-        print(STDOUT $cgi->h1("Dumping raw contents of '$file' to STDOUT"));
-        print(STDOUT "\n$rawtext");
-        print(STDOUT $cgi->end_html);
+        print(STDOUT "$rawtext");
         return 0;
     }
 
