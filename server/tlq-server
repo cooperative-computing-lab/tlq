@@ -62,7 +62,6 @@ my $host = hostname();
 
     my %logs; #Logs have a UUID, path, JSON path, type, component, and size
     my %parsers; #Parsers have an type ID, path, and executor
-    #my $dir = "/disk/d11/tlq";
     if(!(-e $dir)) { mkdir($dir); }
     else { check_deposit(); }
     chmod(0766, $dir);
@@ -93,12 +92,13 @@ my $host = hostname();
         while(my $line = <DEPOSIT>) {
             chomp($line);
             my @parts = split(' ', $line);
-            my ($log, $redirect, $type, $uuid) = @parts;
-            my $cmd = join(' ', @parts[4..$#parts]);
+            my ($log, $home, $redirect, $type, $uuid) = @parts;
+            my $cmd = join(' ', @parts[5..$#parts]);
             if(exists($logs{$uuid})) { next; }
             $logs{$uuid} = {};
             $logs{$uuid}{json} = "$dir/$uuid.json";
             $logs{$uuid}{original} = $log;
+            $logs{$uuid}{home} = $home;
             $logs{$uuid}{path} = $redirect;
             $logs{$uuid}{size} = 0;
             $logs{$uuid}{type} = $type;
@@ -110,6 +110,10 @@ my $host = hostname();
                 $logs{$uuid}{path} = "$dir/$uuid.log";
                 $logs{$uuid}{flag} = 1;
             }
+            my $uri="http://$host:$port/[ACTION]/$uuid"
+            my $deposit = "$cmd created log $log queryable at $uri."
+            system("curl -s --data-urlencode \"DEPOSIT=$deposit\" http://$home/deposit");
+
         }
         close(DEPOSIT);
     }
@@ -188,13 +192,13 @@ my $host = hostname();
         if($flag) {
             $encode{result} = "failure";
             my $json = JSON->new->encode(\%encode);
-            print(STDOUT $cgi->start_html("$json"));
+            print(STDOUT "$json");
             return 1;
         }
         else {
             $encode{result} = "success";
             my $json = JSON->new->encode(\%encode);
-            print(STDOUT $cgi->start_html("$json"));
+            print(STDOUT "$json");
             return 0;
         }
     }

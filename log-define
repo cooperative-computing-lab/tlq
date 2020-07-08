@@ -50,9 +50,9 @@ do
     exists=$(grep "$log")
     cmd="${cmd//$log/$dir/${loguuid}.log}"
     if [[ "$cmd" == "$origcmd" ]]; then
-        echo "$log NONE $logtype $loguuid $cmd" >> "$dir/deposit-log"
+        echo "$log $home NONE $logtype $loguuid $cmd" >> "$dir/deposit-log"
     else
-        echo "$log $dir/${loguuid}.log $logtype $loguuid $cmd" >> "$dir/deposit-log"
+        echo "$log $home $dir/${loguuid}.log $logtype $loguuid $cmd" >> "$dir/deposit-log"
     fi
 	uri="http://$hostname:$port/components/$loguuid"
     origcmd=$cmd
