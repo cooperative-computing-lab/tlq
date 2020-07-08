@@ -65,10 +65,6 @@ my $host = hostname();
     #my $dir = "/disk/d11/tlq";
     if(!(-e $dir)) { mkdir($dir); }
     else { check_deposit(); }
-    #    unlink("$dir/lookup-log");
-    #    unlink("$dir/deposit-queries");
-    #    unlink("$dir/deposit-parser");
-    #}
     chmod(0766, $dir);
     opendir(DIR, "parsers");
     my @localparsers = grep(/-parser$/,readdir(DIR));
@@ -89,7 +85,7 @@ my $host = hostname();
         "/query" => \&run_query,
         "/jx" => \&send_json,
         "/files" => \&send_file,
-        "/rm" => \&rm_component
+        "/rm" => \&rm_file
     );
 
     sub check_deposit {
@@ -97,11 +93,10 @@ my $host = hostname();
         while(my $line = <DEPOSIT>) {
             chomp($line);
             my @parts = split(' ', $line);
-            my ($component, $log, $redirect, $type, $uuid) = @parts;
-            my $cmd = join(' ', @parts[5..$#parts]);
+            my ($log, $redirect, $type, $uuid) = @parts;
+            my $cmd = join(' ', @parts[4..$#parts]);
             if(exists($logs{$uuid})) { next; }
             $logs{$uuid} = {};
-            $logs{$uuid}{component} = $component;
             $logs{$uuid}{json} = "$dir/$uuid.json";
             $logs{$uuid}{original} = $log;
             $logs{$uuid}{path} = $redirect;
@@ -154,7 +149,6 @@ my $host = hostname();
         my ($uuid, $json);
         if($cgi->path_info() =~ m/jx\/(?<uuid>[a-f0-9\-]+)(.json)?/) { $uuid = $+{uuid}; }
         $json = "$uuid.json";
-        #foreach my $l (keys(%logs)) { if($logs{$l}{component} == $uuid) { $json = $logs{$l}{json}; } }
         print(STDERR "Checking for file $json.\n");
         $json = check_file($uuid, 1);
         print(STDERR "Attempting to transfer file $json.\n");
@@ -168,41 +162,39 @@ my $host = hostname();
         return transfer($cgi, $file);
     }
 
-    sub rm_component {
+    #TODO rework client rm operation
+    sub rm_file {
         my ($cgi) = @_;
-        my $component = query_from_json($cgi->param("PUTDATA"));
-        my ($err, $flag) = 0;
-        my (@failures, @files);
-        foreach my $l (keys(%logs)) {
-            if($logs{$l}{component} eq $component) {
-                $l = check_file($l, 0);
-                my $result = unlink($logs{$l}{json});
-                $result = unlink($logs{$l}{path});
-                if(!$result) {
-                    $err = $!;
-                    $flag = 1;
-                    push(@failures, $l);
-                }
-                else { push(@files, $l); }
-            }
+        my $uuid, $err, $flag, $result = 0;
+        my %encode;
+        if($cgi->path_info() =~ m/rm\/(?<uuid>[a-f0-9\-]+)(.json)?/ or $cgi->path_info() =~ m/rm\/(?<uuid>[a-f0-9\-]+)(.json)?/) { $uuid = $+{uuid}; }
+        if($uuid) {
+            my $file = check_file($uuid, 1);
+            if($file) { $result = unlink($file); }
+            if(!$result) {
+                $err = $!;
+                $flag = 1; }
+            $encode{json} = $file;
+            $encode{error} = $err;
+            $file = check_file($uuid, 0);
+            if($file) { unlink($file); }
+            if(!$result) {
+                $err = $!;
+                $flag = 1; }
+            $encode{log} = $file;
+            $encode{error} = $err;
+            if(!$flag) { delete($logs{$uuid}); }
         }
         if($flag) {
-            print(STDOUT "HTTP/1.0 200 OK\n");
-            print(STDOUT $cgi->header);
-            print(STDOUT $cgi->start_html("Component $component not deleted"));
-            print(STDOUT $cgi->h1("Could not delete the following files:\n"));
-            foreach my $f (@failures) { print(STDOUT "$f\n"); }
-            print(STDOUT "Error: $err\n");
-            print(STDOUT $cgi->end_html);
+            $encode{result} = "failure";
+            my $json = JSON->new->encode(\%encode);
+            print(STDOUT $cgi->start_html("$json"));
             return 1;
         }
         else {
-            print(STDOUT "HTTP/1.0 200 OK\n");
-            print(STDOUT $cgi->header);
-            print(STDOUT $cgi->start_html("Component $component deleted"));
-            print(STDOUT $cgi->h1("Deleted the following files:\n"));
-            foreach my $f (@files) { print(STDOUT "$f\n"); }
-            print(STDOUT $cgi->end_html);
+            $encode{result} = "success";
+            my $json = JSON->new->encode(\%encode);
+            print(STDOUT $cgi->start_html("$json"));
             return 0;
         }
     }
@@ -210,10 +202,11 @@ my $host = hostname();
     sub transfer {
         my ($cgi, $file) = @_;
         if(!$file) {
-            print(STDOUT "HTTP/1.0 500 Internal server error\n");
-            print(STDOUT $cgi->header);
-            print(STDOUT $cgi->start_html("File not found."));
-            print(STDOUT $cgi->end_html);
+            my %encode;
+            $encode{result} = "failure";
+            $encode{error} = "$file not found";
+            my $json = JSON->new->encode(\%encode);
+            print(STDOUT "$json");
             return 1;
         }
         my $rawtext = "";
@@ -280,15 +273,16 @@ my $host = hostname();
         print(STDERR "Got path: $path\n");
         if($path =~ m/jx/) { $path = "/jx"; }
         elsif($path =~ m/query/) { $path = "/query"; }
+        elsif($path =~ m/rm/) { $path = "/rm"; }
         my $handler = $dispatch{$path};
         check_deposit();
         if(ref($handler) eq "CODE") { $handler->($cgi); }
         else {
-            print(STDOUT "HTTP/1.0 404 Not found\n");
-            print(STDOUT $cgi->header);
-            print(STDOUT $cgi->start_html("Not found"));
-            print(STDOUT $cgi->h1("Not found"));
-            print(STDOUT $cgi->end_html);
+            %encode;
+            $encode{result} = "failure";
+            $encode{error} = "404 Not found";
+            my $json = JSON->new->encode(\%encode);
+            print(STDOUT "$json");
         }
         return 0;
     }

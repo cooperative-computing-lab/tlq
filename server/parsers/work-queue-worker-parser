@@ -51,7 +51,7 @@ while(my $line = <LOG>) {
     }
     #wq: WORK_QUEUE_SANDBOX set to /var/condor/execute/dir_10583/worker-213124-10614.
     elsif($line =~ m/wq: WORK_QUEUE_SANDBOX set to \S+-\d+-(?<pid>\d+)/) {
-        $component{pid} = $+{pid};
+        $component{pid} = int($+{pid});
     }
     #wq: rx from master: task 10
     elsif($line =~ m/wq: rx from master: task (?<taskid>\d+)/) {
@@ -62,13 +62,13 @@ while(my $line = <LOG>) {
     }
     #wq: started process 23264: ./ltrace-wrapper ./fscheck runtime.config && sleep 1
     elsif($line =~ m/wq: started process (?<pid>\d+): (?<command>[^\n]+)/) {
-        my $pid = $+{pid};
+        my $pid = int($+{pid});
         $worker{pids}{$pid}{command} = $+{command};
     }
     #wq: task 82 (pid 1110) exited normally with exit code 1
     elsif($line =~ m/wq: task (?<taskid>\d+) \(pid (?<pid>\d+)\) exited \S+ with exit code (?<exited>\d+)/) {
-        my $task = $+{taskid};
-        my $pid = $+{pid};
+        my $task = int($+{taskid});
+        my $pid = int($+{pid});
         $worker{tasks}{$task}{pid} = $pid;
         $worker{tasks}{$task}{command} = $worker{pids}{$pid}{command};
         $worker{tasks}{$task}{exited} = $+{exited};

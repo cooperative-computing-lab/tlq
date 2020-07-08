@@ -4,21 +4,16 @@ homehost=$1
 shift
 homeport=$1
 shift
-sysuuid="$1"
-shift
 dir="$1"
 shift
 home="$homehost:$homeport"
-puuid=$TLQPARENTUUID
-if [ "$puuid" = "" ]; then
-    puuid="$sysuuid"
-fi
 hostname=$(hostname -f)
 
 declare -a logs
 declare -a types
 proc=$(ps -AF | grep "tlq-server" | head -1 | awk '{print $2}')
 port=$(netstat -tlpn 2> /dev/null | grep "$proc/perl" | tail -1 | awk '{print $4}' | cut -d ":" -f 2)
+#Default TLQ server port is 11855
 if [ "$port" = "" ]; then
     let port="11855"
 fi
@@ -41,29 +36,27 @@ do
     shift
 done
 cmd=$@
-cuuid=$(uuidgen)
 if [ ! -d $dir ]; then
     errmsg="Command $cmd aborted at $hostname. No TLQ log server running at working directory $dir."
-    curl --data-urlencode "DEPOSIT=$errmsg" http://$home/deposit > /dev/null
+    curl -s --data-urlencode "DEPOSIT=$errmsg" http://$home/deposit
     exit 1
 fi
-TLQPARENTUUID="$cuuid"
-uri="http://$hostname:$port/components/$cuuid"
 j=0
-prevcmd=$cmd
+origcmd=$cmd
 for log in "${logs[@]}"
 do
     logtype=${types[j]}
     loguuid=$(uuidgen)
     exists=$(grep "$log")
     cmd="${cmd//$log/$dir/${loguuid}.log}"
-    if [[ "$cmd" == "$prevcmd" ]]; then
-        echo "$cuuid $log NONE $logtype $loguuid $cmd" >> "$dir/deposit-log"
+    if [[ "$cmd" == "$origcmd" ]]; then
+        echo "$log NONE $logtype $loguuid $cmd" >> "$dir/deposit-log"
     else
-        echo "$cuuid $log $dir/${loguuid}.log $logtype $loguuid $cmd" >> "$dir/deposit-log"
+        echo "$log $dir/${loguuid}.log $logtype $loguuid $cmd" >> "$dir/deposit-log"
     fi
-    prevcmd=$cmd
-    deposit="Component $cuuid created log $log with command $cmd queryable at $uri."
+	uri="http://$hostname:$port/components/$loguuid"
+    origcmd=$cmd
+    deposit="$cmd created log $log queryable at $uri."
     curl --data-urlencode "DEPOSIT=$deposit" http://$home/deposit > /dev/null
     echo $deposit
     let j="j+1"
