@@ -1,0 +1,44 @@
+{
+"define" : {
+#Here is a list of the plays we will retrieve
+"PLAYS": ["henry_iv_part_1",
+			  "henry_iv_part_2",
+			  "henry_vi_part_1",
+			  "henry_vi_part_2",
+			  "henry_vi_part_3"
+	],
+"HOME": "disc01.crc.nd.edu",
+"PORT": "9001",
+"LD": "log-define",
+"LT": "./ltrace-wrapper",
+"LTL": "/disk/d11/tlq/shakespeare.ltrace",
+"TLQDIR": "/disk/d11/tlq"
+},
+
+"rules": [
+{
+	"command": "perl count_characters.pl",
+	"inputs": [format("characters_%s.txt", p) for p in PLAYS,
+			   "count_characters.pl"
+	],
+	"outputs": ["top_character.txt"]
+},
+
+{
+	"command": format("curl -s -o %s.txt http://ccl.cse.nd.edu/workflows/shakespeare/%s.txt", p, p),
+	"inputs": [],
+	"outputs": [format("%s.txt", p)],
+	"local_job": true
+} for p in PLAYS,
+
+{
+	"command": format("sh %s %s %s %s %s.%s.log ltrace -- %s %s.%s.log perl text_analyzer.pl %s.txt", LD, HOME, PORT, TLQDIR, LTL, p, LT, LTL, p, p),
+	"inputs": [format("%s.txt", p),
+				"text_analyzer.pl",
+				LD,
+				LT
+	],
+	"outputs": [format("characters_%s.txt", p)]
+} for p in PLAYS
+
+]}

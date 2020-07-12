@@ -54,11 +54,6 @@ do
     else
         echo "$log $home $dir/${loguuid}.log $logtype $loguuid $cmd" >> "$dir/deposit-log"
     fi
-	#uri="http://$hostname:$port/components/$loguuid"
-    #origcmd=$cmd
-    #deposit="$cmd created log $log queryable at $uri."
-    #curl --data-urlencode "DEPOSIT=$deposit" http://$home/deposit > /dev/null
-    #echo $deposit
     let j="j+1"
 done
 

@@ -18,7 +18,6 @@ use strict;
 {
     package WebServer;
     use HTTP::Server::Simple::CGI;
-    use Sys::Hostname;
     use base qw(HTTP::Server::Simple::CGI);
     my %dispatch = ("/deposit" => \&get_deposit);
 

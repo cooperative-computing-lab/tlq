@@ -1,38 +1,28 @@
+ANALYZE = text_analyzer.pl
 CCTOOLS = ../cctools
-DATA = data
+COUNT = count_characters.pl
 FAILED = makeflow.failed.*
-GENERATOR = split.py
-LIFEMAPPER = makeflow-examples/lifemapper
-LOGCOLLECT = logs/disc20 logs/disc21 logs/disc22 logs/disc23 logs/disc24 logs/disc25 logs/disc26 logs/student10
-LOGS = *.wqlog *.debug *.trace
+SHAKESPEARE = makeflow-examples/shakespeare
+LOGS = *.makeflowlog *.wqlog *.debug *.trace
 LTRACE = ltrace-wrapper
 LOGDEF = log-define
-MAKEFLOW = $(TRACEMAKE)
-OUTPUTS = outputs
-PERL = test
-POINTS = points
+PERLS = $(ANALYZE) $(COUNT)
 SOURCE = ../cctools-source
-TIME = logs/time.dat
-TLQDIR = /disk/d11/tlq
-TOOLS = tools
 TRACE = trace.debug
 TRACEMAKE = trace.jx
 WORKERS = workers/cctools_gpu_autodetect workers/log-define workers/work_queue_worker workers/worker.*.error workers/worker.*.output workers/workers.log
 
-CLEANUP = $(DATA) $(FAILED) $(GENERATOR) $(LOGCOLLECT) $(LOGS) $(LOGDEF) $(OUTPUTS) $(POINTS) $(TOOLS) $(TRACE) $(WORKERS)
+CLEANUP = $(FAILED) $(LOGS) $(LOGDEF) $(LTRACE) $(PERLS) $(TRACE) $(WORKERS)
 
 $(CCTOOLS): /usr/bin/git
 	git clone git@github.com:cooperative-computing-lab/cctools.git $(SOURCE) || git clone https://github.com/cooperative-computing-lab/cctools.git $(SOURCE)
 	mkdir $(CCTOOLS) || true
 	cd $(SOURCE) && ./configure --strict --prefix $(CCTOOLS) --tcp-low-port 9000 --tcp-high-port 9500 && make install
 
-$(GENERATOR): $(CCTOOLS)
+$(ANALYZE): $(CCTOOLS)
 	git clone git@github.com:cooperative-computing-lab/makeflow-examples.git || git clone https://github.com/cooperative-computing-lab/makeflow-examples.git
-	mv $(LIFEMAPPER)/data $(LIFEMAPPER)/tools $(LIFEMAPPER)/$(GENERATOR) .
+	mv $(SHAKESPEARE)/$(COUNT) $(SHAKESPEARE)/$(ANALYZE) .
 	rm -rf makeflow-examples
-
-$(LOGCOLLECT): $(TRACE)
-	cd logs && sh pull-data $(TLQDIR)
 
 $(LOGDEF):
 	cp ../$(LOGDEF) .
@@ -40,10 +30,7 @@ $(LOGDEF):
 $(LTRACE):
 	cp ../$(LTRACE) .
 
-$(POINTS): $(CCTOOLS) $(GENERATOR)
-	python $(GENERATOR) data/points/large.csv
-
-$(TRACE): $(LOGDEF) $(LTRACE) $(POINTS) $(TRACEMAKE) $(WORKERS)
+$(TRACE): $(LOGDEF) $(LTRACE) $(PERLS) $(TRACEMAKE) $(WORKERS)
 	cd workers && condor_submit workers.submit
 	makeflow -T wq -N wq-trace --jx trace.jx
 
@@ -52,9 +39,9 @@ $(WORKERS): $(CCTOOLS)
 	cp ../cctools/bin/work_queue_worker ./workers
 	cp ../log-define ./workers
 
-all: $(CCTOOLS) $(TRACE)
+all: $(CCTOOLS) $(ANALYZE) $(TRACE)
 
-build: $(GENERATOR) $(LOGDEF) $(POINTS)
+build: $(ANALYZE) $(LOGDEF) $(LTRACE)
 
 clean:
 	../cctools/bin/makeflow -c --jx $(TRACEMAKE) || true
