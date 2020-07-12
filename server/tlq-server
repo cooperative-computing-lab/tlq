@@ -168,7 +168,7 @@ my $host = hostname();
     #TODO rework client rm operation
     sub rm_file {
         my ($cgi) = @_;
-        my $uuid, $err, $flag, $result = 0;
+        my ($uuid, $err, $flag, $result) = 0;
         my %encode;
         if($cgi->path_info() =~ m/rm\/(?<uuid>[a-f0-9\-]+)(.json)?/ or $cgi->path_info() =~ m/rm\/(?<uuid>[a-f0-9\-]+)(.log)?/) { $uuid = $+{uuid}; }
         if($uuid) {
@@ -176,14 +176,16 @@ my $host = hostname();
             if($file) { $result = unlink($file); }
             if(!$result) {
                 $err = $!;
-                $flag = 1; }
+                $flag = 1;
+            }
             $encode{json} = $file;
             $encode{error} = $err;
             $file = check_file($uuid, 0);
             if($file) { unlink($file); }
             if(!$result) {
                 $err = $!;
-                $flag = 1; }
+                $flag = 1;
+            }
             $encode{log} = $file;
             $encode{error} = $err;
             if(!$flag) { delete($logs{$uuid}); }
@@ -283,7 +285,7 @@ my $host = hostname();
         check_deposit();
         if(ref($handler) eq "CODE") { $handler->($cgi); }
         else {
-            %encode;
+            my %encode;
             $encode{result} = "failure";
             $encode{error} = "404 Not found";
             my $json = JSON->new->encode(\%encode);
