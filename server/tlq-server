@@ -110,8 +110,8 @@ my $host = hostname();
                 $logs{$uuid}{path} = "$dir/$uuid.log";
                 $logs{$uuid}{noredirect} = 1;
             }
-            my $uri="http://$host:$port/<ACTION>/$uuid"
-            my $deposit = "$cmd created log $log queryable at $uri."
+            my $uri="http://$host:$port/<ACTION>/$uuid";
+            my $deposit = "$cmd created log $log queryable at $uri.";
             system("curl -s --data-urlencode \"DEPOSIT=$deposit\" http://$home/deposit");
         }
         close(DEPOSIT);
