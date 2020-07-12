@@ -56,8 +56,6 @@ catch Error::Simple with {
 
 my $client = 0;
 my $err = 0;
-my $jx = "";
-my $jxmode = 0;
 my $server = "";
 my $log = $OPT{log};
 my $session = $OPT{session};
@@ -92,44 +90,19 @@ while(defined(my $input = $term->readline($prompt))) {
     my $destination = $parts[1];
     my $target = $parts[2];
     my $result = "";
-    if($jxmode) {
-        if($action eq "") {
-            $prompt = " \$ ";
-            $jxmode = 0;
-            if(exists($aliases{$server})) { $server = $aliases{$server}; }
-            $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("JX", $server, query_to_json($jx)));
-            #print(STDOUT "$result\n");
-            my $json = parse_json_from_html($result);
-            open(JX, ">>", "tmp.json");
-            print(JX "$json");
-            close(JX);
-            #$result = `./jx_query $json '$jx'`;
-            $result = `./jx_query ./tmp.json '$jx'`;
-            print(STDOUT "$result\n");
-            unlink("tmp.json");
-            print_result("JX $jx", $result);
-            next;
-        }
-        $jx = $jx . $input;
-        next;
-    }
     $input = uc($action) . " $destination $target";
     $input =~ s/\s+$//;
     $term->add_history($input) if /\S/;
     if($session) { print(HISTORY "$input\n"); }
     if(uc($input) eq "QUIT" or uc($input) eq "EXIT") { exit(0); } 
-    if($action ne "LIST" and !$destination) { print_command_help(); }
-    elsif($action eq "JX") {
-        if(!$destination) {
-            print_command_help();
-            next;
-        }
-        $server = $destination;
-        $jxmode = 1;
-        $jx = "";
-        $prompt = " > ";
+    if($action eq "JX") {
+        if(!-e "./jx_test") { system("cp ../cctools-source/dttools/src/jx_test ."); }
+        $result = system("./jx_test");
+        print(STDOUT "$result\n");
+        print_result("JX", $result);
         next; 
     }
+    if($action ne "LIST" and !$destination) { print_command_help(); } 
     elsif($action eq "PULL") {
         if(!$destination) {
             print_command_help();
@@ -194,8 +167,8 @@ sub get_info {
     my ($file) = @_;
     open(FILE, $file);
     while(my $line = <FILE>) {
-        if($line =~ m/^Component (?<uuid>\S+) created log (?<logs>\S+) with command (?<command>.+) queryable at (?<uri>\S+).$/) {
-            my $uuid = $+{uuid};
+        #work_queue_worker --cores 4 --memory 15999 --disk 916827 -M wq-trace -d all -o /disk/d11/tlq/66d71323-86b3-43dd-b978-6897d5c2b2d5.log --debug-rotate-max 0 -t 900 created log /disk/d11/tlq/worker.0.debug queryable at http://:11855/<ACTION>/66d71323-86b3-43dd-b978-6897d5c2b2d5.
+        if($line =~ m/^(?<command>.+) created log\(s\) (?<logs>\S+) queryable at (?<uri>\S+).$/) {
             my $logs = $+{logs};
             my $command = $+{command};
             my $uri = $+{uri};
@@ -203,7 +176,6 @@ sub get_info {
             if(!exists $components{$uri}) {
                 if($uri =~ m/(?<host>https?:\/\/\S+\/).+/) { $host = $+{host}; }
                 $components{$uri} = {};
-                $components{$uri}{uuid} = $uuid;
                 $components{$uri}{logs} = $logs;
                 $components{$uri}{command} = $command;
                 $components{$uri}{uri} = $uri;
@@ -223,17 +195,6 @@ sub list_components {
         $return = $return . "$c =>\n" . $dump . "\n";
     }
     return $return;
-}
-
-sub parse_json_from_html {
-    my ($html) = @_;
-    my @lines = split("\n", $html);
-    my $flag = 0;
-    foreach my $line (@lines) {
-        if($flag) { return $line; }
-        elsif($line =~ m/<h1>Dumping raw contents of/) { $flag = 1; }
-    }
-    return 1;
 }
 
 sub print_result {

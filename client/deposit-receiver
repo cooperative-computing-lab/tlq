@@ -23,10 +23,7 @@ use strict;
         open(DEPOSIT, ">>", "deposit-log");
         foreach my $content (@contents) { print(DEPOSIT "$content\n"); }
         close(DEPOSIT);
-        print(STDOUT "HTTP/1.0 200 OK\n");
-        print(STDOUT $cgi->header);
-        print(STDOUT $cgi->start_html("Log received."));
-        print(STDOUT $cgi->end_html);
+        print(STDOUT "ACK: @contents");
         return 0;
     }
 
