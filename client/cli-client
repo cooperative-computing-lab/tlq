@@ -89,6 +89,7 @@ my $port = $OPT{port};
 if(!$port) { $port = 9001; }
 my $host = hostname();
 my $spid = WebServer->new($port)->background();
+print(STDERR "$!\n");
 if($spid) { print(STDOUT "Phone home server established at $host:$port with PID $spid.\n\n"); }
 
 my $client = 0;
@@ -102,7 +103,7 @@ if($err) {
 }
 
 my %aliases = ();
-my %components = ();
+my %logs = ();
 my $prompt = " \$ ";
 my $term = Term::ReadLine->new("tlq");
 $client = LWP::UserAgent->new(
@@ -131,7 +132,10 @@ while(defined(my $input = $term->readline($prompt))) {
     $input =~ s/\s+$//;
     $term->add_history($input) if /\S/;
     if($session) { print(HISTORY "$input\n"); }
-    if(uc($input) eq "QUIT" or uc($input) eq "EXIT") { exit(0); } 
+    if(uc($input) eq "QUIT" or uc($input) eq "EXIT") {
+        kill(9, $spid);
+        exit(0);
+    } 
     if($action eq "JX") {
         if(!-e "./jx_test") { system("cp ../cctools-source/dttools/src/jx_test ."); }
         $result = system("./jx_test");
@@ -190,7 +194,7 @@ while(defined(my $input = $term->readline($prompt))) {
     }
     elsif($action eq "EXIT" or $action eq "QUIT") { $result = request($action, $destination); }
     elsif($action eq "LIST") {
-        $result = list_components();
+        $result = list_logs();
         print(STDOUT "$result\n");
     }
     else { print_command_help(); } 
@@ -198,37 +202,36 @@ while(defined(my $input = $term->readline($prompt))) {
 }
 
 if($session) { close(HISTORY); }
+kill(9, $spid);
 exit(0);
 
 sub get_info {
     my ($file) = @_;
     open(FILE, $file);
     while(my $line = <FILE>) {
-        #work_queue_worker --cores 4 --memory 15999 --disk 916827 -M wq-trace -d all -o /disk/d11/tlq/66d71323-86b3-43dd-b978-6897d5c2b2d5.log --debug-rotate-max 0 -t 900 created log /disk/d11/tlq/worker.0.debug queryable at http://:11855/<ACTION>/66d71323-86b3-43dd-b978-6897d5c2b2d5.
-        if($line =~ m/^(?<command>.+) created log\(s\) (?<logs>\S+) queryable at (?<uri>\S+).$/) {
-            my $logs = $+{logs};
+        if($line =~ m/^(?<command>.+) created log (?<log>\S+) queryable at (?<uri>\S+).$/) {
+            my $log = $+{log};
             my $command = $+{command};
             my $uri = $+{uri};
             my $host = "";
-            if(!exists $components{$uri}) {
+            if(!exists $logs{$uri}) {
                 if($uri =~ m/(?<host>https?:\/\/\S+\/).+/) { $host = $+{host}; }
-                $components{$uri} = {};
-                $components{$uri}{logs} = $logs;
-                $components{$uri}{command} = $command;
-                $components{$uri}{uri} = $uri;
-                $components{$uri}{host} = $host;
+                $logs{$uri} = {};
+                $logs{$uri}{log} = $log;
+                $logs{$uri}{command} = $command;
+                $logs{$uri}{uri} = $uri;
+                $logs{$uri}{host} = $host;
             }
-            else { $components{$uri}{logs} = $components{$uri}{logs} . " $logs"; }
         }
     }
     close(FILE);
     return 0;
 }
 
-sub list_components {
+sub list_logs {
     my $return = "";
-    foreach my $c (keys(%components)) {
-        my $dump = Dumper($components{$c});
+    foreach my $c (keys(%logs)) {
+        my $dump = Dumper($logs{$c});
         $return = $return . "$c =>\n" . $dump . "\n";
     }
     return $return;
@@ -266,7 +269,7 @@ sub request {
         $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
     }
     elsif($action eq "QUIT" or $action eq "EXIT") {
-        $http = $components{$destination}{host} . "/exit";
+        $http = $logs{$destination}{host} . "/exit";
         $response = $client->get($http);
     }
     elsif($action eq "RM") {
@@ -280,7 +283,7 @@ sub request {
 
 sub signal_handler {
     print(STDERR "\nCaught '$!' signal. Terminating process.\n");
-    kill($spid);
+    kill(9, $spid);
     exit(1);
 }
 
