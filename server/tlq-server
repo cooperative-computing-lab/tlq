@@ -234,10 +234,9 @@ my $host = hostname();
             $logs{$uuid}{size} = -s $logs{$uuid}{path};
         }
         foreach my $uuid (@toparse) {
-            my $component = $logs{$uuid}{component};
             my $path = $logs{$uuid}{path};
-            print(STDERR "Calling $exec $parser $path $component\n");
-            my $parsed = `$exec $parser $path $component`;
+            print(STDERR "Calling $exec $parser $path $uuid\n");
+            my $parsed = `$exec $parser $path $uuid`;
             my $json = $logs{$uuid}{json};
             if(-e $json) { unlink($json); }
             open(QUERIES, ">>", $json);
