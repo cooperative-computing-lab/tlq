@@ -7,11 +7,38 @@ use Getopt::Long qw(:config no_ignore_case);
 use JSON;
 use LWP::UserAgent;
 use sigtrap qw/handler signal_handler INT TERM/;
+use Sys::Hostname;
 use Term::ReadLine;
 use Time::HiRes qw(time);
 use URI::Encode;
 
 use strict;
+
+#Silent phone home log URL receiver
+{
+    package WebServer;
+    use HTTP::Server::Simple::CGI;
+    use Sys::Hostname;
+    use base qw(HTTP::Server::Simple::CGI);
+    my %dispatch = ("/deposit" => \&get_deposit);
+
+    sub get_deposit {
+        my ($cgi) = @_;
+        my @contents = $cgi->param("DEPOSIT");
+        open(DEPOSIT, ">>", "deposit-log");
+        foreach my $content (@contents) { print(DEPOSIT "$content\n"); }
+        close(DEPOSIT);
+        return 0;
+    }
+
+    sub handle_request {
+        my ($self, $cgi) = @_;
+        my $path = $cgi->path_info();
+        my $handler = $dispatch{$path};
+        if(ref($handler) eq "CODE") { $handler->($cgi); }
+        return 0;
+    }
+}
 
 my $usage = "Debug Log Querying Client Options:
 
@@ -20,13 +47,16 @@ Required:
 Optional:
     --log,-l    <path>      Enables logging of all sent requests and received output.
 
+    --port,-p   <integer>   Attempt to use selected port for phone home receiver.
+                            Default: 9001.
+
     --session,-s            Enables logging of user input history for next session.
 
     --help                  Display this message.
 
 Example Usage:
 
-    perl cli-client --log output.log
+    perl cli-client --log output.log --port 9001 --session
 
 ";
 
@@ -44,6 +74,7 @@ my %OPT;
 try {
     GetOptions(
         "log=s" => \$OPT{log},
+        "port=s" => \$OPT{port},
         "session|?" => \$OPT{session},
         "help|?" => sub { print $usage; exit(0); },
     );
@@ -53,6 +84,12 @@ catch Error::Simple with {
     print STDERR $E->{-text};
     die "Failed to parse command line options.\n";
 };
+
+my $port = $OPT{port};
+if(!$port) { $port = 9001; }
+my $host = hostname();
+my $spid = WebServer->new($port)->background();
+if($spid) { print(STDOUT "Phone home server established at $host:$port with PID $spid.\n\n"); }
 
 my $client = 0;
 my $err = 0;
@@ -243,6 +280,7 @@ sub request {
 
 sub signal_handler {
     print(STDERR "\nCaught '$!' signal. Terminating process.\n");
+    kill($spid);
     exit(1);
 }
 
