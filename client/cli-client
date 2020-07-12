@@ -33,7 +33,8 @@ Example Usage:
 my $command_usage = "Available commands:
   ALIAS <URI> <STRING>
   EXIT
-  JX <URI/ALIAS>
+  JX
+  LIST
   PULL <URI/ALIAS>
   QUERY <URI/ALIAS> <STRING>
   RM <URI/ALIAS>
@@ -255,21 +256,15 @@ sub query_to_json {
 }
 
 sub request {
-    my ($action, $destination, $target) = @_;
+    my ($action, $destination, $content) = @_;
     my $content = 0;
     my $http = $destination;
     my $response = 0;
-    if($action eq "JX") {
-        $content = $target;
-        $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
-    }
-    elsif($action eq "PULL") {
+    if($action eq "PULL") {
         $http = $destination . "/files";
-        $content = $target;
         $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
     }
     elsif($action eq "QUERY") {
-        $content = $target;
         $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
     }
     elsif($action eq "QUIT" or $action eq "EXIT") {

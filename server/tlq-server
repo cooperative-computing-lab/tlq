@@ -103,17 +103,16 @@ my $host = hostname();
             $logs{$uuid}{size} = 0;
             $logs{$uuid}{type} = $type;
             $logs{$uuid}{command} = $cmd;
-            $logs{$uuid}{flag} = 0;
+            $logs{$uuid}{noredirect} = 0;
             $logs{$uuid}{parsed} = 0;
             if(-e $logs{$uuid}{json}) { $logs{$uuid}{parsed} = 1; }
             if($redirect eq "NONE") {
                 $logs{$uuid}{path} = "$dir/$uuid.log";
-                $logs{$uuid}{flag} = 1;
+                $logs{$uuid}{noredirect} = 1;
             }
-            my $uri="http://$host:$port/[ACTION]/$uuid"
+            my $uri="http://$host:$port/<ACTION>/$uuid"
             my $deposit = "$cmd created log $log queryable at $uri."
             system("curl -s --data-urlencode \"DEPOSIT=$deposit\" http://$home/deposit");
-
         }
         close(DEPOSIT);
     }
@@ -138,7 +137,7 @@ my $host = hostname();
 
     sub run_query {
         my ($cgi) = @_;
-        my $query = query_from_json($cgi->param("PUTDATA"));
+        my $query = request_from_json($cgi->param("PUTDATA"));
         my $data = "";
         my %encode;
         $encode{query} = $query;
@@ -161,7 +160,7 @@ my $host = hostname();
 
     sub send_file {
         my ($cgi) = @_;
-        my $file = query_from_json($cgi->param("PUTDATA"));
+        my $file = request_from_json($cgi->param("PUTDATA"));
         $file = check_file($file, 0);
         return transfer($cgi, $file);
     }
@@ -171,7 +170,7 @@ my $host = hostname();
         my ($cgi) = @_;
         my $uuid, $err, $flag, $result = 0;
         my %encode;
-        if($cgi->path_info() =~ m/rm\/(?<uuid>[a-f0-9\-]+)(.json)?/ or $cgi->path_info() =~ m/rm\/(?<uuid>[a-f0-9\-]+)(.json)?/) { $uuid = $+{uuid}; }
+        if($cgi->path_info() =~ m/rm\/(?<uuid>[a-f0-9\-]+)(.json)?/ or $cgi->path_info() =~ m/rm\/(?<uuid>[a-f0-9\-]+)(.log)?/) { $uuid = $+{uuid}; }
         if($uuid) {
             my $file = check_file($uuid, 1);
             if($file) { $result = unlink($file); }
@@ -252,7 +251,9 @@ my $host = hostname();
         while($flag) {
             check_deposit();
             foreach my $uuid (keys(%logs)) {
-                if($logs{$uuid}{flag} and -e $logs{$uuid}{original} and $logs{$uuid}{size} < -s $logs{$uuid}{original}) { system("cp $logs{$uuid}{original} $logs{$uuid}{path}"); }
+                if($logs{$uuid}{noredirect} and -e $logs{$uuid}{original} and $logs{$uuid}{size} < -s $logs{$uuid}{original}) {
+                    system("cp $logs{$uuid}{original} $logs{$uuid}{path}");
+                }
             }
             foreach my $type (keys(%parsers)) { parse_logs($type); }
             sleep(10);
@@ -262,7 +263,7 @@ my $host = hostname();
         return 0;
     }
 
-    sub query_from_json {
+    sub request_from_json {
         my ($json) = @_;
         $json = URI::Encode->new( { encode_reserved => 0 } )->decode($json);
         my $queryref = JSON->new->decode($json);
