@@ -63,7 +63,7 @@ my $start = time();
     use base qw(HTTP::Server::Simple::CGI);
 
     my %logs; #Logs have a UUID, path, JSON path, type, component, and size
-    my %parsers; #Parsers have an type ID, path, and executor
+    my %parsers; #Parsers have an type ID, and path
     if(!(-e $dir)) { mkdir($dir); }
     else { check_deposit(); }
     chmod(0766, $dir);
@@ -77,7 +77,6 @@ my $start = time();
         print(STDERR "Adding parser of type $type to TLQ.\n");
         $parsers{$type} = {};
         $parsers{$type}{path} = "$dir/$p";
-        $parsers{$type}{exec} = "perl";
     }
     my $host = hostname();
     my $log_thread = threads->create("watch_logs");
@@ -103,10 +102,13 @@ my $start = time();
             $logs{$uuid}{home} = $home;
             $logs{$uuid}{path} = $redirect;
             $logs{$uuid}{size} = 0;
-            $logs{$uuid}{type} = $type;
+            $logs{$uuid}{logtype} = $type;
+            $logs{$uuid}{type} = "tlq_log";
             $logs{$uuid}{command} = $cmd;
             $logs{$uuid}{noredirect} = 0;
             $logs{$uuid}{parsed} = 0;
+            $logs{$uuid}{name} = $host;
+            $logs{$uuid}{port} = $port;
             if(-e $logs{$uuid}{json}) { $logs{$uuid}{parsed} = 1; }
             if($redirect eq "NONE") {
                 $logs{$uuid}{path} = "$dir/$uuid.log";
@@ -144,7 +146,7 @@ my $start = time();
         my %encode;
         $encode{query} = $query;
         $encode{result} = `$query`;
-        my $result = JSON->new->encode(\%encode);
+        my $result = JSON->new->utf8->encode(\%encode);
         print(STDOUT "$result");
         return 0;
     }
@@ -194,13 +196,13 @@ my $start = time();
         }
         if($flag) {
             $encode{result} = "failure";
-            my $json = JSON->new->encode(\%encode);
+            my $json = JSON->new->utf8->encode(\%encode);
             print(STDOUT "$json");
             return 1;
         }
         else {
             $encode{result} = "success";
-            my $json = JSON->new->encode(\%encode);
+            my $json = JSON->new->utf8->encode(\%encode);
             print(STDOUT "$json");
             return 0;
         }
@@ -212,7 +214,7 @@ my $start = time();
             my %encode;
             $encode{result} = "failure";
             $encode{error} = "$file not found";
-            my $json = JSON->new->encode(\%encode);
+            my $json = JSON->new->utf8->encode(\%encode);
             print(STDOUT "$json");
             return 1;
         }
@@ -227,18 +229,17 @@ my $start = time();
     sub parse_logs {
         my ($type) = @_;
         my $parser = $parsers{$type}{path};
-        my $exec = $parsers{$type}{exec};
         my @toparse;
         print(STDERR "Parsing logs of type $type.\n");
         foreach my $uuid (keys(%logs)) {
-            if((!$logs{$uuid}{parsed} and $logs{$uuid}{type} eq $type) or ($logs{$uuid}{type} eq $type and ($logs{$uuid}{size} < -s $logs{$uuid}{path}))) {
+            if((!$logs{$uuid}{parsed} and $logs{$uuid}{logtype} eq $type) or ($logs{$uuid}{logtype} eq $type and ($logs{$uuid}{size} < -s $logs{$uuid}{path}))) {
                 push(@toparse, $uuid); }
             $logs{$uuid}{size} = -s $logs{$uuid}{path};
         }
         foreach my $uuid (@toparse) {
             my $path = $logs{$uuid}{path};
-            print(STDERR "Calling $exec $parser $path $uuid\n");
-            my $parsed = `$exec $parser $path $uuid`;
+            print(STDERR "Calling $parser $path $uuid\n");
+            my $parsed = `$parser $path $uuid`;
             my $json = $logs{$uuid}{json};
             if(-e $json) { unlink($json); }
             open(QUERIES, ">>", $json);
@@ -266,8 +267,9 @@ my $start = time();
             $encode{owner} = $ENV{USER};
             $encode{working_dir} = $dir;
             $encode{starttime} = $start;
+            $encode{logs} = \%logs;
             print(STDERR "Sending heartbeat to catalog.cse.nd.edu:9097.\n");
-            my $heartbeat = JSON->new->encode(\%encode);
+            my $heartbeat = JSON->new->utf8->encode(\%encode);
             my $socket = IO::Socket::INET->new(PeerAddr => "catalog.cse.nd.edu:9097", Proto => "udp");
             $socket->send($heartbeat);
             $socket->close();
@@ -301,7 +303,7 @@ my $start = time();
             my %encode;
             $encode{result} = "failure";
             $encode{error} = "404 Not found";
-            my $json = JSON->new->encode(\%encode);
+            my $json = JSON->new->utf8->encode(\%encode);
             print(STDOUT "$json");
         }
         return 0;
