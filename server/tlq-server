@@ -48,12 +48,14 @@ if(!$dir) { $dir = "/tmp/tlq"; }
 if(!$port) { $port = 9000; }
 if($err) { print_help(); }
 my $host = hostname();
+my $start = time();
 
 #Define application-specific web server handling
 {
     package WebServer;
     use Data::Dumper;
     use HTTP::Server::Simple::CGI;
+    use IO::Socket::INET;
     use JSON;
     use Sys::Hostname;
     use threads;
@@ -257,7 +259,19 @@ my $host = hostname();
                 }
             }
             foreach my $type (keys(%parsers)) { parse_logs($type); }
-            sleep(10);
+            my %encode;
+            $encode{type} = "tlq_server";
+            $encode{name} = $host;
+            $encode{port} = $port;
+            $encode{owner} = $ENV{USER};
+            $encode{working_dir} = $dir;
+            $encode{starttime} = $start;
+            print(STDERR "Sending heartbeat to catalog.cse.nd.edu:9097.\n");
+            my $heartbeat = JSON->new->encode(\%encode);
+            my $socket = IO::Socket::INET->new(PeerAddr => "catalog.cse.nd.edu:9097", Proto => "udp");
+            $socket->send($heartbeat);
+            $socket->close();
+            sleep(30);
         }
         print(STDERR "\nExiting log watcher thread.\n");
         threads->exit();
