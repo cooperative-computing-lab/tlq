@@ -34,6 +34,6 @@ perl tlq-server -p 11855
 You can run each of these three scripts with the `-h` option to see its respective help text.
 
 ### Editing configurations
-This TLQ repository was written for a specific environment to demonstrate a live version of TLQ for an academic paper. As such, it is highly unlikely to work out of the box for you. You will need to alter the Makefiles within the `condor-povray` and `lifemapper` repositories to set up the proper batch system and username to use to submit work (and clean it up afterward). The `condor-povray` pipeline is highly coupled with the environment used for the paper, so you will need to edit the `condor-povray` Perl script as well. If your batch system is not HTCondor, this will involve significant changes. For `lifemapper`, you will need to alter the `HOME` variable in the `trace.jx` document to the machine you are running the `deposit-receiver` script.
+This TLQ repository was written for a specific environment to demonstrate a live version of TLQ for an academic paper. As such, it is highly unlikely to work out of the box for you. You will need to alter the Makefiles within the `shakespeare` and `lifemapper` repositories to set up the proper batch system and username to use to submit work (and clean it up afterward). If your batch system is not HTCondor, this will involve significant changes. For `shakespeare` and `lifemapper`, you will need to alter the `HOME` variable in the `trace.jx` document to the machine you are running the `cli-client` script.
 
 
