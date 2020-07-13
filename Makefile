@@ -53,6 +53,7 @@ clean:
 	@echo Cleaning TLQ installation.
 	cd lifemapper && make clean
 	cd shakespeare && make clean
+	cd client && rm -rf .tlq-session.log
 	rm -rf $(CCTOOLS) $(PERLBASE) $(PERLS) $(SOURCE)
 
 .PHONY: all clean
