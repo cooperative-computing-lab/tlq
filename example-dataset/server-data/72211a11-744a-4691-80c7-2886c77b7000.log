@@ -1,0 +1,271 @@
+9029   0.000000 libjli.so->getenv("_JAVA_LAUNCHER_DEBUG") = nil
+9029   0.001890 libjli.so->getenv("_JAVA_VERSION_SET") = nil
+9029   0.000830 libjli.so->fopen("/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.252.b09-2.el7_8.x86_64/jre/lib/amd64/jvm.cfg", "r") = 0x5577b16540e0
+9029   0.000803 libjli.so->getenv("JDK_ALTERNATE_VM") = nil
+9029   0.000303 libjli.so->__xstat(1, "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.252.b09-2.el7_8.x86_64/jre/lib/amd64/server/libjvm.so", 0x7fff032a91a0) = 0
+9029   0.000615 libjli.so->getenv("LD_LIBRARY_PATH") = "/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/ruby/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/graphviz/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/git/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/clang/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/lib:/opt/crc/usr/local/lib"
+9029   0.002162 libjli.so->dlopen("/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.252.b09-2.el7_8.x86_64/jre/lib/amd64/server/libjvm.so", 258 <unfinished ...>
+9029   0.037428 libjvm.so->getenv("NMT_LEVEL_9029") = nil
+9029   0.001764 <... dlopen resumed> )           = 0x5577b16544b0
+9029   0.000068 libjli.so->getenv("CLASSPATH")   = nil
+9029   0.000316 libjli.so->getenv("_JAVA_SPLASH_JAR") = nil
+9029   0.000338 libjli.so->getenv("_JAVA_SPLASH_FILE") = nil
+9029   0.000343 libjli.so->pthread_attr_setdetachstate(0x7fff032a9150, 0, 0x7fff032a91e0, 0) = 0
+9029   0.000609 libpthread.so.0->__clone(0x2acefd7b0de0, 0x2acefd6c3fc0, 0x3d0f00, 0x2acefd6c4700) = 9030
+9030   0.001858 libjvm.so->dlopen(0x2acefef1052e, 1, 0xfffffffffff42c48, 4096) = 0x2acf00000990
+9030   0.002741 libjvm.so->getenv(0x2acefef2b2c0, 0, 115, 0x65737361) = 0x7fff032ae674
+9030   0.000481 libjvm.so->fopen(0x2acefd6c2be0, 0x2acefeeca9ab, 0x6f732e79666972, 0x2acefe088ab0) = 0x2acf00001440
+9030   0.001662 libjvm.so->dlopen(0x2acefd6c2be0, 1, 0xffffffff, 0x2acf00002b00) = 0x2acf00001440
+9030   0.001596 libjvm.so->fopen(0x2acefd6c2be0, 0x2acefeeca9ab, 111, 0x732e6176) = 0x2acf00001b10
+9030   0.002007 libjvm.so->dlopen(0x2acefd6c2be0, 1, 0xffffffff, 0x2acf00001a00) = 0x2acf00001b10
+9030   0.001694 libjvm.so->__xstat(1, 0x2acefd6c3330, 0x2acefd6c3b70, 0x637274) = -1
+9030   0.000509 libjvm.so->getenv(0x2acefeec3226, 0x2acefd6c36a0, 1024, 0x2aceff3675db) = 0
+9030   0.000532 libjvm.so->getenv(0x2acefeec3218, 0x2acefd6c36a0, 1024, 0) = 0
+9030   0.000472 libjvm.so->fopen(0x2acefef0fe95, 0x2acefeeca9ab, 4095, 24) = 0x2acf000032b0
+9030   0.001209 libjvm.so->fopen(0x2acefef0fee1, 0x2acefeeca9ab, 0x2acf00000078, 0x2acf000032a0) = 0x2acf000032b0
+9030   0.000757 libjvm.so->fopen(0x2acefd6bd980, 0x2acefeeca9ab, 4016, 3997) = 0x2acf000032b0
+9030   0.000702 libjvm.so->opendir(0x2acf00002b40, 0x2acf00002b40, 13, 16) = 0
+9030   0.000514 libjvm.so->__xstat(1, 0x2acefd6c28c0, 0x2acefd6c1830, 0x6f732e7477616d62) = -1
+9030   0.000438 libjvm.so->__xstat(1, 0x2acefd6c28c0, 0x2acefd6c1830, 0x5f74776162696c2f) = 0
+9030   0.000596 libjvm.so->fopen(0x2acefd6c1b60, 0x2acefeeca9ab, 4011, 3996) = 0x2acf00003790
+9030   0.000685 libjvm.so->fopen(0x2acefd6c1b60, 0x2acefeeca9ab, 4011, 3996) = 0x2acf00003790
+9030   0.000875 libjvm.so->fopen(0x2acefd6c1b60, 0x2acefeeca9ab, 4011, 4004) = 0x2acf00003790
+9030   0.001044 libjvm.so->fopen(0x2acefd6c1af0, 0x2acefeeca9ab, 4011, 3996) = 0x2acf00003790
+9030   0.000892 libjvm.so->fopen(0x2acefd6c1af0, 0x2acefeeca9ab, 4011, 3996) = 0x2acf00003790
+9030   0.000878 libjvm.so->fopen(0x2acefd6c1af0, 0x2acefeeca9ab, 4011, 4004) = 0x2acf00003790
+9030   0.000712 libjvm.so->fopen(0x2acefd6c1b20, 0x2acefeeca9ab, 4016, 3997) = 0x2acf00003790
+9030   0.000914 libjvm.so->getenv(0x2acefef10c5e, 4096, 3, -1) = 0
+9030   0.001059 libjvm.so->fopen(0x2acefef10518, 0x2acefeeca9ab, 0x2acefd7a7908, 0x2acefd7a6df0) = 0x2acf00003790
+9030   0.005417 libjvm.so->open(0x2acf0004a580, 0x20000, 0, 0x2acf0004a5c9) = 3
+9030   0.000631 libjvm.so->__fxstat(1, 3, 0x2acefd6c39d0, -1) = 0
+9030   0.000525 libjvm.so->opendir(0x2acf0004a580, 0x2acefd6c39d0, 0x4000, -1) = 0x2acf0004b490
+9030   0.000624 libjvm.so->__fxstat(1, 3, 0x2acefd6c3870, 0x2acf0004b490) = 0
+9030   0.000469 libjvm.so->__fxstat(1, 5, 0x2acefd6c3900, -1) = 0
+9030   0.000529 libjvm.so->open(0x2acefeee185c, 0, 0, 0) = 3
+9030   0.000741 libjvm.so->__lxstat(1, 0x2acf0004a580, 0x2acefd6c3b20, -144) = 0
+9030   0.000498 libjvm.so->open(0x2acf0004a580, 0x20000, 0x4000, -1) = 3
+9030   0.000534 libjvm.so->__fxstat(1, 3, 0x2acefd6c39d0, -1) = 0
+9030   0.000505 libjvm.so->opendir(0x2acf0004a580, 0x2acefd6c39d0, 0x4000, -1) = 0x2acf0004b490
+9030   0.000606 libjvm.so->__fxstat(1, 3, 0x2acefd6c3870, 0x2acf0004b490) = 0
+9030   0.000475 libjvm.so->__fxstat(1, 5, 0x2acefd6c3900, -1) = 0
+9030   0.000764 libjvm.so->open(0x2acefeee185c, 0, 0, 0) = 3
+9030   0.000613 libjvm.so->open(0x2acf0004a5c9, 0x20042, 384, -1) = 7
+9030   0.000766 libjvm.so->__fxstat(1, 7, 0x2acefd6c3b20, -1) = 0
+9030   0.001868 libjvm.so->fopen(0x2acefd6c2b30, 0x2acefeeca9ab, 4, 0x6f732e70) = 0x2acf00057b70
+9030   0.001703 libjvm.so->dlopen(0x2acefd6c2b30, 1, 0xffffffff, 0x2acf00057b00) = 0x2acf00057b70
+9030   0.001566 libjvm.so->__xstat(1, 0x2acefd6c30f0, 0x2acefd6c3920, 2048) = 0
+9030   0.000478 libjvm.so->__xstat(1, 0x2acefd6c30f0, 0x2acefd6c3920, 2048) = 0
+9030   0.000468 libjvm.so->__xstat(1, 0x2acefd6c30f0, 0x2acefd6c3920, 2048) = -1
+9030   0.000463 libjvm.so->__xstat(1, 0x2acefd6c30f0, 0x2acefd6c3920, 2048) = 0
+9030   0.000438 libjvm.so->__xstat(1, 0x2acefd6c30f0, 0x2acefd6c3920, 2048) = 0
+9030   0.000426 libjvm.so->__xstat(1, 0x2acefd6c30f0, 0x2acefd6c3920, 2048) = 0
+9030   0.000425 libjvm.so->__xstat(1, 0x2acefd6c30f0, 0x2acefd6c3920, 2048) = -1
+9030   0.000709 libjvm.so->__xstat(1, 0x2acefd6c30f0, 0x2acefd6c3920, 2048) = -1
+9030   0.000647 libjvm.so->fopen(0x2acf00002520, 0x2acefeeca9ab, 0, 0) = 0x2acf000588e0
+9030   0.008763 libjvm.so->open64(0x2acefd6c2490, 0, 0, 16) = 3
+9030   0.000620 libjvm.so->__fxstat64(1, 3, 0x2acefd6c22c0, -1) = 0
+9030   0.035700 libjvm.so->__xstat(1, 0x2acefd6c2ef0, 0x2acefd6c3720, 2048) = -1
+9030   0.000723 libjvm.so->fopen(0x2acefd6c1af0, 0x2acefeeca9ab, 4011, 3996) = 0x2acf000b5b60
+9030   0.000707 libjvm.so->fopen(0x2acefd6c1af0, 0x2acefeeca9ab, 4011, 3996) = 0x2acf000b5b60
+9030   0.000692 libjvm.so->fopen(0x2acefd6c1af0, 0x2acefeeca9ab, 4011, 4004) = 0x2acf000b5b60
+9030   0.004211 libjvm.so->pthread_attr_setdetachstate(0x2acefd6c3bd0, 1, 0, 0) = 0
+9030   0.000706 libpthread.so.0->__clone(0x2acefd7b0de0, 0x2acf15fa9fc0, 0x3d0f00, 0x2acf15faa700) = 9031
+9030   0.015730 libjvm.so->pthread_attr_setdetachstate(0x2acefd6c3260, 1, 0, 0) = 0
+9030   0.000662 libpthread.so.0->__clone(0x2acefd7b0de0, 0x2acf160aafc0, 0x3d0f00, 0x2acf160ab700) = 9032
+9030   0.007339 libjvm.so->pthread_attr_setdetachstate(0x2acefd6c35e0, 1, 0, 0) = 0
+9030   0.000814 libpthread.so.0->__clone(0x2acefd7b0de0, 0x2acf161abfc0, 0x3d0f00, 0x2acf161ac700) = 9033
+9030   0.042001 libjvm.so->fopen(0x2acf000e8b80, 0x2acefeeca9ab, 4, 0x6f732e70) = 0x2acf000f16e0
+9030   0.002233 libjvm.so->dlopen(0x2acf000e8b80, 1, 0xffffffff, 0x2acf000e8600) = 0x2acf00057b70
+9030   0.024015 libjvm.so->fopen(0x2acefd6bf130, 0x2acefeeca9ab, 4011, 3996) = 0x2acf000f8fb0
+9030   0.001278 libjvm.so->fopen(0x2acefd6bf130, 0x2acefeeca9ab, 4011, 3996) = 0x2acf000f8fb0
+9030   0.001222 libjvm.so->fopen(0x2acefd6bf130, 0x2acefeeca9ab, 4011, 4004) = 0x2acf000f8fb0
+9030   0.015998 libjvm.so->pthread_attr_setdetachstate(0x2acefd6c3b20, 1, 0, 0) = 0
+9030   0.001111 libpthread.so.0->__clone(0x2acefd7b0de0, 0x2acf162acfc0, 0x3d0f00, 0x2acf162ad700) = 9034
+9030   0.001589 libjvm.so->__xstat64(1, 0x2acefd6c3bb0, 0x2acefd6c3b20, 18) = -1
+9030   0.001211 libjvm.so->pthread_attr_setdetachstate(0x2acefd6c3920, 1, 0, 0) = 0
+9030   0.001239 libpthread.so.0->__clone(0x2acefd7b0de0, 0x2acf163adfc0, 0x3d0f00, 0x2acf163ae700) = 9035
+9030   0.001886 libjvm.so->pthread_attr_setdetachstate(0x2acefd6c3920, 1, 0, 0) = 0
+9030   0.001357 libpthread.so.0->__clone(0x2acefd7b0de0, 0x2acf164aefc0, 0x3d0f00, 0x2acf164af700) = 9036
+9030   0.007644 libjvm.so->pthread_attr_setdetachstate(0x2acefd6c3a70, 1, 0, 0) = 0
+9030   0.001410 libpthread.so.0->__clone(0x2acefd7b0de0, 0x2acf165affc0, 0x3d0f00, 0x2acf165b0700) = 9037
+9030   0.002588 libjvm.so->pthread_attr_setdetachstate(0x2acefd6c3b80, 1, 0, 0) = 0
+9030   0.001707 libpthread.so.0->__clone(0x2acefd7b0de0, 0x2acf166b0fc0, 0x3d0f00, 0x2acf166b1700) = 9039
+9030   0.015594 libjvm.so->open64(0x2acf00134540, 0, 0, 0) = 5
+9030   0.001726 libjvm.so->__fxstat64(1, 5, 0x2acefd6c0f90, -1) = 0
+9030   0.026769 libjvm.so->fopen(0x2acf0015a780, 0x2acefeeca9ab, 4, 0x6f732e6f) = 0x2acf0015a840
+9030   0.003491 libjvm.so->dlopen(0x2acf0015a780, 1, 0xffffffff, 0x2acf0015a700) = 0x2acf0015a840
+9030   0.100968 libjvm.so->fopen(0x2acefd6bde90, 0x2acefeeca9ab, 0x6f732e, 0x6d766a62696c2f72) = 0x2acf0016e9e0
+9030   0.005672 libjvm.so->dlopen(0x2acefd6bde90, 1, 0xffffffff, 0x2acf0016e900) = 0x5577b16544b0
+9030   0.001793 libjvm.so->fopen(0x2acefd6bde90, 0x2acefeeca9ab, 0x6f732e, 0x6d766a62696c2f72) = 0x2acf0016e9e0
+9030   0.004577 libjvm.so->dlopen(0x2acefd6bde90, 1, 0xffffffff, 0x2acf0016e900) = 0x5577b16544b0
+9030   0.001666 libjvm.so->fopen(0x2acefd6bde90, 0x2acefeeca9ab, 0x6f732e, 0x6d766a62696c2f72) = 0x2acf0016e9e0
+9030   0.003372 libjvm.so->dlopen(0x2acefd6bde90, 1, 0xffffffff, 0x2acf0016e900) = 0x5577b16544b0
+9030   0.001662 libjvm.so->fopen(0x2acefd6bde90, 0x2acefeeca9ab, 0x6f732e, 0x6d766a62696c2f72) = 0x2acf0016e9e0
+9030   0.003317 libjvm.so->dlopen(0x2acefd6bde90, 1, 0xffffffff, 0x2acf0016e900) = 0x5577b16544b0
+9030   0.047765 libjvm.so->fopen(0x2acf001b2680, 0x2acefeeca9ab, 4, 0x6f732e74) = 0x2acf001b3350
+9030   0.003254 libjvm.so->dlopen(0x2acf001b2680, 1, 0xffffffff, 0x2acf0016e600) = 0x2acf001b3350
+9030   0.131415 libjvm.so->fopen(0x2acf0024e5a0, 0x2acefeeca9ab, 0x6f732e7373656c, 0x656c646165685f74) = 0x2acf0024e680
+9030   0.002768 libjvm.so->dlopen(0x2acf0024e5a0, 1, 0xffffffff, 0x2acf0024e600) = 0x2acf0024e680
+9039   0.036418 +++ exited (status 0) +++
+9034   0.000312 +++ exited (status 0) +++
+9031   0.000274 +++ exited (status 0) +++
+9030   0.000214 +++ exited (status 0) +++
+9037   0.000299 +++ exited (status 1) +++
+9036   0.000025 +++ exited (status 1) +++
+9035   0.000015 +++ exited (status 1) +++
+9032   0.000014 +++ exited (status 1) +++
+9033   0.005244 +++ exited (status 1) +++
+9029   0.000045 +++ exited (status 1) +++
+Wrote an ltrace for command: "java -cp ./tools/maxent.jar density.Project outputs/Letis_orcus_Feige/Letis_orcus_Feige.lambdas data/layers/worldclim outputs/Letis_orcus_Feige_worldclim.asc nowarnings nocache autorun -z" with PID 9027 from PPID 9006 on disc25.crc.nd.edu with result 1
+REMOTEHOST=10.17.144.144
+_CONDOR_ANCESTOR_24525=24530:1594671055:2748281650
+_CONDOR_JOB_PIDS=
+MANPATH=/afs/crc.nd.edu/user/n/nkremerh/cctools/share/man/:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/ruby/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/graphviz/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/gnuplot/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/git/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/clang/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/share/man:/afs/crc.nd.edu/x86_64_linux/Modules/4.5.0/share/man:/opt/crc/usr/local/man:/opt/sge/man:/usr/share/man/overrides:/usr/share/man:/usr/local/share/man
+XDG_SESSION_ID=2735
+HOSTNAME=disc01.crc.nd.edu
+_LMFILES__modshare=/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules/CRC_default/1.1:1
+MODULEPATH_modshare=/afs/crc.nd.edu/x86_64_linux/Modules/modules/general_software:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/development_tools_and_libraries:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules:1:/afs/crc.nd.edu/x86_64_linux/Modules/current/modulefiles:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/restricted_software:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/deprecated_software:1
+MODULES_CMD=/afs/crc.nd.edu/x86_64_linux/Modules/4.5.0/libexec/modulecmd.tcl
+HOST=disc01.crc.nd.edu
+SHELL=/bin/tcsh
+TERM=xterm-256color
+MAKEFLAGS=
+HISTSIZE=5000
+TMPDIR=/var/condor/execute/dir_24525/worker-213124-24553/t.1396/cctools-temp-t.1396.eXDAxS
+SSH_CLIENT=10.17.144.144 39924 22
+PERL5LIB=/afs/crc.nd.edu/user/n/nkremerh/cctools/lib/perl5/site_perl/5.16.3:/afs/crc.nd.edu/user/n/nkremerh/.perl5/lib/perl5
+SGE_CELL=crc
+_CONDOR_SCRATCH_DIR=/var/condor/execute/dir_24525
+PERL_MB_OPT=--install_base '/afs/crc.nd.edu/user/n/nkremerh/.perl5/'
+SSH_TTY=/dev/pts/0
+SGE_LOAD_AVG=load_avg
+MAKEFLOW_MAX_LOCAL_JOBS=2
+HISTFILESIZE=10000
+_CHIRP_DELAYED_UPDATE_PREFIX=Chirp*
+USER=nkremerh
+GROUP=campus
+LD_LIBRARY_PATH=/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/ruby/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/graphviz/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/git/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/clang/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/lib:/opt/crc/usr/local/lib
+TEMP=/var/condor/execute/dir_24525/worker-213124-24553/t.1396/cctools-temp-t.1396.eXDAxS
+BATCH_SYSTEM=HTCondor
+WORKER_TMPDIR=/var/condor/execute/dir_24525/worker-213124-24553/cache/tmp
+ENV=/afs/crc.nd.edu/x86_64_linux/Modules/4.5.0/init/profile.sh
+MODULES_LMALTNAME=CRC_default/1.1&CRC_default/default&CRC_default
+_CONDOR_CHIRP_CONFIG=/var/condor/execute/dir_24525/.chirp.config
+GLOBUS_GSSAPI_MAX_TLS_PROTOCOL=0
+_CONDOR_HIGHPORT=9999
+HOSTTYPE=x86_64-linux
+MAKELEVEL=1
+MFLAGS=
+CCLSOFTWARE=/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7
+PATH=/afs/crc.nd.edu/user/n/nkremerh/cctools/bin:/afs/crc.nd.edu/user/n/nkremerh/miniconda/bin:/afs/crc.nd.edu/group/ccl/software/git:/afs/crc.nd.edu/user/n/nkremerh/.local/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/povray/3.7/bin:/afs/crc.nd.edu/user/n/nkremerh/.perl5/bin:/afs/crc.nd.edu/user/n/nkremerh/pegasus/bin:/afs/crc.nd.edu/user/n/nkremerh/nodejs/bin:/afs/crc.nd.edu/user/n/nkremerh/montage/bin:/afs/crc.nd.edu/user/n/nkremerh/latexdiff:/afs/crc.nd.edu/user/n/nkremerh/envtrace:/afs/crc.nd.edu/user/n/nkremerh/endlines:/afs/crc.nd.edu/user/n/nkremerh/cctools/bin:/afs/crc.nd.edu/user/n/nkremerh/.cargo/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/ruby/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/graphviz/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/gnuplot/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/git/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/sbin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cmake/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/clang/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/sbin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/bin:/afs/crc.nd.edu/x86_64_linux/Modules/4.5.0/bin:/opt/crc/usr/local/bin:/opt/sge/bin/lx-amd64:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/afs/crc.nd.edu/user/c/condor/software/bin:/afs/crc.nd.edu/user/c/condor/software/sbin
+MAIL=/var/spool/mail/nkremerh
+PWD=/var/condor/execute/dir_24525/worker-213124-24553/t.1396
+_LMFILES_=/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules/CRC_default/1.1
+SGE_EXECD_PORT=6445
+EDITOR=vim
+LANG=en_US.UTF-8
+MODULEPATH=/afs/crc.nd.edu/x86_64_linux/Modules/modules/development_tools_and_libraries:/afs/crc.nd.edu/x86_64_linux/Modules/modules/general_software:/afs/crc.nd.edu/x86_64_linux/Modules/modules/restricted_software:/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules:/afs/crc.nd.edu/x86_64_linux/Modules/modules/deprecated_software:/afs/crc.nd.edu/x86_64_linux/Modules/current/modulefiles
+SGE_QMASTER_PORT=6444
+SGE_ROOT=/opt/sge
+LOADEDMODULES=CRC_default/1.1
+WORK_QUEUE_SANDBOX=/var/condor/execute/dir_24525/worker-213124-24553
+_CONDOR_SLOT=slot1
+CCLPLATFORM=x86_64/redhat7
+USE_SYSTEMD=true
+_CONDOR_ANCESTOR_4261=24525:1594671054:4145456440
+_CONDOR_LOWPORT=9100
+KRB5CCNAME=FILE:/tmp/krb5cc_213124_ZwXmib
+HISTCONTROL=ignoreboth:erasedups
+PATH_modshare=/opt/crc/usr/local/bin:1:/opt/sge/bin/lx-amd64:1:/usr/sbin:1:/usr/bin:1:/afs/crc.nd.edu/user/c/condor/software/sbin:1:/usr/local/sbin:1:/afs/crc.nd.edu/user/c/condor/software/bin:1:/usr/local/bin:1
+SHLVL=7
+HOME=/afs/crc.nd.edu/user/n/nkremerh
+GLOBUS_GSSAPI_NAME_COMPATIBILITY=STRICT_RFC2818
+_CONDOR_ANCESTOR_3989=4261:1593343483:4184216969
+_CONDOR_MACHINE_AD=/var/condor/execute/dir_24525/.machine.ad
+OSTYPE=linux
+DISK=916727
+GREP_OPTIONS=--color=auto
+GLOBUS_GSSAPI_MIN_TLS_PROTOCOL=TLS1_VERSION
+MEMORY=15899
+MANPATH_modshare=/usr/share/man/overrides:1:/usr/local/share/man:1:/usr/share/man:1:/opt/crc/usr/local/man:1:/opt/sge/man:1
+VENDOR=unknown
+BASH_ENV=/afs/crc.nd.edu/x86_64_linux/Modules/4.5.0/init/bash
+PERL_LOCAL_LIB_ROOT=/afs/crc.nd.edu/user/n/nkremerh/.perl5/
+PYTHONPATH=/afs/crc.nd.edu/user/n/nkremerh/cctools/lib/python3.6/site-packages/
+CCLHOME=/afs/crc.nd.edu/group/ccl
+MACHTYPE=x86_64
+LOGNAME=nkremerh
+TMP=/var/condor/execute/dir_24525/worker-213124-24553/t.1396/cctools-temp-t.1396.eXDAxS
+LD_LIBRARY_PATH_modshare=/opt/crc/usr/local/lib:1
+MODULES_LMALTNAME_modshare=CRC_default/1.1&CRC_default/default&CRC_default:1
+SSH_CONNECTION=10.17.144.144 39924 129.74.128.103 22
+MODULESHOME=/afs/crc.nd.edu/x86_64_linux/Modules/4.5.0
+OMP_NUM_THREADS=1
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+GLOBUS_GSSAPI_BACKWARD_COMPATIBLE_MIC=true
+GLOBUS_GSSAPI_CIPHERS=HIGH
+LOADEDMODULES_modshare=CRC_default/1.1:1
+_CONDOR_JOB_AD=/var/condor/execute/dir_24525/.job.ad
+SGE_CLUSTER_NAME=CRC
+XDG_RUNTIME_DIR=/run/user/213124
+CCTOOLS=../cctools
+CORES=4
+_CONDOR_JOB_IWD=/var/condor/execute/dir_24525
+PERL_MM_OPT=INSTALL_BASE=/afs/crc.nd.edu/user/n/nkremerh/.perl5/
+GLOBUS_GSSAPI_SERVER_CIPHER_ORDER=true
+BASH_FUNC_module()=() {  unset _mlshdbg;
+ if [ "${MODULES_SILENT_SHELL_DEBUG:-0}" = '1' ]; then
+ case "$-" in 
+ *v*x*)
+ set +vx;
+ _mlshdbg='vx'
+ ;;
+ *v*)
+ set +v;
+ _mlshdbg='v'
+ ;;
+ *x*)
+ set +x;
+ _mlshdbg='x'
+ ;;
+ *)
+ _mlshdbg=''
+ ;;
+ esac;
+ fi;
+ unset _mlre _mlIFS;
+ if [ -n "${IFS+x}" ]; then
+ _mlIFS=$IFS;
+ fi;
+ IFS=' ';
+ for _mlv in ${MODULES_RUN_QUARANTINE:-};
+ do
+ if [ "${_mlv}" = "${_mlv##*[!A-Za-z0-9_]}" -a "${_mlv}" = "${_mlv#[0-9]}" ]; then
+ if [ -n "`eval 'echo ${'$_mlv'+x}'`" ]; then
+ _mlre="${_mlre:-}${_mlv}_modquar='`eval 'echo ${'$_mlv'}'`' ";
+ fi;
+ _mlrv="MODULES_RUNENV_${_mlv}";
+ _mlre="${_mlre:-}${_mlv}='`eval 'echo ${'$_mlrv':-}'`' ";
+ fi;
+ done;
+ if [ -n "${_mlre:-}" ]; then
+ eval `eval ${_mlre}/usr/bin/tclsh /afs/crc.nd.edu/x86_64_linux/Modules/4.5.0/libexec/modulecmd.tcl bash '"$@"'`;
+ else
+ eval `/usr/bin/tclsh /afs/crc.nd.edu/x86_64_linux/Modules/4.5.0/libexec/modulecmd.tcl bash "$@"`;
+ fi;
+ _mlstatus=$?;
+ if [ -n "${_mlIFS+x}" ]; then
+ IFS=$_mlIFS;
+ else
+ unset IFS;
+ fi;
+ unset _mlre _mlv _mlrv _mlIFS;
+ if [ -n "${_mlshdbg:-}" ]; then
+ set -$_mlshdbg;
+ fi;
+ unset _mlshdbg;
+ return $_mlstatus
+}
+BASH_FUNC_ml()=() {  module ml "$@"
+}
+_=/usr/bin/printenv
