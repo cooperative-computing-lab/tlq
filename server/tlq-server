@@ -84,7 +84,7 @@ my $start = time();
     my %dispatch = (
         "/query" => \&run_query,
         "/jx" => \&send_json,
-        "/files" => \&send_file,
+        "/pull" => \&send_file,
         "/rm" => \&rm_file
     );
 
@@ -123,19 +123,13 @@ my $start = time();
 
     sub check_file {
         my ($file, $mode) = @_;
-        if(!$file) { 
-            print(STDERR "File not specified.\n");
-            return 0; }
+        if(!$file) { return 0; }
         if(exists($logs{$file}) and !$mode) { $file = $logs{$file}{path}; }
         elsif(exists($logs{$file}) and $mode) { $file = $logs{$file}{json}; }
-        if(!(-e $file)) { 
-            print(STDERR "File $file does not exist.\n");
-            return 0; }
+        if(!(-e $file)) { return 0; }
         my $result = open(FILE, $file);
         close(FILE);
-        if(!$result) { 
-            print(STDERR "Could not open file $file.\n");
-            return 0; }
+        if(!$result) { return 0; }
         return $file;
     } 
 
@@ -156,7 +150,6 @@ my $start = time();
         my ($uuid, $json);
         if($cgi->path_info() =~ m/jx\/(?<uuid>[a-f0-9\-]+)(.json)?/) { $uuid = $+{uuid}; }
         $json = "$uuid.json";
-        print(STDERR "Checking for file $json.\n");
         $json = check_file($uuid, 1);
         print(STDERR "Attempting to transfer file $json.\n");
         return transfer($cgi, $json);
@@ -169,7 +162,6 @@ my $start = time();
         return transfer($cgi, $file);
     }
 
-    #TODO rework client rm operation
     sub rm_file {
         my ($cgi) = @_;
         my ($uuid, $err, $flag, $result) = 0;
@@ -267,7 +259,7 @@ my $start = time();
             $encode{owner} = $ENV{USER};
             $encode{working_dir} = $dir;
             $encode{starttime} = $start;
-            $encode{logs} = \%logs;
+            #$encode{logs} = \%logs;
             print(STDERR "Sending heartbeat to catalog.cse.nd.edu:9097.\n");
             my $heartbeat = JSON->new->utf8->encode(\%encode);
             my $socket = IO::Socket::INET->new(PeerAddr => "catalog.cse.nd.edu:9097", Proto => "udp");
@@ -292,7 +284,6 @@ my $start = time();
     sub handle_request {
         my ($self, $cgi) = @_;
         my $path = $cgi->path_info();
-        print(STDERR "Got path: $path\n");
         if($path =~ m/jx/) { $path = "/jx"; }
         elsif($path =~ m/query/) { $path = "/query"; }
         elsif($path =~ m/rm/) { $path = "/rm"; }
