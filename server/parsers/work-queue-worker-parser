@@ -6,7 +6,7 @@ use Getopt::Long qw(:config no_ignore_case);
 use JSON;
 use strict;
 
-my $usage = "Work Queue Workers Record Type Log Parser Options:
+my $usage = "Work Queue Worker Record Type Log Parser Options:
 
 Required:
     <log>	    Sets the path to the log file.
@@ -67,7 +67,6 @@ while(my $line = <LOG>) {
 }
 close(LOG);
 
-delete($worker{pids});
 my $json = JSON->new->utf8->encode(\%worker);
 print(STDOUT "$json\n");
 exit(0);
