@@ -1,5 +1,11 @@
 # TLQ Example with Lifemapper Dataset
-You can runy queries with this precreated dataset from a run of the Lifemapper scientific workflow. None of the execution data has been retained, only the debug logs and parsed JSON metalogs.
+You can run queries with this precreated dataset from a run of the Lifemapper scientific workflow. None of the execution data has been retained, only the debug logs and parsed JSON metalogs.
+
+## Setting up TLQ
+If you have not yet built TLQ at the top-level directory, run this command:
+```
+cd .. && make build
+```
 
 ## Configuring the dataset
 Before running TLQ, you need to properly configure the dataset. This involves altering the URLs in the client-side and server-side list of logs. This is done by running:
@@ -22,3 +28,4 @@ cp ./client-data/deposits.log ../client/ && cd ../client && perl tlq-client -s
 From here, you can now execute queries with TLQ. Run the `list` command in the client to see the list of available logs to query and their URLs.
 The `jx` command will drop you into an interactive shell for querying the JSON metalogs.
 The `query` command allows you to execute arbitrary tools at the server, such as `grep`.
+

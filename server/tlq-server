@@ -259,6 +259,7 @@ my $start = time();
             $encode{owner} = $ENV{USER};
             $encode{working_dir} = $dir;
             $encode{starttime} = $start;
+            $encode{url} = "http://$host:$port";
             #$encode{logs} = \%logs;
             print(STDERR "Sending heartbeat to catalog.cse.nd.edu:9097.\n");
             my $heartbeat = JSON->new->utf8->encode(\%encode);
