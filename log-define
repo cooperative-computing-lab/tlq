@@ -50,9 +50,9 @@ do
     exists=$(grep "$log")
     cmd="${cmd//$log/$dir/${loguuid}.log}"
     if [[ "$cmd" == "$origcmd" ]]; then
-        echo "$log $home NONE $logtype $loguuid $cmd" >> "$dir/deposit-log"
+        echo "$log $home NONE $logtype $loguuid $cmd" >> "$dir/deposits.log"
     else
-        echo "$log $home $dir/${loguuid}.log $logtype $loguuid $cmd" >> "$dir/deposit-log"
+        echo "$log $home $dir/${loguuid}.log $logtype $loguuid $cmd" >> "$dir/deposits.log"
     fi
     let j="j+1"
 done

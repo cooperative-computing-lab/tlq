@@ -89,7 +89,7 @@ my $start = time();
     );
 
     sub check_deposit {
-        open(DEPOSIT, "$dir/deposit-log");
+        open(DEPOSIT, "$dir/deposits.log");
         while(my $line = <DEPOSIT>) {
             chomp($line);
             my @parts = split(' ', $line);
