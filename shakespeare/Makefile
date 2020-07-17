@@ -8,6 +8,7 @@ LTRACE = ltrace-wrapper
 LOGDEF = log-define
 PERLS = $(ANALYZE) $(COUNT)
 SOURCE = ../cctools-source
+TLQDIR = /disk/d11/tlq
 TRACE = trace.debug
 TRACEMAKE = trace.jx
 WORKERS = workers/cctools_gpu_autodetect workers/log-define workers/work_queue_worker workers/worker.*.error workers/worker.*.output workers/workers.log
@@ -32,7 +33,7 @@ $(LTRACE):
 
 $(TRACE): $(LOGDEF) $(LTRACE) $(PERLS) $(TRACEMAKE) $(WORKERS)
 	cd workers && condor_submit workers.submit
-	$(LOGDEF) disc01.crc.nd.edu 9001 ${PWD}/trace.debug makeflow-and-work-queue makeflow -T wq -N wq-trace -d all -o ${PWD}/trace.debug --jx trace.jx
+	sh $(LOGDEF) disc01.crc.nd.edu 9001 $(TLQDIR) ${PWD}/trace.debug makeflow-and-work-queue-master -- makeflow -T wq -N wq-trace -d all -o ${PWD}/trace.debug --jx trace.jx
 
 $(WORKERS): $(CCTOOLS)
 	cp ../cctools/bin/cctools_gpu_autodetect ./workers/

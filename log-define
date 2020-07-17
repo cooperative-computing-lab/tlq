@@ -47,7 +47,6 @@ for log in "${logs[@]}"
 do
     logtype=${types[j]}
     loguuid=$(uuidgen)
-    exists=$(grep "$log")
     cmd="${cmd//$log/$dir/${loguuid}.log}"
     if [[ "$cmd" == "$origcmd" ]]; then
         echo "$log $home NONE $logtype $loguuid $cmd" >> "$dir/deposits.log"
