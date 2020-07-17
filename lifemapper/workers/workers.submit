@@ -14,10 +14,10 @@ log = workers.log
 # the environment exported.
 getenv = true
 #requirements =  MachineGroup == "DISC" && (MachineShortName == "disc20" || MachineShortName == "disc21" || MachineShortName == "disc22" || MachineShortName == "disc23" || MachineShortName == "disc24" || MachineShortName == "disc25" || MachineShortName == "disc26")
-requirements =  MachineGroup == "DISC" && (MachineShortName == "disc25")
+requirements =  MachineGroup == "DISC" && (MachineShortName == "disc25" || MachineShortName == "disc26")
 #request_cpus = 3
 request_cpus = 1
 request_memory = 2048
 request_disk = 1048576
 #queue 14
-queue 1
+queue 4

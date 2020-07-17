@@ -45,7 +45,7 @@ $(POINTS): $(CCTOOLS) $(GENERATOR)
 
 $(TRACE): $(LOGDEF) $(LTRACE) $(POINTS) $(TRACEMAKE) $(WORKERS)
 	cd workers && condor_submit workers.submit
-	makeflow -T wq -N wq-trace --jx trace.jx
+	$(LOGDEF) disc01.crc.nd.edu 9001 ${PWD}/trace.debug makeflow-and-work-queue -- makeflow -T wq -N wq-trace -d all -o ${PWD}/trace.debug --jx trace.jx
 
 $(WORKERS): $(CCTOOLS)
 	cp ../cctools/bin/cctools_gpu_autodetect ./workers/

@@ -28,6 +28,10 @@ my %master;
 $master{type} = "work-queue-master";
 $master{log} = $log;
 $master{uuid} = $uuid;
+my %makeflow;
+$makeflow{type} = "makeflow";
+$makeflow{log} = $log;
+$makeflow{uuid} = $uuid;
 my $linenum = 1;
 my $currtask = 0;
 my $cmdflag = 0;
@@ -39,12 +43,16 @@ while(my $line = <LOG>) {
         $master{address} = $+{address};
         $master{ip} = $+{ip};
         $master{pid} = $+{pid};
+        $makeflow{address} = $+{address};
+        $makeflow{ip} = $+{ip};
+        $makeflow{pid} = $+{pid};
     }
     #2020/07/14 14:58:25.35 makeflow[22171] tcp: listening on port 9000
     elsif($line =~ m/tcp: listening on port (?<port>\d+)/) { $master{port} = $+{port}; }
 
     #2020/07/13 16:10:56.03 work_queue_worker[24553] debug: work_queue_worker version 8.0.0 DEVELOPMENT (released 2020-06-30 12:58:58 -0400)
     if($line =~ m/(?<date>\d+\/\d+\/\d+)\s+(?<timestamp>\d+:\d+:\d+\.\d+)\s+\S+\[(?<pid>\d+)\]\s+(?<stream>\S+):\s+(?<message>.+)/) {
+        $master{pid} = $+{pid};
         $master{messages}{$linenum}{date} = $+{date};
         $master{messages}{$linenum}{timestamp} = $+{timestamp};
         $master{messages}{$linenum}{output_stream} = $+{stream};
@@ -96,7 +104,10 @@ while(my $line = <LOG>) {
 }
 close(LOG);
 
-my $json = JSON->new->utf8->encode(\%master);
+my %combined;
+$combined{"work-queue-master"} = \%master;
+$combined{makeflow} = \%makeflow;
+my $json = JSON->new->utf8->encode(\%combined);
 print(STDOUT "$json\n");
 exit(0);
 
