@@ -1,0 +1,78 @@
+#! /usr/bin/env perl
+
+use Error qw(:try);
+use Error::Simple;
+use Getopt::Long qw(:config no_ignore_case);
+use JSON;
+use strict;
+
+my $usage = "Work Queue Worker Record Type Log Parser Options:
+
+Required:
+    <log>	    Sets the path to the log file.
+    <uuid>          Sets the component UUID for the log.
+
+Example Usage:
+    work-queue-worker-parser worker.debug ABC-123
+
+";
+
+if(@ARGV != 2) {
+    print(STDERR $usage);
+    exit 1;
+}
+my ($log, $uuid) = @ARGV;
+
+my %worker;
+$worker{failures} = 0;
+$worker{type} = "work-queue-worker";
+$worker{log} = $log;
+$worker{uuid} = $uuid;
+my $linenum = 1;
+
+open(LOG, $log);
+while(my $line = <LOG>) {
+    #wq: connected to master 10.32.74.140:9000 via local address 10.32.74.164:36500
+    if($line =~ m/work_queue_worker\[(?<pid>\d+)\]\s+wq: connected to master (?<master>\S+) via local address (?<ip>\S+):(?<port>\d+)/) {
+        $worker{master} = $+{master};
+        $worker{ip} = $+{ip};
+        $worker{port} = $+{port};
+        $worker{pid} = $+{pid};
+    }
+    #dns: finding my hostname: uname = disc13.crc.nd.edu, address = 10.32.74.164, hostname = disc13.crc.nd.edu
+    elsif($line =~ m/dns: finding my hostname: uname = \S+, address = \S+, hostname = (?<addr>\S+)/) { $worker{address} = $+{addr}; }
+
+    #2020/07/13 16:10:56.03 work_queue_worker[24553] debug: work_queue_worker version 8.0.0 DEVELOPMENT (released 2020-06-30 12:58:58 -0400)
+    if($line =~ m/(?<date>\d+\/\d+\/\d+)\s+(?<timestamp>\d+:\d+:\d+\.\d+)\s+work_queue_worker\[(?<pid>\d+)\]\s+(?<stream>\S+):\s+(?<message>.+)/) {
+        $worker{pid} = $+{pid};
+        $worker{messages}{$linenum}{date} = $+{date};
+        $worker{messages}{$linenum}{timestamp} = $+{timestamp};
+        $worker{messages}{$linenum}{output_stream} = $+{stream};
+        $worker{messages}{$linenum}{message} = $+{message};
+    }
+    
+    #wq: rx from master: task 10
+    if($line =~ m/wq: rx from master: task (?<taskid>\d+)/) { $worker{tasks}{$+{task}}{exited} = "COULD NOT SET"; }
+    #wq: started process 23264: ./ltrace-wrapper ./fscheck runtime.config && sleep 1
+    elsif($line =~ m/wq: started process (?<pid>\d+): (?<command>[^\n]+)/) { $worker{pids}{$+{pid}}{command} = $+{command}; }
+    #wq: task 82 (pid 1110) exited normally with exit code 1
+    elsif($line =~ m/wq: task (?<taskid>\d+) \(pid (?<pid>\d+)\) exited \S+ with exit code (?<exited>\d+)/) {
+        $worker{tasks}{$+{task}}{pid} = $+{pid};
+        $worker{tasks}{$+{task}}{command} = $worker{pids}{$+{pid}}{command};
+        $worker{tasks}{$+{task}}{exited} = $+{exited};
+    }
+    #wq: could not rename output file /var/condor/execute/dir_20022/worker-213124-20026/t.2/out.dat to cache/file-10-7a6fc525356ac795b582a230c9e31976-out.2.dat: No such file or directory
+    elsif($line =~ m/wq: could not rename output file/) { $worker{failures}++; }
+    $linenum++;
+}
+close(LOG);
+
+my $json = JSON->new->utf8->encode(\%worker);
+print(STDOUT "$json\n");
+exit(0);
+
+sub print_help {
+    print $usage;
+    exit(1);
+}
+# vim: tabstop=8 shiftwidth=4 softtabstop=4 expandtab shiftround autoindent
