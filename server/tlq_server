@@ -8,7 +8,7 @@ use Sys::Hostname;
 
 use strict;
 
-my $usage = "TLQ Log Watch Server Options:
+my $usage = "TLQ Log Server Options:
 
 Required:
 
@@ -22,7 +22,7 @@ Optional:
 
 Example Usage:
 
-    perl tlq-server --port 9000
+    perl tlq_server --port 9000 --dir /tmp/user/tlq
 
 ";
 
@@ -68,7 +68,7 @@ my $start = time();
     else { check_deposit(); }
     chmod(0766, $dir);
     opendir(DIR, "parsers");
-    my @localparsers = grep(/-parser$/,readdir(DIR));
+    my @localparsers = grep(/_parser$/,readdir(DIR));
     closedir(DIR);
     foreach my $p (@localparsers) {
         system("cp parsers/$p $dir/$p");

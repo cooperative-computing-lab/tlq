@@ -39,7 +39,7 @@ use strict;
     }
 }
 
-my $usage = "Debug Log Querying Client Options:
+my $usage = "TLQ Log Querying Client Options:
 
 Required:
 
@@ -55,7 +55,7 @@ Optional:
 
 Example Usage:
 
-    perl cli-client --log output.log --port 9001 --session
+    perl tlq_client --log output.log --port 9001 --session
 
 ";
 
@@ -113,8 +113,8 @@ $client = LWP::UserAgent->new(
 );
 $client->env_proxy;
 if($session) {
-    open(HISTORY, ">>", ".tlq-session.log") or die "Could not open .tlq-session.log for writing.\n";
-    open(READHIST, ".tlq-session.log");
+    open(HISTORY, ">>", ".tlq_session.log") or die "Could not open .tlq_session.log for writing.\n";
+    open(READHIST, ".tlq_session.log");
     while(my $line = <READHIST>) {
         chomp($line);
         $term->add_history($line);

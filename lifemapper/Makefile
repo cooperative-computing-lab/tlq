@@ -2,22 +2,21 @@ CCTOOLS = ../cctools
 DATA = data
 FAILED = makeflow.failed.*
 GENERATOR = split.py
-LIFEMAPPER = makeflow-examples/lifemapper
-LOGCOLLECT = logs/disc20 logs/disc21 logs/disc22 logs/disc23 logs/disc24 logs/disc25 logs/disc26 logs/student10
+LIFEMAPPER = makeflow_examples/lifemapper
 LOGS = *.wqlog *.debug *.trace
-LTRACE = ltrace-wrapper
-LOGDEF = log-define
+LTRACE = ltrace_wrapper
+LOGDEF = log_define
 MAKEFLOW = $(TRACEMAKE)
 OUTPUTS = outputs
 PERL = test
 POINTS = points
-SOURCE = ../cctools-source
+SOURCE = ../cctools_source
 TIME = logs/time.dat
 TLQDIR = /disk/d11/tlq
 TOOLS = tools
 TRACE = trace.debug
 TRACEMAKE = trace.jx
-WORKERS = workers/cctools_gpu_autodetect workers/log-define workers/work_queue_worker workers/worker.*.error workers/worker.*.output workers/workers.log
+WORKERS = workers/cctools_gpu_autodetect workers/log_define workers/work_queue_worker workers/worker.*.error workers/worker.*.output workers/workers.log
 
 CLEANUP = $(DATA) $(FAILED) $(GENERATOR) $(LOGCOLLECT) $(LOGS) $(LOGDEF) $(OUTPUTS) $(POINTS) $(TOOLS) $(TRACE) $(WORKERS)
 
@@ -29,10 +28,7 @@ $(CCTOOLS): /usr/bin/git
 $(GENERATOR): $(CCTOOLS)
 	git clone git@github.com:cooperative-computing-lab/makeflow-examples.git || git clone https://github.com/cooperative-computing-lab/makeflow-examples.git
 	mv $(LIFEMAPPER)/data $(LIFEMAPPER)/tools $(LIFEMAPPER)/$(GENERATOR) .
-	rm -rf makeflow-examples
-
-$(LOGCOLLECT): $(TRACE)
-	cd logs && sh pull-data $(TLQDIR)
+	rm -rf makeflow_examples
 
 $(LOGDEF):
 	cp ../$(LOGDEF) .
@@ -45,12 +41,12 @@ $(POINTS): $(CCTOOLS) $(GENERATOR)
 
 $(TRACE): $(LOGDEF) $(LTRACE) $(POINTS) $(TRACEMAKE) $(WORKERS)
 	cd workers && condor_submit workers.submit
-	sh $(LOGDEF) disc01.crc.nd.edu 9001 $(TLQDIR) ${PWD}/trace.debug makeflow-and-work-queue-master -- makeflow -T wq -N wq-trace -d all -o ${PWD}/trace.debug --jx trace.jx
+	sh $(LOGDEF) disc01.crc.nd.edu 9001 $(TLQDIR) ${PWD}/trace.debug makeflow_and_work_queue_master -- makeflow -T wq -N wq-trace -d all -o ${PWD}/trace.debug --jx trace.jx
 
 $(WORKERS): $(CCTOOLS)
 	cp ../cctools/bin/cctools_gpu_autodetect ./workers/
 	cp ../cctools/bin/work_queue_worker ./workers
-	cp ../log-define ./workers
+	cp ../log_define ./workers
 
 all: $(CCTOOLS) $(TRACE)
 

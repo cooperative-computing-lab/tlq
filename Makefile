@@ -1,10 +1,9 @@
 CCTOOLS = cctools
-CONDORPOVRAY = condor-povray/condor.debug
-LIFEMAPPER = lifemapper/ltrace.debug
+LIFEMAPPER = lifemapper/trace.debug
 PERLBASE = .perl5
-PERLS = .perl-modules-installed
-SHAREDFS = testing/shared-fs/master.debug
-SOURCE = cctools-source
+PERLS = .perl_modules_installed
+SHAKESPEARE = shakespeare/trace.debug
+SOURCE = cctools_source
 
 $(SOURCE): /usr/bin/git
 	@echo Installing CCTools software repository in working directory.
@@ -13,9 +12,6 @@ $(SOURCE): /usr/bin/git
 $(CCTOOLS): $(SOURCE)
 	mkdir $(CCTOOLS) || true
 	cd $(SOURCE) && ./configure --strict --prefix ../$(CCTOOLS) --tcp-low-port 9000 --tcp-high-port 9500 && make install
-
-$(CONDORPOVRAY): $(CCTOOLS) $(PERLBASE)
-	cd condor-povray && make
 
 $(LIFEMAPPER): $(CCTOOLS) $(PERLBASE)
 	cd lifemapper && make
@@ -45,7 +41,10 @@ $(PERLS):
 	cpan install Time::HiRes || true >> $(PERLS) 2>&1
 	cpan install URI::Encode || true >> $(PERLS) 2>&1
 
-all: $(CCTOOLS) $(CONDORPOVRAY) $(LIFEMAPPER) $(PERLBASE) $(PERLS) $(SOURCE)
+$(SHAKESPEARE): $(CCTOOLS) $(PERLBASE)
+	cd shakespeare && make
+
+all: $(CCTOOLS) $(LIFEMAPPER) $(PERLBASE) $(PERLS) $(SHAKESPEARE) $(SOURCE)
 
 build: $(CCTOOLS) $(PERLBASE) $(PERLS) $(SOURCE)
 
@@ -53,7 +52,7 @@ clean:
 	@echo Cleaning TLQ installation.
 	cd lifemapper && make clean
 	cd shakespeare && make clean
-	cd client && rm -rf .tlq-session.log
+	cd client && rm -rf .tlq_session.log
 	rm -rf $(CCTOOLS) $(PERLBASE) $(PERLS) $(SOURCE)
 
 .PHONY: all clean
