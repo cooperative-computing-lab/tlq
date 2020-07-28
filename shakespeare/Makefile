@@ -2,17 +2,18 @@ ANALYZE = text_analyzer.pl
 CCTOOLS = ../cctools
 COUNT = count_characters.pl
 FAILED = makeflow.failed.*
-SHAKESPEARE = makeflow_examples/shakespeare
 LOGS = *.makeflowlog *.wqlog *.debug *.trace
 LTRACE = ltrace_wrapper
 LOGDEF = log_define
+MFDIR = makeflow_examples
 PERLS = $(ANALYZE) $(COUNT)
+SHAKESPEARE = makeflow_examples/shakespeare
 SOURCE = ../cctools_source
+TEXTS = *.txt
 TLQDIR = /disk/d11/tlq
 TRACE = trace.debug
 TRACEMAKE = trace.jx
 WORKERS = workers/cctools_gpu_autodetect workers/log_define workers/work_queue_worker workers/worker.*.error workers/worker.*.output workers/workers.log
-TEXTS = *.txt
 
 CLEANUP = $(FAILED) $(LOGS) $(LOGDEF) $(LTRACE) $(PERLS) $(TEXT) $(TRACE) $(WORKERS)
 
@@ -22,7 +23,7 @@ $(CCTOOLS): /usr/bin/git
 	cd $(SOURCE) && ./configure --strict --prefix $(CCTOOLS) --tcp-low-port 9000 --tcp-high-port 9500 && make install
 
 $(ANALYZE): $(CCTOOLS)
-	git clone git@github.com:cooperative-computing-lab/makeflow-examples.git || git clone https://github.com/cooperative-computing-lab/makeflow-examples.git
+	git clone git@github.com:cooperative-computing-lab/makeflow-examples.git $(MFDIR) || git clone https://github.com/cooperative-computing-lab/makeflow-examples.git $(MFDIR)
 	mv $(SHAKESPEARE)/$(COUNT) $(SHAKESPEARE)/$(ANALYZE) .
 	rm -rf makeflow_examples
 

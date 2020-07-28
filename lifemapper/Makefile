@@ -7,6 +7,7 @@ LOGS = *.wqlog *.debug *.trace
 LTRACE = ltrace_wrapper
 LOGDEF = log_define
 MAKEFLOW = $(TRACEMAKE)
+MFDIR = makeflow_examples
 OUTPUTS = outputs
 PERL = test
 POINTS = points
@@ -26,7 +27,7 @@ $(CCTOOLS): /usr/bin/git
 	cd $(SOURCE) && ./configure --strict --prefix $(CCTOOLS) --tcp-low-port 9000 --tcp-high-port 9500 && make install
 
 $(GENERATOR): $(CCTOOLS)
-	git clone git@github.com:cooperative-computing-lab/makeflow-examples.git || git clone https://github.com/cooperative-computing-lab/makeflow-examples.git
+	git clone git@github.com:cooperative-computing-lab/makeflow-examples.git $(MFDIR) || git clone https://github.com/cooperative-computing-lab/makeflow-examples.git $(MFDIR)
 	mv $(LIFEMAPPER)/data $(LIFEMAPPER)/tools $(LIFEMAPPER)/$(GENERATOR) .
 	rm -rf makeflow_examples
 
