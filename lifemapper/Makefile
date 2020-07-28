@@ -40,7 +40,7 @@ $(LTRACE):
 $(POINTS): $(CCTOOLS) $(GENERATOR)
 	python $(GENERATOR) data/points/large.csv
 
-$(TRACE): $(LOGDEF) $(LTRACE) $(POINTS) $(TRACEMAKE) $(WORKERS)
+$(TRACE): $(CCTOOLS) $(LOGDEF) $(LTRACE) $(POINTS) $(TRACEMAKE) $(WORKERS)
 	cd workers && condor_submit workers.submit
 	sh $(LOGDEF) disc01.crc.nd.edu 9001 $(TLQDIR) ${PWD}/trace.debug makeflow_and_work_queue_master -- makeflow -T wq -N wq-trace -d all -o ${PWD}/trace.debug --jx trace.jx
 
@@ -49,7 +49,7 @@ $(WORKERS): $(CCTOOLS)
 	cp ../cctools/bin/work_queue_worker ./workers
 	cp ../log_define ./workers
 
-all: $(CCTOOLS) $(TRACE)
+all: $(TRACE)
 
 build: $(GENERATOR) $(LOGDEF) $(POINTS)
 

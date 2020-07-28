@@ -14,7 +14,7 @@ $(CCTOOLS): $(SOURCE)
 	cd $(SOURCE) && ./configure --strict --prefix ../$(CCTOOLS) --tcp-low-port 9000 --tcp-high-port 9500 && make install
 
 $(LIFEMAPPER): $(CCTOOLS) $(PERLBASE)
-	cd lifemapper && make
+	cd lifemapper && make all
 
 $(PERLBASE): $(PERLS)
 	@echo Copying local perl5 installation to working directory.
@@ -42,11 +42,15 @@ $(PERLS):
 	cpan install URI::Encode || true >> $(PERLS) 2>&1
 
 $(SHAKESPEARE): $(CCTOOLS) $(PERLBASE)
-	cd shakespeare && make
+	cd shakespeare && make all
 
 all: $(CCTOOLS) $(LIFEMAPPER) $(PERLBASE) $(PERLS) $(SHAKESPEARE) $(SOURCE)
 
 build: $(CCTOOLS) $(PERLBASE) $(PERLS) $(SOURCE)
+
+lifemapper: $(LIFEMAPPER)
+
+shakespeare: $(SHAKESPEARE)
 
 clean:
 	@echo Cleaning TLQ installation.

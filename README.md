@@ -20,11 +20,12 @@ TLQ requires a local installation of Perl 5. It will automatically retrieve the 
 CCTools is automatically installed at the top-level TLQ directory when running `make build`. CCTools provides the Work Queue master-worker framework software and the Makeflow workflow management system, both of which are necessary to run Lifemapper. It also provides a simple interface to the HTCondor batch system, which is the default configured batch system for this repository. Finally, CCTools provides the JX (JSON eXtended) language which can be used to query the metalogs at each log server.
 
 ## Running TLQ
-This repository of TLQ is fairly bare-bones. Log servers and the client must be started manually _before_ executing the system of your choice. At the user-end, you will need to run these two commands in either two separate terminals or background the first command:
+This repository of TLQ is fairly bare-bones. Log servers and the client must be started manually _before_ executing the system of your choice. At the user-end, you will need to run the client which also receives messages from log servers about which logs the servers are watching:
 ```
-perl deposit_receiver
-perl tlq_client
+perl tlq_client -s
 ```
+
+The `-s` option saves any commands you execute for subsequent sessions.
 
 At each machine you want to run a log server, run:
 ```
