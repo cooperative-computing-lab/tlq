@@ -73,7 +73,7 @@ my $start = time();
     foreach my $p (@localparsers) {
         system("cp parsers/$p $dir/$p");
         my $type = $p;
-        $type =~ s/-parser//g;
+        $type =~ s/_parser//g;
         print(STDERR "Adding parser of type $type to TLQ.\n");
         $parsers{$type} = {};
         $parsers{$type}{path} = "$dir/$p";
@@ -224,8 +224,7 @@ my $start = time();
         my @toparse;
         print(STDERR "Parsing logs of type $type.\n");
         foreach my $uuid (keys(%logs)) {
-            if((!$logs{$uuid}{parsed} and $logs{$uuid}{logtype} eq $type) or ($logs{$uuid}{logtype} eq $type and ($logs{$uuid}{size} < -s $logs{$uuid}{path}))) {
-                push(@toparse, $uuid); }
+            if((!$logs{$uuid}{parsed} and $logs{$uuid}{logtype} eq $type) or ($logs{$uuid}{logtype} eq $type and ($logs{$uuid}{size} < -s $logs{$uuid}{path}))) { push(@toparse, $uuid); }
             $logs{$uuid}{size} = -s $logs{$uuid}{path};
         }
         foreach my $uuid (@toparse) {
