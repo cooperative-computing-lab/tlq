@@ -12,6 +12,7 @@ $(SOURCE): /usr/bin/git
 $(CCTOOLS): $(SOURCE)
 	mkdir $(CCTOOLS) || true
 	cd $(SOURCE) && ./configure --strict --prefix ../$(CCTOOLS) --tcp-low-port 9000 --tcp-high-port 9500 && make install
+	cp $(SOURCE)/dttools/src/jx_test ./client/
 
 $(LIFEMAPPER): $(CCTOOLS) $(PERLBASE)
 	cd lifemapper && make all
@@ -26,6 +27,7 @@ $(PERLBASE): $(PERLS)
 $(PERLS):
 	@echo Downloading and installing required Perl modules.
 	curl -L https://cpanmin.us | perl - App::cpanminus >> $(PERLS) 2>&1
+	cpan install Compress::Zlib || true >> $(PERLS) 2>&1
 	cpan install Data::Dumper || true >> $(PERLS) 2>&1
 	cpan install DateTime || true >> $(PERLS) 2>&1
 	cpan install Error || true >> $(PERLS) 2>&1
@@ -56,7 +58,7 @@ clean:
 	@echo Cleaning TLQ installation.
 	cd lifemapper && make clean
 	cd shakespeare && make clean
-	cd client && rm -rf .tlq_session.log
+	cd client && rm -rf .tlq_session.log deposits.log jx_test
 	rm -rf $(CCTOOLS) $(PERLBASE) $(PERLS) $(SOURCE)
 
 .PHONY: all clean

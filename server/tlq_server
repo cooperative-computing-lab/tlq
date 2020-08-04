@@ -53,6 +53,7 @@ my $start = time();
 #Define application-specific web server handling
 {
     package WebServer;
+    use Compress::Zlib;
     use Data::Dumper;
     use HTTP::Server::Simple::CGI;
     use IO::Socket::INET;
@@ -251,6 +252,17 @@ my $start = time();
                 }
             }
             foreach my $type (keys(%parsers)) { parse_logs($type); }
+            my @listlogs;
+            foreach my $l (keys(%logs)) {
+                my %item;
+                $item{uuid} = $l;
+                $item{url} = "http://$host:$port/jx/$l.json";
+                $item{type} = $logs{$l}{type};
+                $item{command} = $logs{$l}{command};
+                $item{path} = $logs{$l}{path};
+                $item{original} = $logs{$l}{original};
+                push(@listlogs, \%item);
+            }
             my %encode;
             $encode{type} = "tlq_server";
             $encode{name} = $host;
@@ -259,11 +271,12 @@ my $start = time();
             $encode{working_dir} = $dir;
             $encode{starttime} = $start;
             $encode{url} = "http://$host:$port";
-            #$encode{logs} = \%logs;
+            $encode{logs} = \@listlogs;
             print(STDERR "Sending heartbeat to catalog.cse.nd.edu:9097.\n");
             my $heartbeat = JSON->new->utf8->encode(\%encode);
+            $heartbeat = Compress::Zlib::compress($heartbeat);
             my $socket = IO::Socket::INET->new(PeerAddr => "catalog.cse.nd.edu:9097", Proto => "udp");
-            $socket->send($heartbeat);
+            $socket->send(chr(26) . $heartbeat);
             $socket->close();
             sleep(30);
         }
