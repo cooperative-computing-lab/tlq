@@ -75,7 +75,6 @@ my $start = time();
         system("cp parsers/$p $dir/$p");
         my $type = $p;
         $type =~ s/_parser//g;
-        print(STDERR "Adding parser of type $type to TLQ.\n");
         $parsers{$type} = {};
         $parsers{$type}{path} = "$dir/$p";
     }
@@ -152,7 +151,6 @@ my $start = time();
         if($cgi->path_info() =~ m/jx\/(?<uuid>[a-f0-9\-]+)(.json)?/) { $uuid = $+{uuid}; }
         $json = "$uuid.json";
         $json = check_file($uuid, 1);
-        print(STDERR "Attempting to transfer file $json.\n");
         return transfer($cgi, $json);
     }
 
@@ -223,7 +221,6 @@ my $start = time();
         my ($type) = @_;
         my $parser = $parsers{$type}{path};
         my @toparse;
-        print(STDERR "Parsing logs of type $type.\n");
         foreach my $uuid (keys(%logs)) {
             if((!$logs{$uuid}{parsed} and $logs{$uuid}{logtype} eq $type) or ($logs{$uuid}{logtype} eq $type and ($logs{$uuid}{size} < -s $logs{$uuid}{path}))) { push(@toparse, $uuid); }
             $logs{$uuid}{size} = -s $logs{$uuid}{path};
@@ -244,6 +241,7 @@ my $start = time();
 
     sub watch_logs {
         my $flag = 1;
+        my @prevlogs;
         while($flag) {
             check_deposit();
             foreach my $uuid (keys(%logs)) {
@@ -253,32 +251,36 @@ my $start = time();
             }
             foreach my $type (keys(%parsers)) { parse_logs($type); }
             my @listlogs;
-            foreach my $l (keys(%logs)) {
+            foreach my $l (sort(keys(%logs))) {
                 my %item;
                 $item{uuid} = $l;
                 $item{url} = "http://$host:$port/jx/$l.json";
-                $item{type} = $logs{$l}{type};
+                $item{type} = $logs{$l}{logtype};
                 $item{command} = $logs{$l}{command};
+                $item{home} = $logs{$l}{home};
                 $item{path} = $logs{$l}{path};
                 $item{original} = $logs{$l}{original};
                 push(@listlogs, \%item);
             }
-            my %encode;
-            $encode{type} = "tlq_server";
-            $encode{name} = $host;
-            $encode{port} = $port;
-            $encode{owner} = $ENV{USER};
-            $encode{working_dir} = $dir;
-            $encode{starttime} = $start;
-            $encode{url} = "http://$host:$port";
-            $encode{logs} = \@listlogs;
-            print(STDERR "Sending heartbeat to catalog.cse.nd.edu:9097.\n");
-            my $heartbeat = JSON->new->utf8->encode(\%encode);
-            $heartbeat = Compress::Zlib::compress($heartbeat);
-            my $socket = IO::Socket::INET->new(PeerAddr => "catalog.cse.nd.edu:9097", Proto => "udp");
-            $socket->send(chr(26) . $heartbeat);
-            $socket->close();
-            sleep(30);
+            if(scalar(@listlogs) != scalar(@prevlogs)) {
+                my %encode;
+                $encode{type} = "tlq_server";
+                $encode{name} = $host;
+                $encode{port} = $port;
+                $encode{owner} = $ENV{USER};
+                $encode{working_dir} = $dir;
+                $encode{starttime} = $start;
+                $encode{url} = "http://$host:$port";
+                $encode{logs} = \@listlogs;
+                print(STDERR "Sending heartbeat to catalog.cse.nd.edu:9097.\n");
+                my $heartbeat = JSON->new->utf8->encode(\%encode);
+                $heartbeat = Compress::Zlib::compress($heartbeat);
+                my $socket = IO::Socket::INET->new(PeerAddr => "catalog.cse.nd.edu:9097", Proto => "udp");
+                $socket->send(chr(26) . $heartbeat);
+                $socket->close();
+                @prevlogs = @listlogs;
+            }
+            sleep(1);
         }
         print(STDERR "\nExiting log watcher thread.\n");
         threads->exit();
