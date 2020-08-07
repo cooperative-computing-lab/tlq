@@ -63,6 +63,22 @@ while(my $line = <LOG>) {
     }
     #wq: could not rename output file /var/condor/execute/dir_20022/worker-213124-20026/t.2/out.dat to cache/file-10-7a6fc525356ac795b582a230c9e31976-out.2.dat: No such file or directory
     elsif($line =~ m/wq: could not rename output file/) { $worker{failures}++; }
+
+    
+    #tlq: set worker TLQ URL: http://disc25.crc.nd.edu:11855/jx/6ca6187d-95bc-4934-ada5-6c34796787c8.json
+    if($line =~ m/tlq: set worker TLQ URL: http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
+        my $url = $+{address} . "/jx/" . $+{uuid} . ".json";
+        $worker{url} = $url;
+        $worker{links}{$+{uuid}}{type} = "work_queue_worker";
+        $worker{links}{$+{uuid}}{url} = $url;
+    }
+    #tlq: setting master TLQ URL: http://disc01.crc.nd.edu:11855/jx/37bd779f-95d8-4c2c-80e3-f5eb4e28aacc.json
+    elsif($line =~ m/tlq: setting master TLQ URL http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
+        my $url = "http://" . $+{address} . "/jx/" . $+{uuid} . ".json";
+        $master{master}{$+{address}}{url} = $url;
+        $master{links}{$+{uuid}}{type} = "work_queue_master";
+        $master{links}{$+{uuid}}{url} = $url;
+    }
     $linenum++;
 }
 close(LOG);
