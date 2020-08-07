@@ -75,9 +75,9 @@ while(my $line = <LOG>) {
     #tlq: setting master TLQ URL: http://disc01.crc.nd.edu:11855/jx/37bd779f-95d8-4c2c-80e3-f5eb4e28aacc.json
     elsif($line =~ m/tlq: setting master TLQ URL http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
         my $url = "http://" . $+{address} . "/jx/" . $+{uuid} . ".json";
-        $master{master}{$+{address}}{url} = $url;
-        $master{links}{$+{uuid}}{type} = "work_queue_master";
-        $master{links}{$+{uuid}}{url} = $url;
+        $worker{master}{$+{address}}{url} = $url;
+        $worker{links}{$+{uuid}}{type} = "work_queue_master";
+        $worker{links}{$+{uuid}}{url} = $url;
     }
     $linenum++;
 }
