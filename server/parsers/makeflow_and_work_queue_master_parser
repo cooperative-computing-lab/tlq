@@ -25,7 +25,7 @@ my ($log, $uuid) = @ARGV;
 
 my %master;
 #$master{failures} = 0;
-$master{type} = "work-queue-master";
+$master{type} = "work_queue_master";
 $master{log} = $log;
 $master{uuid} = $uuid;
 my %makeflow;
@@ -100,12 +100,30 @@ while(my $line = <LOG>) {
     elsif($line =~ m/wq: tx to \S+ \(\S+\): wall_time (?<wall>\S+)/ and $currtask) { $master{tasks}{$currtask}{wall_time} = $+{wall}; }
     #wq: tx to disc25.crc.nd.edu (10.32.74.188:37590): end
     elsif($line =~ m/wq: tx to \S+ \(\S+\): end/ and $currtask) { $currtask = 0; }
+    
+
+    #tlq: set master TLQ URL: http://disc01.crc.nd.edu:11855/jx/37bd779f-95d8-4c2c-80e3-f5eb4e28aacc.json
+    if($line =~ m/tlq: set master TLQ URL: (?<url>\S+)/) {
+        $master{url} = $+{url};
+        $master{links}{$+{uuid}}{type} = "work_queue_master";
+        $master{links}{$+{uuid}}{url} = $+{url};
+        $makeflow{links}{$+{uuid}}{type} = "makeflow";
+        $makeflow{links}{$+{uuid}}{url} = $+{url};
+    }
+    #tlq: received worker (10.32.74.188:36598) TLQ URL http://disc25.crc.nd.edu:11855/jx/6ca6187d-95bc-4934-ada5-6c34796787c8.json
+    elsif($line =~ m/tlq: received worker \((?<ip>\S+):(?<port>\d+)\) TLQ URL http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
+        my $workeraddr = $+{ip} . ":" . $+{port};
+        my $url = "http://" . $+{address} . "/jx/" . $+{uuid} . ".json";
+        $master{workers}{$workeraddr}{url} = $url;
+        $master{links}{$+{uuid}}{type} = "work_queue_worker";
+        $master{links}{$+{uuid}}{url} = $url;
+    }
     $linenum++;
 }
 close(LOG);
 
 my %combined;
-$combined{"work-queue-master"} = \%master;
+$combined{"work_queue_master"} = \%master;
 $combined{makeflow} = \%makeflow;
 my $json = JSON->new->utf8->encode(\%combined);
 print(STDOUT "$json\n");
