@@ -48,6 +48,7 @@ if(!$dir) { $dir = "/tmp/tlq"; }
 if(!$port) { $port = 9000; }
 if($err) { print_help(); }
 my $host = hostname();
+my $uds = "/tmp/tlq_server_urls";
 my $start = time();
 
 #Define application-specific web server handling
@@ -57,6 +58,7 @@ my $start = time();
     use Data::Dumper;
     use HTTP::Server::Simple::CGI;
     use IO::Socket::INET;
+    use IO::Socket::UNIX;
     use JSON;
     use Sys::Hostname;
     use threads;
@@ -65,6 +67,7 @@ my $start = time();
 
     my %logs; #Logs have a UUID, path, JSON path, type, component, and size
     my %parsers; #Parsers have an type ID, and path
+    if(-e $uds) { unlink($uds); }
     if(!(-e $dir)) { mkdir($dir); }
     else { check_deposit(); }
     chmod(0766, $dir);
@@ -80,7 +83,9 @@ my $start = time();
     }
     my $host = hostname();
     my $log_thread = threads->create("watch_logs");
+    my $url_thread = threads->create("watch_urls");
     $log_thread->detach();
+    $url_thread->detach();
     my %dispatch = (
         "/query" => \&run_query,
         "/jx" => \&send_json,
@@ -109,6 +114,7 @@ my $start = time();
             $logs{$uuid}{parsed} = 0;
             $logs{$uuid}{name} = $host;
             $logs{$uuid}{port} = $port;
+            $logs{$uuid}{url} = "http://$host:$port/jx/$uuid.json";
             if(-e $logs{$uuid}{json}) { $logs{$uuid}{parsed} = 1; }
             if($redirect eq "NONE") {
                 $logs{$uuid}{path} = "$dir/$uuid.log";
@@ -119,6 +125,7 @@ my $start = time();
             system("curl -s --data-urlencode \"DEPOSIT=$deposit\" http://$home/deposit");
         }
         close(DEPOSIT);
+        my $dc = scalar(keys(%logs));
     }
 
     sub check_file {
@@ -240,9 +247,8 @@ my $start = time();
     }
 
     sub watch_logs {
-        my $flag = 1;
         my @prevlogs;
-        while($flag) {
+        while(1) {
             check_deposit();
             foreach my $uuid (keys(%logs)) {
                 if($logs{$uuid}{noredirect} and -e $logs{$uuid}{original} and $logs{$uuid}{size} < -s $logs{$uuid}{original}) {
@@ -280,9 +286,32 @@ my $start = time();
                 $socket->close();
                 @prevlogs = @listlogs;
             }
-            sleep(1);
+            #sleep(1);
         }
         print(STDERR "\nExiting log watcher thread.\n");
+        threads->exit();
+        return 0;
+    }
+
+    sub watch_urls {
+        my $socket = IO::Socket::UNIX->new(Type => SOCK_STREAM(), Local => "/tmp/tlq_server_urls", Listen => 5);
+        while(1) {
+            next unless my $connection = $socket->accept();
+            my $line;
+            $connection->recv($line, 1024);
+            check_deposit();
+            my $url;
+            foreach my $log (keys(%logs)) {
+                if($logs{$log}{path} == $line) {
+                    $url = $logs{$log}{url};
+                    last;
+                }
+            }
+            if($url) { $connection->print($url); }
+            else { $connection->print("unable to find TLQ url"); }
+        }
+        close($socket);
+        print(STDERR "\nExiting URL watcher thread.\n");
         threads->exit();
         return 0;
     }

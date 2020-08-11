@@ -35,6 +35,7 @@ $(PERLS):
 	cpan install Getopt::Long || true >> $(PERLS) 2>&1
 	cpan install HTTP::Server::Simple::CGI || true >> $(PERLS) 2>&1
 	cpan install IO::Socket::INET || true >> $(PERLS) 2>&1
+	cpan install IO::Socket::UNIX || true >> $(PERLS) 2>&1
 	cpan install JSON || true >> $(PERLS) 2>&1
 	cpan install LWP::UserAgent || true >> $(PERLS) 2>&1
 	cpan install Sys::Hostname || true >> $(PERLS) 2>&1
