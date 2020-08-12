@@ -308,7 +308,10 @@ my $start = time();
                     last;
                 }
             }
-            if($url) { $connection->print($url); }
+            if($url) {
+                $connection->print($url);
+                print(STDERR "Connection $peer_addr given $url.\n");
+            }
             else { $connection->print("unable to find TLQ url"); }
         }
         close($socket);
