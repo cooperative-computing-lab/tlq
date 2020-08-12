@@ -16,7 +16,7 @@ Optional:
     --dir,-d    <path>      Use the specified path for TLQ's working directory.
                             Default: /tmp/tlq
     --port,-p   <integer>   Attempt to use selected port.
-                            Default: 9000.
+                            Default: 11855.
 
     --help                  Display this message.
 
@@ -45,7 +45,7 @@ my $err = 0;
 our $dir = $OPT{dir};
 my $port = $OPT{port};
 if(!$dir) { $dir = "/tmp/tlq"; }
-if(!$port) { $port = 9000; }
+if(!$port) { $port = 11855; }
 if($err) { print_help(); }
 my $host = hostname();
 my $start = time();
@@ -291,7 +291,8 @@ my $start = time();
     }
 
     sub watch_urls {
-        my $socket = IO::Socket::INET->new(LocalAddr => "127.0.0.1:11856", Proto => "tcp", Listen => 5, Reuse => 1) or die "Could not bind TLQ URL advertising socket: $@\n";
+        my $sockport = $port + 1;
+        my $socket = IO::Socket::INET->new(LocalAddr => "127.0.0.1:$sockport", Proto => "tcp", Listen => 5, Reuse => 1) or die "Could not bind TLQ URL advertising socket: $@\n";
         while(1) {
             next unless my $connection = $socket->accept();
             my $peer_host = $connection->peerhost();
@@ -303,7 +304,7 @@ my $start = time();
             check_deposit();
             my $url;
             foreach my $log (keys(%logs)) {
-                if($logs{$log}{path} == $line) {
+                if($logs{$log}{path} eq $line or $logs{$log}{original} eq $line) {
                     $url = $logs{$log}{url};
                     last;
                 }
