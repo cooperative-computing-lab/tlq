@@ -291,11 +291,13 @@ my $start = time();
     }
 
     sub watch_urls {
-        my $socket = IO::Socket::INET->new(Type => SOCK_STREAM, LocalAddr => "129.74.128.103", LocalPort => 11856, Proto => "tcp", Listen => 5, Timeout => 10);
-        if($socket) { print(STDERR "SOCKET STARTED\n"); }
+        my $socket = IO::Socket::INET->new(LocalAddr => "127.0.0.1:11856", Proto => "tcp", Listen => 5, Reuse => 1) or die "Could not bind TLQ URL advertising socket: $@\n";
         while(1) {
             next unless my $connection = $socket->accept();
-            print(STDERR "GOT CONNECTION\n");
+            my $peer_host = $connection->peerhost();
+            my $peer_port = $connection->peerport();
+            my $peer_addr = "$peer_host:$peer_port";
+            print(STDERR "Connected to $peer_addr over local socket.\n");
             my $line;
             $connection->recv($line, 1024);
             check_deposit();
