@@ -48,7 +48,6 @@ if(!$dir) { $dir = "/tmp/tlq"; }
 if(!$port) { $port = 9000; }
 if($err) { print_help(); }
 my $host = hostname();
-my $uds = "/tmp/tlq_server_urls";
 my $start = time();
 
 #Define application-specific web server handling
@@ -58,7 +57,6 @@ my $start = time();
     use Data::Dumper;
     use HTTP::Server::Simple::CGI;
     use IO::Socket::INET;
-    use IO::Socket::UNIX;
     use JSON;
     use Sys::Hostname;
     use threads;
@@ -67,7 +65,6 @@ my $start = time();
 
     my %logs; #Logs have a UUID, path, JSON path, type, component, and size
     my %parsers; #Parsers have an type ID, and path
-    if(-e $uds) { unlink($uds); }
     if(!(-e $dir)) { mkdir($dir); }
     else { check_deposit(); }
     chmod(0766, $dir);
@@ -294,9 +291,11 @@ my $start = time();
     }
 
     sub watch_urls {
-        my $socket = IO::Socket::UNIX->new(Type => SOCK_STREAM(), Local => "/tmp/tlq_server_urls", Listen => 5);
+        my $socket = IO::Socket::INET->new(Type => SOCK_STREAM, LocalAddr => "129.74.128.103", LocalPort => 11856, Proto => "tcp", Listen => 5, Timeout => 10);
+        if($socket) { print(STDERR "SOCKET STARTED\n"); }
         while(1) {
             next unless my $connection = $socket->accept();
+            print(STDERR "GOT CONNECTION\n");
             my $line;
             $connection->recv($line, 1024);
             check_deposit();
