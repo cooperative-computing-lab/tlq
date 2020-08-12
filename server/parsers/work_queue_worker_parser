@@ -57,9 +57,9 @@ while(my $line = <LOG>) {
     elsif($line =~ m/wq: started process (?<pid>\d+): (?<command>[^\n]+)/) { $worker{pids}{$+{pid}}{command} = $+{command}; }
     #wq: task 82 (pid 1110) exited normally with exit code 1
     elsif($line =~ m/wq: task (?<taskid>\d+) \(pid (?<pid>\d+)\) exited \S+ with exit code (?<exited>\d+)/) {
-        $worker{tasks}{$+{task}}{pid} = $+{pid};
-        $worker{tasks}{$+{task}}{command} = $worker{pids}{$+{pid}}{command};
-        $worker{tasks}{$+{task}}{exited} = $+{exited};
+        $worker{tasks}{$+{taskid}}{pid} = $+{pid};
+        $worker{tasks}{$+{taskid}}{command} = $worker{pids}{$+{pid}}{command};
+        $worker{tasks}{$+{taskid}}{exited} = $+{exited};
     }
     #wq: could not rename output file /var/condor/execute/dir_20022/worker-213124-20026/t.2/out.dat to cache/file-10-7a6fc525356ac795b582a230c9e31976-out.2.dat: No such file or directory
     elsif($line =~ m/wq: could not rename output file/) { $worker{failures}++; }
@@ -73,10 +73,16 @@ while(my $line = <LOG>) {
         $worker{links}{$+{uuid}}{url} = $url;
     }
     #tlq: setting master TLQ URL: http://disc01.crc.nd.edu:11855/jx/37bd779f-95d8-4c2c-80e3-f5eb4e28aacc.json
-    elsif($line =~ m/tlq: setting master TLQ URL http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
+    elsif($line =~ m/tlq: set master TLQ URL http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
         my $url = "http://" . $+{address} . "/jx/" . $+{uuid} . ".json";
         $worker{master}{$+{address}}{url} = $url;
         $worker{links}{$+{uuid}}{type} = "work_queue_master";
+        $worker{links}{$+{uuid}}{url} = $url;
+    }
+    elsif($line =~ m/tlq: set task (?<taskid>\d+) TLQ URL http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
+        my $url = "http://" . $+{address} . "/jx/" . $+{uuid} . ".json";
+        $worker{tasks}{$+{taskid}}{url} = $url;
+        $worker{links}{$+{uuid}}{type} = "ltrace";
         $worker{links}{$+{uuid}}{url} = $url;
     }
     $linenum++;
