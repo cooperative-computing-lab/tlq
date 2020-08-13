@@ -63,7 +63,7 @@ my $command_usage = "Available commands:
   ALIAS <URI> <STRING>
   EXIT
   JX
-  LIST
+  LIST [URI/ALIAS]
   PULL <URI/ALIAS>
   QUERY <URI/ALIAS> <STRING>
   RM <URI/ALIAS>
@@ -195,7 +195,8 @@ while(defined(my $input = $term->readline($prompt))) {
     }
     elsif($action eq "EXIT" or $action eq "QUIT") { $result = request($action, $destination); }
     elsif($action eq "LIST") {
-        $result = list_logs();
+        if($destination) { $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("LIST", $server, query_to_json("list"))); }
+        else { $result = list_logs(); }
         print(STDOUT "$result\n");
     }
     else { print_command_help(); } 
@@ -283,6 +284,10 @@ sub request {
     }
     elsif($action eq "RM") {
         $http = $destination . "/rm";
+        $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
+    }
+    elsif($action eq "LIST") {
+        $http = $destination . "/list";
         $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
     }
     else { return "Request type $action not supported."; }

@@ -162,6 +162,7 @@ my $start = time();
         my ($cgi) = @_;
         my $file = request_from_json($cgi->param("PUTDATA"));
         $file = check_file($file, 0);
+        print(STDOUT "HTTP/1.0 200 OK\n");
         return transfer($cgi, $file);
     }
 
@@ -184,6 +185,8 @@ my $start = time();
             $encode{logs}{$log}{tlq_port} = $logs{$log}{tlq_port};
             $encode{logs}{$log}{url} = $logs{$log}{url};
         }
+        my $result = JSON->new->utf8->encode(\%encode);
+        print(STDOUT "$result");
         return 1;
     }
 
@@ -267,7 +270,7 @@ my $start = time();
 
     sub watch_logs {
         my @prevlogs;
-        my $prevtime;
+        my $prevtime = 0;
         while(1) {
             my $currtime = time();
             check_deposit();
@@ -283,7 +286,7 @@ my $start = time();
                 $item{uuid} = $l;
                 push(@listlogs, \%item);
             }
-            if(scalar(@listlogs) != scalar(@prevlogs) or ($currtime - $prevtime) > 60) {
+            if((scalar(@listlogs) != scalar(@prevlogs)) or ($currtime - $prevtime) > 60) {
                 my %encode;
                 $encode{type} = "tlq_server";
                 $encode{name} = $host;
@@ -299,8 +302,8 @@ my $start = time();
                 $socket->send(chr(26) . $heartbeat);
                 $socket->close();
                 @prevlogs = @listlogs;
+                $prevtime = $currtime;
             }
-            $prevtime = $currtime;
         }
         print(STDERR "\nExiting log watcher thread.\n");
         threads->exit();
