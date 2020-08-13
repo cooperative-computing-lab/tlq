@@ -2,6 +2,7 @@ CCTOOLS = ../cctools
 DATA = data
 FAILED = makeflow.failed.*
 GENERATOR = split.py
+HOME = disc01.crc.nd.edu
 LIFEMAPPER = makeflow_examples/lifemapper
 LOGS = *.wqlog *.debug *.trace
 LTRACE = ltrace_wrapper
@@ -42,7 +43,7 @@ $(POINTS): $(CCTOOLS) $(GENERATOR)
 
 $(TRACE): $(CCTOOLS) $(LOGDEF) $(LTRACE) $(POINTS) $(TRACEMAKE) $(WORKERS)
 	cd workers && condor_submit workers.submit
-	sh $(LOGDEF) disc01.crc.nd.edu 9001 $(TLQDIR) ${PWD}/trace.debug makeflow_and_work_queue_master -- makeflow -T wq -N wq-trace --tlq 11856 -d all -o ${PWD}/trace.debug --jx trace.jx
+	sh $(LOGDEF) $(HOME) 9001 $(TLQDIR) ${PWD}/trace.debug makeflow_and_work_queue_master -- makeflow -T wq -N wq-trace --tlq 11856 -d all -o ${PWD}/trace.debug --jx trace.jx
 
 $(WORKERS): $(CCTOOLS)
 	cp ../cctools/bin/cctools_gpu_autodetect ./workers/

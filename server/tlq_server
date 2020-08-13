@@ -87,6 +87,7 @@ my $start = time();
         "/query" => \&run_query,
         "/jx" => \&send_json,
         "/pull" => \&send_file,
+        "/list" => \&send_index,
         "/rm" => \&rm_file
     );
 
@@ -104,13 +105,12 @@ my $start = time();
             $logs{$uuid}{home} = $home;
             $logs{$uuid}{path} = $redirect;
             $logs{$uuid}{size} = 0;
-            $logs{$uuid}{logtype} = $type;
-            $logs{$uuid}{type} = "tlq_log";
+            $logs{$uuid}{type} = $type;
             $logs{$uuid}{command} = $cmd;
             $logs{$uuid}{noredirect} = 0;
             $logs{$uuid}{parsed} = 0;
-            $logs{$uuid}{name} = $host;
-            $logs{$uuid}{port} = $port;
+            $logs{$uuid}{tlq_host} = $host;
+            $logs{$uuid}{tlq_port} = $port;
             $logs{$uuid}{url} = "http://$host:$port/jx/$uuid.json";
             if(-e $logs{$uuid}{json}) { $logs{$uuid}{parsed} = 1; }
             if($redirect eq "NONE") {
@@ -163,6 +163,28 @@ my $start = time();
         my $file = request_from_json($cgi->param("PUTDATA"));
         $file = check_file($file, 0);
         return transfer($cgi, $file);
+    }
+
+    sub send_index {
+        my ($cgi) = @_;
+        my $query = request_from_json($cgi->param("PUTDATA"));
+        my %encode;
+        $encode{query} = $query;
+        $encode{logs} = {};
+        foreach my $log (keys(%logs)) {
+            $encode{logs}{$log} = 
+            $encode{logs}{$log}{json} = $logs{$log}{json};
+            $encode{logs}{$log}{original} = $logs{$log}{original};
+            $encode{logs}{$log}{home} = $logs{$log}{home};
+            $encode{logs}{$log}{path} = $logs{$log}{path};
+            $encode{logs}{$log}{size} = $logs{$log}{size};
+            $encode{logs}{$log}{type} = $logs{$log}{type};
+            $encode{logs}{$log}{command} = $logs{$log}{command};
+            $encode{logs}{$log}{tlq_host} = $logs{$log}{tlq_host};
+            $encode{logs}{$log}{tlq_port} = $logs{$log}{tlq_port};
+            $encode{logs}{$log}{url} = $logs{$log}{url};
+        }
+        return 1;
     }
 
     sub rm_file {
@@ -226,7 +248,7 @@ my $start = time();
         my $parser = $parsers{$type}{path};
         my @toparse;
         foreach my $uuid (keys(%logs)) {
-            if((!$logs{$uuid}{parsed} and $logs{$uuid}{logtype} eq $type) or ($logs{$uuid}{logtype} eq $type and ($logs{$uuid}{size} < -s $logs{$uuid}{path}))) { push(@toparse, $uuid); }
+            if((!$logs{$uuid}{parsed} and $logs{$uuid}{type} eq $type) or ($logs{$uuid}{type} eq $type and ($logs{$uuid}{size} < -s $logs{$uuid}{path}))) { push(@toparse, $uuid); }
             $logs{$uuid}{size} = -s $logs{$uuid}{path};
         }
         foreach my $uuid (@toparse) {
@@ -245,7 +267,9 @@ my $start = time();
 
     sub watch_logs {
         my @prevlogs;
+        my $prevtime;
         while(1) {
+            my $currtime = time();
             check_deposit();
             foreach my $uuid (keys(%logs)) {
                 if($logs{$uuid}{noredirect} and -e $logs{$uuid}{original} and $logs{$uuid}{size} < -s $logs{$uuid}{original}) {
@@ -257,15 +281,9 @@ my $start = time();
             foreach my $l (sort(keys(%logs))) {
                 my %item;
                 $item{uuid} = $l;
-                $item{url} = "http://$host:$port/jx/$l.json";
-                $item{type} = $logs{$l}{logtype};
-                $item{command} = $logs{$l}{command};
-                $item{home} = $logs{$l}{home};
-                $item{path} = $logs{$l}{path};
-                $item{original} = $logs{$l}{original};
                 push(@listlogs, \%item);
             }
-            if(scalar(@listlogs) != scalar(@prevlogs)) {
+            if(scalar(@listlogs) != scalar(@prevlogs) or ($currtime - $prevtime) > 60) {
                 my %encode;
                 $encode{type} = "tlq_server";
                 $encode{name} = $host;
@@ -274,7 +292,6 @@ my $start = time();
                 $encode{working_dir} = $dir;
                 $encode{starttime} = $start;
                 $encode{url} = "http://$host:$port";
-                $encode{logs} = \@listlogs;
                 print(STDERR "Sending heartbeat to catalog.cse.nd.edu:9097.\n");
                 my $heartbeat = JSON->new->utf8->encode(\%encode);
                 $heartbeat = Compress::Zlib::compress($heartbeat);
@@ -283,7 +300,7 @@ my $start = time();
                 $socket->close();
                 @prevlogs = @listlogs;
             }
-            #sleep(1);
+            $prevtime = $currtime;
         }
         print(STDERR "\nExiting log watcher thread.\n");
         threads->exit();
@@ -292,7 +309,7 @@ my $start = time();
 
     sub watch_urls {
         my $sockport = $port + 1;
-        my $socket = IO::Socket::INET->new(LocalAddr => "127.0.0.1:$sockport", Proto => "tcp", Listen => 5, Reuse => 1) or die "Could not bind TLQ URL advertising socket: $@\n";
+        my $socket = IO::Socket::INET->new(LocalAddr => "127.0.0.1:$sockport", Proto => "tcp", Listen => 10, Reuse => 1) or die "Could not bind TLQ URL advertising socket: $@\n";
         while(1) {
             next unless my $connection = $socket->accept();
             my $peer_host = $connection->peerhost();
@@ -326,7 +343,6 @@ my $start = time();
         $json = URI::Encode->new( { encode_reserved => 0 } )->decode($json);
         my $queryref = JSON->new->decode($json);
         my %query = %$queryref;
-        my $dump = Dumper(%query);
         return $query{query};
     }
 
