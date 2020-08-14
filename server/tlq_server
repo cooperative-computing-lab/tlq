@@ -130,6 +130,8 @@ my $start = time();
         if(!$file) { return 0; }
         if(exists($logs{$file}) and !$mode) { $file = $logs{$file}{path}; }
         elsif(exists($logs{$file}) and $mode) { $file = $logs{$file}{json}; }
+        my $localfile = "$dir/$file";
+        if(-e $localfile) { $file = $localfile; }
         if(!(-e $file)) { return 0; }
         my $result = open(FILE, $file);
         close(FILE);
@@ -142,7 +144,7 @@ my $start = time();
         my $query = request_from_json($cgi->param("PUTDATA"));
         my $data = "";
         my %encode;
-        $encode{query} = $query;
+        $encode{request} = $query;
         $encode{result} = `$query`;
         my $result = JSON->new->utf8->encode(\%encode);
         print(STDOUT "$result");
@@ -160,9 +162,10 @@ my $start = time();
 
     sub send_file {
         my ($cgi) = @_;
-        my $file = request_from_json($cgi->param("PUTDATA"));
-        $file = check_file($file, 0);
-        print(STDOUT "HTTP/1.0 200 OK\n");
+        my ($path, $file);
+        if($cgi->path_info() =~ m/pull\/(?<path>\S+)/) { $path = $+{path}; }
+        print(STDERR "Got request for $path\n");
+        $file = check_file($path, 0);
         return transfer($cgi, $file);
     }
 
@@ -170,7 +173,6 @@ my $start = time();
         my ($cgi) = @_;
         my $query = request_from_json($cgi->param("PUTDATA"));
         my %encode;
-        $encode{query} = $query;
         $encode{logs} = {};
         foreach my $log (keys(%logs)) {
             $encode{logs}{$log} = 
@@ -344,15 +346,16 @@ my $start = time();
     sub request_from_json {
         my ($json) = @_;
         $json = URI::Encode->new( { encode_reserved => 0 } )->decode($json);
-        my $queryref = JSON->new->decode($json);
-        my %query = %$queryref;
-        return $query{query};
+        my $reqref = JSON->new->decode($json);
+        my %req = %$reqref;
+        return $req{request};
     }
 
     sub handle_request {
         my ($self, $cgi) = @_;
         my $path = $cgi->path_info();
         if($path =~ m/jx/) { $path = "/jx"; }
+        if($path =~ m/pull/) { $path = "/pull"; }
         elsif($path =~ m/query/) { $path = "/query"; }
         elsif($path =~ m/rm/) { $path = "/rm"; }
         my $handler = $dispatch{$path};
@@ -362,6 +365,7 @@ my $start = time();
             my %encode;
             $encode{result} = "failure";
             $encode{error} = "404 Not found";
+            $encode{path} = $path;
             my $json = JSON->new->utf8->encode(\%encode);
             print(STDOUT "$json");
         }

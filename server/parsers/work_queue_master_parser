@@ -112,7 +112,7 @@ while(my $line = <LOG>) {
 }
 close(LOG);
 
-my $json = JSON->new->utf8->encode(\%master);
+my $json = JSON->new->utf8->pretty->encode(\%master);
 print(STDOUT "$json\n");
 exit(0);
 

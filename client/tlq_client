@@ -60,13 +60,12 @@ Example Usage:
 ";
 
 my $command_usage = "Available commands:
-  ALIAS <URI> <STRING>
+  ALIAS <URL> <STRING>
   EXIT
+  HTTP  <URL>
   JX
-  LIST [URI/ALIAS]
-  PULL <URI/ALIAS>
-  QUERY <URI/ALIAS> <STRING>
-  RM <URI/ALIAS>
+  LIST  [URL/ALIAS]
+  QUERY <URL/ALIAS> <STRING>
 ";
 
 my %OPT;
@@ -126,10 +125,10 @@ while(defined(my $input = $term->readline($prompt))) {
     get_info("deposits.log");
     my @parts = split(' ', $input);
     my $action = uc($parts[0]);
-    my $destination = $parts[1];
-    my $target = $parts[2];
+    my $url = $parts[1];
+    my $query = $parts[2];
     my $result = "";
-    $input = uc($action) . " $destination $target";
+    $input = uc($action) . " $url $query";
     $input =~ s/\s+$//;
     $term->add_history($input) if /\S/;
     if($session) { print(HISTORY "$input\n"); }
@@ -144,63 +143,43 @@ while(defined(my $input = $term->readline($prompt))) {
         print_result("JX", $result);
         next; 
     }
-    if($action ne "LIST" and !$destination) { print_command_help(); } 
-    elsif($action eq "PULL") {
-        if(!$destination) {
-            print_command_help();
-            next;
+
+    if($action ne "LIST" and !$url) { print_command_help(); }
+    elsif($action eq "HTTP" and $url) {
+        if(exists($aliases{$url})) { $url = $aliases{$url}; }
+        $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("HTTP", $url, 0));
+        print_result("HTTP $url", $result);
+        next;
+    }
+    elsif($action eq "LIST") {
+        if($url) {
+            if(exists($aliases{$url})) { $url = $aliases{$url}; }
+            $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("LIST", $url, 0));
+            print_result("LIST $url", $result);
         }
-        $server = $destination;
-        if(exists($aliases{$server})) { $server = $aliases{$server}; }
-        $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("PULL", $server, query_to_json($target)));
-        print(STDOUT "$result\n");
-        print_result("PULL $server $target", $result);
+        else {
+            print(STDERR "GOT LIST\n");
+            $result = list_logs();
+            print_result("LIST local", $result);
+        }
         next;
     }
     elsif($action eq "QUERY") {
-        if(!$destination) {
-            print_command_help();
-            next;
-        }
         my $i = 3;
         while(scalar(@parts) > $i) {
-            $target = $target . " $parts[$i]";
+            $query = $query . " $parts[$i]";
             $i++;
         }
-        $server = $destination;
-        if(exists($aliases{$server})) { $server = $aliases{$server}; }
-        my $time = time();
-        $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("QUERY", $server, query_to_json($target)));
-        $time = time() - $time;
-        print(STDOUT "$result\n");
-        print(STDERR "Query duration: $time\n");
-        print_result("QUERY $server $target", $result);
-        next; 
-    }
-    elsif($action eq "RM") {
-        if(!$destination) {
-            print_command_help();
-            next;
-        }
-        $server = $destination;
-        if(exists($aliases{$server})) { $server = $aliases{$server}; }
-        $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("RM", $server, query_to_json($target)));
-        print(STDOUT "$result\n");
-        print_result("RM $server $target", $result);
+        if(exists($aliases{$url})) { $url = $aliases{$url}; }
+        $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("QUERY", $url, request_to_json($query)));
+        print_result("QUERY $url $query", $result);
         next;
     }
     elsif($action eq "ALIAS") {
-        $aliases{$target} = $destination;
-        print(STDOUT "Please use alias $target to access $destination.\n");
-    }
-    elsif($action eq "EXIT" or $action eq "QUIT") { $result = request($action, $destination); }
-    elsif($action eq "LIST") {
-        if($destination) { $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("LIST", $server, query_to_json("list"))); }
-        else { $result = list_logs(); }
-        print(STDOUT "$result\n");
+        $aliases{$query} = $url;
+        print(STDOUT "Please use alias $query to access $url.\n");
     }
     else { print_command_help(); } 
-    if($action ne "QUERY") { print_result($input, $result); }
 }
 
 if($session) { close(HISTORY); }
@@ -250,6 +229,7 @@ sub list_logs {
 sub print_result {
     my ($input, $result) = @_;
     chomp($result);
+    print(STDOUT "$result\n");
     if($log) {
         open(LOG, ">>", $log) or die "Could not open $log for log writing.\n";
         print(LOG "$input =>\n$result\n");
@@ -257,39 +237,23 @@ sub print_result {
     }
 }
 
-sub query_to_json {
-    my ($query) = @_;
+sub request_to_json {
+    my ($request) = @_;
     my %object;
-    $object{query} = $query;
+    $object{request} = $request;
     my $json = JSON->new->encode(\%object);
     $json = URI::Encode->new( { encode_reserved => 0 } )->encode($json);
     return $json;
 }
 
 sub request {
-    my ($action, $destination, $content) = @_;
+    my ($action, $url, $content) = @_;
     my $content = 0;
-    my $http = $destination;
+    my $http = $url;
     my $response = 0;
-    if($action eq "PULL") {
-        $http = $destination . "/files";
-        $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
-    }
-    elsif($action eq "QUERY") {
-        $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
-    }
-    elsif($action eq "QUIT" or $action eq "EXIT") {
-        $http = $logs{$destination}{host} . "/exit";
-        $response = $client->get($http);
-    }
-    elsif($action eq "RM") {
-        $http = $destination . "/rm";
-        $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
-    }
-    elsif($action eq "LIST") {
-        $http = $destination . "/list";
-        $response = $client->put($http, "Content-Type" => "text/plain", Content => $content);
-    }
+    if($action eq "HTTP") { $response = $client->put($http); }
+    elsif($action eq "LIST") { $response = $client->put($http); }
+    elsif($action eq "QUERY") { $response = $client->put($http, "Content-Type" => "text/plain", Content => $content); }
     else { return "Request type $action not supported."; }
     if($response->is_success) { return $response->decoded_content; }
     else { return $response->status_line; }

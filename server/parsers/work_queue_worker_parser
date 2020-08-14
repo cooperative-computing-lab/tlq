@@ -89,7 +89,7 @@ while(my $line = <LOG>) {
 }
 close(LOG);
 
-my $json = JSON->new->utf8->encode(\%worker);
+my $json = JSON->new->utf8->pretty->encode(\%worker);
 print(STDOUT "$json\n");
 exit(0);
 

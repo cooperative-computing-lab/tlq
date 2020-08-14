@@ -133,7 +133,7 @@ foreach my $p (keys(%procs)) {
         $ltrace{processes}{$p}{children} = \@newarr;
     }
 }
-my $json = JSON->new->utf8->encode(\%ltrace);
+my $json = JSON->new->utf8->pretty->encode(\%ltrace);
 print(STDOUT "$json\n");
 
 sub print_help {

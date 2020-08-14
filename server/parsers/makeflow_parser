@@ -52,7 +52,7 @@ while(my $line = <LOG>) {
 }
 close(LOG);
 
-my $json = JSON->new->utf8->encode(\%makeflow);
+my $json = JSON->new->utf8->pretty->encode(\%makeflow);
 print(STDOUT "$json\n");
 exit(0);
 

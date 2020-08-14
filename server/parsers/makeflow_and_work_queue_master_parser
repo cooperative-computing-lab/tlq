@@ -126,7 +126,7 @@ close(LOG);
 my %combined;
 $combined{"work_queue_master"} = \%master;
 $combined{makeflow} = \%makeflow;
-my $json = JSON->new->utf8->encode(\%combined);
+my $json = JSON->new->utf8->pretty->encode(\%combined);
 print(STDOUT "$json\n");
 exit(0);
 
