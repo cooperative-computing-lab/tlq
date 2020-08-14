@@ -60,12 +60,11 @@ Example Usage:
 ";
 
 my $command_usage = "Available commands:
-  ALIAS <URL> <STRING>
   EXIT
   HTTP  <URL>
   JX
-  LIST  [URL/ALIAS]
-  QUERY <URL/ALIAS> <STRING>
+  LIST  [URL]
+  QUERY <URL> <STRING>
 ";
 
 my %OPT;
@@ -83,26 +82,23 @@ catch Error::Simple with {
     die "Failed to parse command line options.\n";
 };
 
-print(STDOUT "Establish phone home server to receive log deposits.\n");
 my $port = $OPT{port};
 if(!$port) { $port = 9001; }
 my $host = hostname();
 my $spid = WebServer->new($port)->background();
 print(STDERR "$!\n");
 if($spid) { print(STDOUT "Phone home server established at $host:$port with PID $spid.\n\n"); }
+else {
+    print(STDERR "Could not establish phone home server at $host:$port.\n");
+    exit(1);
+}
 sleep(1);
 
 my $client = 0;
-my $err = 0;
 my $server = "";
 my $log = $OPT{log};
 my $session = $OPT{session};
-if($err) {
-    print(STDERR "Could not find $err required arguments.\n");
-    print_help();
-}
 
-my %aliases = ();
 my %logs = ();
 my $prompt = " \$ ";
 my $term = Term::ReadLine->new("tlq");
@@ -146,20 +142,17 @@ while(defined(my $input = $term->readline($prompt))) {
 
     if($action ne "LIST" and !$url) { print_command_help(); }
     elsif($action eq "HTTP" and $url) {
-        if(exists($aliases{$url})) { $url = $aliases{$url}; }
         $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("HTTP", $url, 0));
         print_result("HTTP $url", $result);
         next;
     }
     elsif($action eq "LIST") {
         if($url) {
-            if(exists($aliases{$url})) { $url = $aliases{$url}; }
             $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("LIST", $url, 0));
             print_result("LIST $url", $result);
         }
         else {
-            print(STDERR "GOT LIST\n");
-            $result = list_logs();
+            foreach my $l (keys(%logs)) { $result = $result . "$l =>\n  command: $logs{$l}{command},\n  host: $logs{$l}{host},\n  json: $logs{$l}{json},\n  jx: $logs{$l}{jx},\n  log: $logs{$l}{log},\n  rm: $logs{$l}{rm},\n  query: $logs{$l}{query}\n\n"; }
             print_result("LIST local", $result);
         }
         next;
@@ -170,14 +163,9 @@ while(defined(my $input = $term->readline($prompt))) {
             $query = $query . " $parts[$i]";
             $i++;
         }
-        if(exists($aliases{$url})) { $url = $aliases{$url}; }
         $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("QUERY", $url, request_to_json($query)));
         print_result("QUERY $url $query", $result);
         next;
-    }
-    elsif($action eq "ALIAS") {
-        $aliases{$query} = $url;
-        print(STDOUT "Please use alias $query to access $url.\n");
     }
     else { print_command_help(); } 
 }
@@ -200,30 +188,22 @@ sub get_info {
                 if($url =~ m/(?<host>https?:\/\/[^\/]+)\/<ACTION>\/(?<uuid>\S+-\S+-\S+-\S+-\S+)/) {
                     $host = $+{host};
                     $uuid = $+{uuid};
+                    $logs{$url} = {};
+                    $logs{$url}{log} = "$host/pull/$uuid.log";
+                    $logs{$url}{json} = "$host/pull/$uuid.json";
+                    $logs{$url}{command} = $command;
+                    $logs{$url}{url} = $url;
+                    $logs{$url}{host} = $host;
+                    $logs{$url}{jx} = "$host/jx/$uuid.json";
+                    $logs{$url}{rm} = "$host/rm/$uuid.log";
+                    $logs{$url}{query} = "$host/query/$uuid.log";
+                    $logs{$url}{path} = $log;
                 }
-                $logs{$url} = {};
-                $logs{$url}{pull} = "$host/pull/$uuid.log";
-                $logs{$url}{command} = $command;
-                $logs{$url}{url} = $url;
-                $logs{$url}{host} = $host;
-                $logs{$url}{jx} = "$host/jx/$uuid.json";
-                $logs{$url}{rm} = "$host/rm/$uuid.log";
-                $logs{$url}{query} = "$host/query/$uuid.log";
-                $logs{$url}{path} = $log;
             }
         }
     }
     close(FILE);
     return 0;
-}
-
-sub list_logs {
-    my $return = "";
-    foreach my $c (keys(%logs)) {
-        my $dump = Dumper($logs{$c});
-        $return = $return . "$c =>\n" . $dump . "\n";
-    }
-    return $return;
 }
 
 sub print_result {
@@ -241,7 +221,7 @@ sub request_to_json {
     my ($request) = @_;
     my %object;
     $object{request} = $request;
-    my $json = JSON->new->encode(\%object);
+    my $json = JSON->new->utf8->encode(\%object);
     $json = URI::Encode->new( { encode_reserved => 0 } )->encode($json);
     return $json;
 }

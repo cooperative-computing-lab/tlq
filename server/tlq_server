@@ -48,6 +48,8 @@ if(!$dir) { $dir = "/tmp/tlq"; }
 if(!$port) { $port = 11855; }
 if($err) { print_help(); }
 my $host = hostname();
+if(!$host) { $host = `hostname`; }
+if(!$host) { print(STDERR "Could not resolve local hostname.\n"); }
 my $start = time();
 
 #Define application-specific web server handling
@@ -78,9 +80,6 @@ my $start = time();
         $parsers{$type} = {};
         $parsers{$type}{path} = "$dir/$p";
     }
-    my $host = hostname();
-    if(!$host) { $host = `hostname`; }
-    if(!$host) { print(STDERR "Could not resolve local hostname.\n"); }
     my $log_thread = threads->create("watch_logs");
     my $url_thread = threads->create("watch_urls");
     $log_thread->detach();
@@ -148,7 +147,7 @@ my $start = time();
         my %encode;
         $encode{request} = $query;
         $encode{result} = `$query`;
-        my $result = JSON->new->utf8->encode(\%encode);
+        my $result = JSON->new->utf8->pretty->encode(\%encode);
         print(STDOUT "$result");
         return 0;
     }
@@ -173,23 +172,20 @@ my $start = time();
 
     sub send_index {
         my ($cgi) = @_;
-        my $query = request_from_json($cgi->param("PUTDATA"));
         my %encode;
         $encode{logs} = {};
         foreach my $log (keys(%logs)) {
-            $encode{logs}{$log} = 
             $encode{logs}{$log}{json} = $logs{$log}{json};
             $encode{logs}{$log}{original} = $logs{$log}{original};
             $encode{logs}{$log}{home} = $logs{$log}{home};
             $encode{logs}{$log}{path} = $logs{$log}{path};
-            $encode{logs}{$log}{size} = $logs{$log}{size};
             $encode{logs}{$log}{type} = $logs{$log}{type};
             $encode{logs}{$log}{command} = $logs{$log}{command};
             $encode{logs}{$log}{tlq_host} = $logs{$log}{tlq_host};
             $encode{logs}{$log}{tlq_port} = $logs{$log}{tlq_port};
             $encode{logs}{$log}{url} = $logs{$log}{url};
         }
-        my $result = JSON->new->utf8->encode(\%encode);
+        my $result = JSON->new->utf8->pretty->encode(\%encode);
         print(STDOUT "$result");
         return 1;
     }
@@ -220,13 +216,13 @@ my $start = time();
         }
         if($flag) {
             $encode{result} = "failure";
-            my $json = JSON->new->utf8->encode(\%encode);
+            my $json = JSON->new->utf8->pretty->encode(\%encode);
             print(STDOUT "$json");
             return 1;
         }
         else {
             $encode{result} = "success";
-            my $json = JSON->new->utf8->encode(\%encode);
+            my $json = JSON->new->utf8->pretty->encode(\%encode);
             print(STDOUT "$json");
             return 0;
         }
@@ -238,7 +234,7 @@ my $start = time();
             my %encode;
             $encode{result} = "failure";
             $encode{error} = "$file not found";
-            my $json = JSON->new->utf8->encode(\%encode);
+            my $json = JSON->new->utf8->pretty->encode(\%encode);
             print(STDOUT "$json");
             return 1;
         }
@@ -300,7 +296,7 @@ my $start = time();
                 $encode{starttime} = $start;
                 $encode{url} = "http://$host:$port";
                 print(STDERR "Sending heartbeat to catalog.cse.nd.edu:9097.\n");
-                my $heartbeat = JSON->new->utf8->encode(\%encode);
+                my $heartbeat = JSON->new->utf8->pretty->encode(\%encode);
                 $heartbeat = Compress::Zlib::compress($heartbeat);
                 my $socket = IO::Socket::INET->new(PeerAddr => "catalog.cse.nd.edu:9097", Proto => "udp");
                 $socket->send(chr(26) . $heartbeat);
@@ -368,7 +364,7 @@ my $start = time();
             $encode{result} = "failure";
             $encode{error} = "404 Not found";
             $encode{path} = $path;
-            my $json = JSON->new->utf8->encode(\%encode);
+            my $json = JSON->new->utf8->pretty->encode(\%encode);
             print(STDOUT "$json");
         }
         return 0;
