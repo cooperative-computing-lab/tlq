@@ -49,7 +49,10 @@ if(!$port) { $port = 11855; }
 if($err) { print_help(); }
 my $host = hostname();
 if(!$host) { $host = `hostname`; }
-if(!$host) { print(STDERR "Could not resolve local hostname.\n"); }
+if(!$host) {
+    print(STDERR "Could not resolve local hostname.\n");
+    exit(1);
+}
 my $start = time();
 
 #Define application-specific web server handling
@@ -142,7 +145,10 @@ my $start = time();
 
     sub run_query {
         my ($cgi) = @_;
+        my $path;
         my $query = request_from_json($cgi->param("PUTDATA"));
+        if($cgi->path_info() =~ m/query\/(?<path>\S+)/) { $path = $+{path}; }
+        if($path and $query !~ m/.*$dir\/$path.*/) { $query =~ s/$path/$dir\/$path/; }
         my $data = "";
         my %encode;
         $encode{request} = $query;

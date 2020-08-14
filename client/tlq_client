@@ -157,7 +157,7 @@ while(defined(my $input = $term->readline($prompt))) {
         }
         next;
     }
-    elsif($action eq "QUERY") {
+    elsif($action eq "QUERY" and $query) {
         my $i = 3;
         while(scalar(@parts) > $i) {
             $query = $query . " $parts[$i]";
@@ -228,7 +228,6 @@ sub request_to_json {
 
 sub request {
     my ($action, $url, $content) = @_;
-    my $content = 0;
     my $http = $url;
     my $response = 0;
     if($action eq "HTTP") { $response = $client->put($http); }
