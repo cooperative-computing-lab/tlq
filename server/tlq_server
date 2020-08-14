@@ -79,6 +79,8 @@ my $start = time();
         $parsers{$type}{path} = "$dir/$p";
     }
     my $host = hostname();
+    if(!$host) { $host = `hostname`; }
+    if(!$host) { print(STDERR "Could not resolve local hostname.\n");
     my $log_thread = threads->create("watch_logs");
     my $url_thread = threads->create("watch_urls");
     $log_thread->detach();
