@@ -12,6 +12,8 @@ $(SOURCE): /usr/bin/git
 $(CCTOOLS): $(SOURCE)
 	mkdir $(CCTOOLS) || true
 	cd $(SOURCE) && ./configure --strict --prefix ../$(CCTOOLS) --tcp-low-port 9000 --tcp-high-port 9500 && make install
+	
+$(JX): $(CCTOOLS)
 	cp $(SOURCE)/dttools/src/jx_test ./client/
 
 $(LIFEMAPPER): $(CCTOOLS) $(PERLBASE)

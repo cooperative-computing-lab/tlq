@@ -37,4 +37,18 @@ You can run each of these three scripts with the `-h` option to see its respecti
 ### Editing configurations
 This TLQ repository was written for a specific environment to demonstrate a live version of TLQ for an academic paper. As such, it is highly unlikely to work out of the box for you. You will need to alter the Makefiles within the `shakespeare` and `lifemapper` repositories to set up the proper batch system and username to use to submit work (and clean it up afterward). If your batch system is not HTCondor, this will involve significant changes. For `shakespeare` and `lifemapper`, you will need to alter the `HOME` variable in the `trace.jx` document to the machine you are running the `tlq_client` script.
 
+#### Other Hardcoded Information
+```
+.
++-- lifemapper
+|  +-- Makefile (set HOME variable)
+|  +-- workers
+|    +-- workers.submit (home and port in the command variable, expressions in the requirements variable)
+|  +-- trace.jx (set LTL and TLQDIR variables)
++-- shakespeare
+|  +-- Makefile (set the HOME variable)
+|  +-- workers
+|    +-- workers.submit (home and port in the command variable, expressions in the requirements variable)
+|  +-- trace.jx (set LTL and TLQDIR variables)
+```
 
