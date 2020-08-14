@@ -40,15 +40,15 @@ This TLQ repository was written for a specific environment to demonstrate a live
 #### Other Hardcoded Information
 ```
 .
-+-- lifemapper
-|  +-- Makefile (set HOME variable)
-|  +-- workers
-|    +-- workers.submit (home and port in the command variable, expressions in the requirements variable)
-|  +-- trace.jx (set LTL and TLQDIR variables)
-+-- shakespeare
-|  +-- Makefile (set the HOME variable)
-|  +-- workers
-|    +-- workers.submit (home and port in the command variable, expressions in the requirements variable)
-|  +-- trace.jx (set LTL and TLQDIR variables)
+├── lifemapper
+|  ├── Makefile (set HOME variable)
+|  ├── workers
+|    └── workers.submit (home and port in the command variable, expressions in the requirements variable)
+|  └── trace.jx (set LTL and TLQDIR variables)
+├── shakespeare
+|  ├── Makefile (set the HOME variable)
+|  ├── workers
+|    └── workers.submit (home and port in the command variable, expressions in the requirements variable)
+|  └── trace.jx (set LTL and TLQDIR variables)
 ```
 
