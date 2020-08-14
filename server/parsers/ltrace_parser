@@ -27,6 +27,11 @@ my %ltrace;
 $ltrace{type} = "ltrace";
 $ltrace{log} = $log;
 $ltrace{uuid} = $uuid;
+$lrace{command} = "DID NOT RUN COMMAND SUCCESSFULLY";
+$lrace{pid} = "";
+$ltrace{ppid} = "COULD NOT SET PPID";
+$ltrace{address} = "COULD NOT FIND HOST ADDRESS";
+$ltrace{exit} = "DID NOT EXIT NORMALLY";
 my $linenum = 1;
 
 open(LOG, $log) or die "Could not open specified log file.\n";
@@ -42,6 +47,7 @@ while(my $line = <LOG>) {
 
     #19381   0.000000 libjli.so->getenv("_JAVA_LAUNCHER_DEBUG") = nil
     if($line =~ m/(?<pid>\d+)\s+(?<timestamp>\d+\.\d+)\s+(?<message>.+)/) {
+        if(!$ltrace{pid}) { $ltrace{pid} = int($+{pid}); }
         $ltrace{messages}{$linenum}{pid} = int($+{pid});
         $ltrace{messages}{$linenum}{timestamp} = $+{timestamp};
         $ltrace{messages}{$linenum}{message} = $+{message};
