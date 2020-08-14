@@ -10,19 +10,19 @@ cd .. && make build
 ## Configuring the dataset
 Before running TLQ, you need to properly configure the dataset. This involves altering the URLs in the client-side and server-side list of logs. This is done by running:
 ```
-sh configure-logs
+sh configure_logs
 ```
 
 ## Running a TLQ log server
 To properly run queries, you need to have a log server running to serve a client. To run a log server with the provided dataset, run:
 ```
-cd ../server && perl tlq-server -p 11855 -d /path/to/server-data
+cd ../server && perl tlq_server -p 11855 -d /absolute/path/to/server_data
 ```
 
 ## Running a TLQ client
 In a separate terminal on the same machine, start up the querying client:
 ```
-cp ./client-data/deposits.log ../client/ && cd ../client && perl tlq-client -s
+cp ./linked/client_data/deposits.log ../client/ && cd ../client && perl tlq_client -s
 ```
 
 From here, you can now execute queries with TLQ. Run the `list` command in the client to see the list of available logs to query and their URLs.

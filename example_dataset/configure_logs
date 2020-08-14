@@ -1,0 +1,10 @@
+#!/bin/sh
+
+hostname=$(hostname -f)
+echo Configuring client deposit log.
+sed -i "s/\w\+\.\w\+.\w\+.\w\+:11855/$hostname:11855/g" ./unlinked/client-data/deposits.log
+sed -i "s/\w\+\.\w\+.\w\+.\w\+:11855/$hostname:11855/g" ./linked/client-data/deposits.log
+echo Configuring server deposit log.
+sed -i "s/\w\+\.\w\+.\w\+.\w\+:9001/$hostname:9001/g" ./unlinked/server-data/deposit-log
+sed -i "s/\w\+\.\w\+.\w\+.\w\+:9001/$hostname:9001/g" ./linked/server-data/deposit-log
+exit $?
