@@ -43,12 +43,12 @@ This TLQ repository was written for a specific environment to demonstrate a live
 ├── lifemapper
 |  ├── Makefile (set HOME variable)
 |  ├── workers
-|    └── workers.submit (home and port in the command variable, expressions in the requirements variable)
+|    └── workers.submit (set arguments and requirements variables)
 |  └── trace.jx (set LTL and TLQDIR variables)
 ├── shakespeare
 |  ├── Makefile (set the HOME variable)
 |  ├── workers
-|    └── workers.submit (home and port in the command variable, expressions in the requirements variable)
+|    └── workers.submit (set arguments and requirements variables)
 |  └── trace.jx (set LTL and TLQDIR variables)
 ```
 
