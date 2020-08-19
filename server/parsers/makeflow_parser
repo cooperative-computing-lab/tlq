@@ -28,6 +28,7 @@ my %makeflow;
 $makeflow{type} = "makeflow";
 $makeflow{log} = $log;
 $makeflow{uuid} = $uuid;
+$makeflow{links} = ();
 my $linenum = 1;
 
 open(LOG, $log);

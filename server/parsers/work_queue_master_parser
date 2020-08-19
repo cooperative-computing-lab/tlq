@@ -28,6 +28,7 @@ my %master;
 $master{type} = "work-queue-master";
 $master{log} = $log;
 $master{uuid} = $uuid;
+$master{links} = ();
 my $linenum = 1;
 my $currtask = 0;
 my $cmdflag = 0;

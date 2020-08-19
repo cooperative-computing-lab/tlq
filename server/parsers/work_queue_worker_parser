@@ -28,6 +28,7 @@ $worker{failures} = 0;
 $worker{type} = "work-queue-worker";
 $worker{log} = $log;
 $worker{uuid} = $uuid;
+$worker{links} = ();
 my $linenum = 1;
 
 open(LOG, $log);

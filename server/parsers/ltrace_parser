@@ -32,6 +32,7 @@ $lrace{pid} = "";
 $ltrace{ppid} = "COULD NOT SET PPID";
 $ltrace{address} = "COULD NOT FIND HOST ADDRESS";
 $ltrace{exit} = "DID NOT EXIT NORMALLY";
+$ltrace{links} = ();
 my $linenum = 1;
 
 open(LOG, $log) or die "Could not open specified log file.\n";
