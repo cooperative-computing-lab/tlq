@@ -17,7 +17,7 @@ $(JX): $(CCTOOLS)
 	cp $(SOURCE)/dttools/src/jx_test ./client/
 
 $(LIFEMAPPER): $(CCTOOLS) $(PERLBASE)
-	cd lifemapper && make all
+	cd lifemapper && make trace
 
 $(PERLBASE): $(PERLS)
 	@echo Copying local perl5 installation to working directory.
@@ -47,7 +47,7 @@ $(PERLS):
 	cpan install URI::Encode || true >> $(PERLS) 2>&1
 
 $(SHAKESPEARE): $(CCTOOLS) $(PERLBASE)
-	cd shakespeare && make all
+	cd shakespeare && make trace
 
 all: $(CCTOOLS) $(LIFEMAPPER) $(PERLBASE) $(PERLS) $(SHAKESPEARE) $(SOURCE)
 
@@ -59,8 +59,8 @@ shakespeare: $(SHAKESPEARE)
 
 clean:
 	@echo Cleaning TLQ installation.
-	cd lifemapper && make clean
-	cd shakespeare && make clean
+	cd lifemapper && make clean || true
+	cd shakespeare && make clean || true
 	cd client && rm -rf .tlq_session.log deposits.log jx_test
 	rm -rf $(CCTOOLS) $(PERLBASE) $(PERLS) $(SOURCE)
 
