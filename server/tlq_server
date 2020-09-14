@@ -317,9 +317,9 @@ my $total_request = 0;
                 if(-f $file) {
                     my $fsize = (stat($file))[7];
                     $currdata += $fsize;
-                    $total_data += $fsize;
                 }
             }
+            if($currdata > $total_data) { $total_data = $currdata; }
             if($timing) { $total_parse += $parse_end - $parse_start; }
             my @listlogs;
             foreach my $l (sort(keys(%logs))) {

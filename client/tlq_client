@@ -130,12 +130,14 @@ if($session) {
 print(STDOUT $command_usage);
 while(defined(my $input = $term->readline($prompt))) {
     get_info("deposits.log");
+    my $currdata = 0;
     foreach my $file (<*>) {
         if(-f $file) {
             my $fsize = (stat($file))[7];
-            $total_data += $fsize;
+            $currdata += $fsize;
         }
     }
+    if($currdata > $total_data) { $total_data = $currdata; }
     my @parts = split(' ', $input);
     my $action = uc($parts[0]);
     my $url = $parts[1];
