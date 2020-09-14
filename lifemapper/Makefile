@@ -43,7 +43,7 @@ $(POINTS): $(CCTOOLS) $(GENERATOR)
 	python $(GENERATOR) data/points/large.csv
 
 $(TRACE): $(CCTOOLS) $(LOGDEF) $(LTRACE) $(POINTS) $(TRACEMAKE) $(WORKERS)
-	cd workers && condor_submit workers.submit
+	cd workers && condor_submit workers.submit && sleep 30
 	sh $(LOGDEF) $(HOME) 9001 $(TLQDIR) ${PWD}/trace.debug makeflow_and_work_queue_master -- makeflow -T wq -N wq_trace --tlq 11856 -d all -o ${PWD}/trace.debug --jx trace.jx
 
 $(WORKERS): $(CCTOOLS)
