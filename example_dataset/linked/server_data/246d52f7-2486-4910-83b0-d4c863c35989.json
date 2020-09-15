@@ -1,0 +1,164 @@
+{
+   "messages" : {
+      "11" : {
+         "timestamp" : "0.000340",
+         "pid" : 31013,
+         "message" : "libjli.so->getenv(\"_JAVA_SPLASH_JAR\") = nil"
+      },
+      "7" : {
+         "timestamp" : "0.002190",
+         "pid" : 31013,
+         "message" : "libjli.so->dlopen(\"/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre/lib/amd64/server/libjvm.so\", 258 <unfinished ...>"
+      },
+      "17" : {
+         "timestamp" : "0.000312",
+         "pid" : 31018,
+         "message" : "libjvm.so->fopen(0x2b33a79a4c10, 0x2b33a9228ccb, 0x6f732e79666972, 0x2b33a836aab0) = 0x2b33ac001440"
+      },
+      "2" : {
+         "timestamp" : "0.001704",
+         "pid" : 31013,
+         "message" : "libjli.so->getenv(\"_JAVA_VERSION_SET\") = nil"
+      },
+      "1" : {
+         "timestamp" : "0.000000",
+         "pid" : 31013,
+         "message" : "libjli.so->getenv(\"_JAVA_LAUNCHER_DEBUG\") = nil"
+      },
+      "16" : {
+         "timestamp" : "0.002113",
+         "pid" : 31018,
+         "message" : "libjvm.so->getenv(0x2b33a928c83e, 0, 115, 0x65737361) = 0x7ffed623c711"
+      },
+      "13" : {
+         "timestamp" : "0.000325",
+         "pid" : 31013,
+         "message" : "libjli.so->pthread_attr_setdetachstate(0x7ffed6235a80, 0, 0x7ffed6235b10, 0) = 0"
+      },
+      "6" : {
+         "timestamp" : "0.000602",
+         "pid" : 31013,
+         "message" : "libjli.so->getenv(\"LD_LIBRARY_PATH\") = \"/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/ruby/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/graphviz/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/git/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/clang/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/lib:/opt/crc/usr/local/lib\""
+      },
+      "3" : {
+         "timestamp" : "0.000712",
+         "pid" : 31013,
+         "message" : "libjli.so->fopen(\"/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre/lib/amd64/jvm.cfg\", \"r\") = 0x55e2348f00f0"
+      },
+      "9" : {
+         "timestamp" : "0.001638",
+         "pid" : 31013,
+         "message" : "<... dlopen resumed> )          = 0x55e2348f04c0"
+      },
+      "12" : {
+         "timestamp" : "0.000318",
+         "pid" : 31013,
+         "message" : "libjli.so->getenv(\"_JAVA_SPLASH_FILE\") = nil"
+      },
+      "14" : {
+         "timestamp" : "0.000462",
+         "pid" : 31013,
+         "message" : "libpthread.so.0->__clone(0x2b33a7a92de0, 0x2b33a79a5fc0, 0x3d0f00, 0x2b33a79a6700) = 0x792a"
+      },
+      "15" : {
+         "timestamp" : "0.001793",
+         "pid" : 31018,
+         "message" : "libjvm.so->dlopen(0x2b33a92719ae, 1, 0xfffffffffff42c48, 4096) = 0x2b33ac000990"
+      },
+      "8" : {
+         "timestamp" : "0.039589",
+         "pid" : 31013,
+         "message" : "libjvm.so->getenv(\"NMT_LEVEL_31013\") = nil"
+      },
+      "4" : {
+         "timestamp" : "0.000838",
+         "pid" : 31013,
+         "message" : "libjli.so->getenv(\"JDK_ALTERNATE_VM\") = nil"
+      },
+      "10" : {
+         "timestamp" : "0.000072",
+         "pid" : 31013,
+         "message" : "libjli.so->getenv(\"CLASSPATH\")  = nil"
+      },
+      "5" : {
+         "timestamp" : "0.000315",
+         "pid" : 31013,
+         "message" : "libjli.so->__xstat(1, \"/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre/lib/amd64/server/libjvm.so\", 0x7ffed6235ad0) = 0"
+      }
+   },
+   "processes" : {
+      "31013" : {
+         "files" : {
+            "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre/lib/amd64/server/libjvm.so" : {
+               "uses" : 1
+            },
+            "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre/lib/amd64/jvm.cfg" : {
+               "uses" : 1
+            }
+         },
+         "environment_variables" : {
+            "_JAVA_SPLASH_FILE" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            },
+            "_JAVA_SPLASH_JAR" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            },
+            "LD_LIBRARY_PATH" : {
+               "uses" : 1,
+               "values" : [
+                  "\"/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/ruby/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/graphviz/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/git/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/clang/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/lib:/opt/crc/usr/local/lib\""
+               ]
+            },
+            "_JAVA_LAUNCHER_DEBUG" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            },
+            "NMT_LEVEL_31013" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            },
+            "JDK_ALTERNATE_VM" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            },
+            "_JAVA_VERSION_SET" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            },
+            "CLASSPATH" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            }
+         },
+         "children" : [
+            "31018"
+         ]
+      }
+   },
+   "exit" : "DID NOT EXIT NORMALLY",
+   "uuid" : "246d52f7-2486-4910-83b0-d4c863c35989",
+   "pid" : 31013,
+   "ppid" : "COULD NOT SET PPID",
+   "type" : "ltrace",
+   "log" : "/disk/d11/tlq/246d52f7-2486-4910-83b0-d4c863c35989.log",
+   "address" : "COULD NOT FIND HOST ADDRESS",
+   "links" : null,
+   "command" : "DID NOT RUN COMMAND SUCCESSFULLY"
+}
+
