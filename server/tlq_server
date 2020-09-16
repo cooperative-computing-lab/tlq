@@ -266,7 +266,7 @@ my $total_request = 0;
             print(STDOUT $json);
             return 1;
         }
-        my $rawtext = "";
+        my $rawtext = "\n";
         open(FILE, $file);
         while(my $line = <FILE>) { $rawtext = $rawtext . $line; }
         close(FILE);
