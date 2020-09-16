@@ -29,6 +29,7 @@ $master{type} = "work-queue-master";
 $master{log} = $log;
 $master{uuid} = $uuid;
 $master{links} = ();
+my @msgs;
 my $linenum = 1;
 my $currtask = 0;
 my $cmdflag = 0;
@@ -46,10 +47,13 @@ while(my $line = <LOG>) {
 
     #2020/07/13 16:10:56.03 work_queue_worker[24553] debug: work_queue_worker version 8.0.0 DEVELOPMENT (released 2020-06-30 12:58:58 -0400)
     if($line =~ m/(?<date>\d+\/\d+\/\d+)\s+(?<timestamp>\d+:\d+:\d+\.\d+)\s+\S+\[(?<pid>\d+)\]\s+(?<stream>\S+):\s+(?<message>.+)/) {
-        $master{messages}{$linenum}{date} = $+{date};
-        $master{messages}{$linenum}{timestamp} = $+{timestamp};
-        $master{messages}{$linenum}{output_stream} = $+{stream};
-        $master{messages}{$linenum}{message} = $+{message};
+        my %logline;
+        $logline{date} = $+{date};
+        $logline{timestamp} = $+{timestamp};
+        $logline{output_stream} = $+{stream};
+        $logline{message} = $+{message};
+        $logline{linenum} = $linenum;
+        push(@msgs, \%logline);
     }
 
     #wq: disc25.crc.nd.edu (10.32.74.188:37590) running CCTools version 8.0.0 on Linux (operating system) with architecture x86_64 is ready
@@ -113,6 +117,7 @@ while(my $line = <LOG>) {
 }
 close(LOG);
 
+$master{messages} = \@msgs;
 my $json = JSON->new->utf8->pretty->encode(\%master);
 print(STDOUT "$json\n");
 exit(0);

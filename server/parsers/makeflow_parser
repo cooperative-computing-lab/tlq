@@ -29,6 +29,7 @@ $makeflow{type} = "makeflow";
 $makeflow{log} = $log;
 $makeflow{uuid} = $uuid;
 $makeflow{links} = ();
+my @msgs;
 my $linenum = 1;
 
 open(LOG, $log);
@@ -44,15 +45,19 @@ while(my $line = <LOG>) {
 
     #2020/07/13 16:10:56.03 work_queue_worker[24553] debug: work_queue_worker version 8.0.0 DEVELOPMENT (released 2020-06-30 12:58:58 -0400)
     if($line =~ m/(?<date>\d+\/\d+\/\d+)\s+(?<timestamp>\d+:\d+:\d+\.\d+)\s+\S+\[(?<pid>\d+)\]\s+(?<stream>\S+):\s+(?<message>.+)/) {
-        $makeflow{messages}{$linenum}{date} = $+{date};
-        $makeflow{messages}{$linenum}{timestamp} = $+{timestamp};
-        $makeflow{messages}{$linenum}{output_stream} = $+{stream};
-        $makeflow{messages}{$linenum}{message} = $+{message};
+        my %logline;
+        $logline{date} = $+{date};
+        $logline{timestamp} = $+{timestamp};
+        $logline{output_stream} = $+{stream};
+        $logline{message} = $+{message};
+        $logline{linenum} = $linenum;
+        push(@msgs, \%logline);
     }
     $linenum++;
 }
 close(LOG);
 
+$makeflow{messages} = \@msgs;
 my $json = JSON->new->utf8->pretty->encode(\%makeflow);
 print(STDOUT "$json\n");
 exit(0);

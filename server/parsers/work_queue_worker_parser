@@ -29,6 +29,7 @@ $worker{type} = "work-queue-worker";
 $worker{log} = $log;
 $worker{uuid} = $uuid;
 $worker{links} = ();
+my @msgs;
 my $linenum = 1;
 
 open(LOG, $log);
@@ -46,10 +47,13 @@ while(my $line = <LOG>) {
     #2020/07/13 16:10:56.03 work_queue_worker[24553] debug: work_queue_worker version 8.0.0 DEVELOPMENT (released 2020-06-30 12:58:58 -0400)
     if($line =~ m/(?<date>\d+\/\d+\/\d+)\s+(?<timestamp>\d+:\d+:\d+\.\d+)\s+work_queue_worker\[(?<pid>\d+)\]\s+(?<stream>\S+):\s+(?<message>.+)/) {
         $worker{pid} = $+{pid};
-        $worker{messages}{$linenum}{date} = $+{date};
-        $worker{messages}{$linenum}{timestamp} = $+{timestamp};
-        $worker{messages}{$linenum}{output_stream} = $+{stream};
-        $worker{messages}{$linenum}{message} = $+{message};
+        my %logline;
+        $logline{date} = $+{date};
+        $logline{timestamp} = $+{timestamp};
+        $logline{output_stream} = $+{stream};
+        $logline{message} = $+{message};
+        $logline{linenum} = $linenum;
+        push(@msgs, \%logline);
     }
     
     #wq: rx from master: task 10
@@ -90,6 +94,7 @@ while(my $line = <LOG>) {
 }
 close(LOG);
 
+$worker{messages} = \@msgs;
 my $json = JSON->new->utf8->pretty->encode(\%worker);
 print(STDOUT "$json\n");
 exit(0);
