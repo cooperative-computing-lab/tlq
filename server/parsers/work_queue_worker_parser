@@ -28,8 +28,8 @@ $worker{failures} = 0;
 $worker{type} = "work-queue-worker";
 $worker{log} = $log;
 $worker{uuid} = $uuid;
-$worker{links} = ();
 my @msgs;
+my @links;
 my $linenum = 1;
 
 open(LOG, $log);
@@ -74,27 +74,34 @@ while(my $line = <LOG>) {
     if($line =~ m/tlq: set worker TLQ URL: http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
         my $url = $+{address} . "/jx/" . $+{uuid} . ".json";
         $worker{url} = $url;
-        $worker{links}{$+{uuid}}{type} = "work_queue_worker";
-        $worker{links}{$+{uuid}}{url} = $url;
+        my %link;
+        $link{type} = "work_queue_worker";
+        $link{url} = $url;
+        push(@links, \%link);
     }
     #tlq: setting master TLQ URL: http://disc01.crc.nd.edu:11855/jx/37bd779f-95d8-4c2c-80e3-f5eb4e28aacc.json
     elsif($line =~ m/tlq: set master TLQ URL http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
         my $url = "http://" . $+{address} . "/jx/" . $+{uuid} . ".json";
         $worker{master}{$+{address}}{url} = $url;
-        $worker{links}{$+{uuid}}{type} = "work_queue_master";
-        $worker{links}{$+{uuid}}{url} = $url;
+        my %link;
+        $link{type} = "work_queue_master";
+        $link{url} = $url;
+        push(@links, \%link);
     }
     elsif($line =~ m/tlq: set task (?<taskid>\d+) TLQ URL http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
         my $url = "http://" . $+{address} . "/jx/" . $+{uuid} . ".json";
         $worker{tasks}{$+{taskid}}{url} = $url;
-        $worker{links}{$+{uuid}}{type} = "ltrace";
-        $worker{links}{$+{uuid}}{url} = $url;
+        my %link;
+        $link{type} = "ltrace";
+        $link{url} = $url;
+        push(@links, \%link);
     }
     $linenum++;
 }
 close(LOG);
 
 $worker{messages} = \@msgs;
+$worker{links} = \@links;
 my $json = JSON->new->utf8->pretty->encode(\%worker);
 print(STDOUT "$json\n");
 exit(0);
