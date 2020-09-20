@@ -1,6 +1,6 @@
 universe = vanilla
 executable = /usr/bin/sh
-arguments = log_define disc01.crc.nd.edu 9001 /disk/d11/tlq /disk/d11/tlq/worker.$(PROCESS).debug work_queue_worker -- work_queue_worker --cores $$([TARGET.Cpus]) --memory $$([TARGET.Memory]) --disk $$([TARGET.Disk/1024]) -M wq_trace -d all -o /disk/d11/tlq/worker.$(PROCESS).debug --debug-rotate-max 0 -t 900 --tlq disc01.crc.nd.edu:9001
+arguments = log_define disc01.crc.nd.edu 9001 /disk/d11/tlq /disk/d11/tlq/worker.$(PROCESS).debug work_queue_worker -- ./work_queue_worker --cores $$([TARGET.Cpus]) --memory $$([TARGET.Memory]) --disk $$([TARGET.Disk/1024]) -M wq_trace -d all -o /disk/d11/tlq/worker.$(PROCESS).debug --debug-rotate-max 0 -t 900 --tlq 11855
 transfer_input_files = work_queue_worker, cctools_gpu_autodetect, log_define
 should_transfer_files = yes
 when_to_transfer_output = on_exit
