@@ -80,7 +80,7 @@ while(my $line = <LOG>) {
         push(@links, \%link);
     }
     #tlq: setting master TLQ URL: http://disc01.crc.nd.edu:11855/jx/37bd779f-95d8-4c2c-80e3-f5eb4e28aacc.json
-    elsif($line =~ m/tlq: set master TLQ URL http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
+    elsif($line =~ m/tlq: set master TLQ URL: http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
         my $url = "http://" . $+{address} . "/jx/" . $+{uuid} . ".json";
         $worker{master}{$+{address}}{url} = $url;
         my %link;
@@ -88,7 +88,8 @@ while(my $line = <LOG>) {
         $link{url} = $url;
         push(@links, \%link);
     }
-    elsif($line =~ m/tlq: set task (?<taskid>\d+) TLQ URL http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
+    #tlq: set task 1887 TLQ URL: http://disc01.crc.nd.edu:11855/jx/a220555d-6040-4171-a87d-283c77af2f28.json
+    elsif($line =~ m/tlq: set task (?<taskid>\d+) TLQ URL: http:\/\/(?<address>\S+)\/jx\/(?<uuid>\S+).json/) {
         my $url = "http://" . $+{address} . "/jx/" . $+{uuid} . ".json";
         $worker{tasks}{$+{taskid}}{url} = $url;
         my %link;
