@@ -2,9 +2,9 @@
 
 hostname=$(hostname -f)
 echo Configuring client deposit log.
-sed -i "s/\w\+\.\w\+.\w\+.\w\+:11855/$hostname:11855/g" ./unlinked/client_data/deposits.log
-sed -i "s/\w\+\.\w\+.\w\+.\w\+:11855/$hostname:11855/g" ./linked/client_data/deposits.log
+sed -i "s/\w\+\.\w\+.\w\+.\w\+:11855/$hostname:11855/g" ./client_data/deposits.log
 echo Configuring server deposit log.
-sed -i "s/\w\+\.\w\+.\w\+.\w\+:9001/$hostname:9001/g" ./unlinked/server_data/deposits.log
-sed -i "s/\w\+\.\w\+.\w\+.\w\+:9001/$hostname:9001/g" ./linked/server_data/deposits.log
+sed -i "s/\w\+\.\w\+.\w\+.\w\+:9001/$hostname:9001/g" ./server_data/deposits.log
+sed -i "s/\w\+\.\w\+.\w\+.\w\+:11855/$hostname:11855/g" ./server_data/*.log
+sed -i "s/\w\+\.\w\+.\w\+.\w\+:11855/$hostname:11855/g" ./server_data/*.json
 exit $?

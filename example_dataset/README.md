@@ -22,7 +22,7 @@ cd ../server && perl tlq_server -p 11855 -d /absolute/path/to/server_data
 ## Running a TLQ client
 In a separate terminal on the same machine, start up the querying client:
 ```
-cp ./linked/client_data/deposits.log ../client/ && cd ../client && perl tlq_client -s
+cp ./client_data/deposits.log ../client/ && cd ../client && perl tlq_client -s
 ```
 
 From here, you can now execute queries with TLQ. Run the `list` command in the client to see the list of available logs to query and their URLs.

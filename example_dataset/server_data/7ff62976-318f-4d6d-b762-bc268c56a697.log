@@ -1,0 +1,439 @@
+2020/09/21 12:02:55.51 work_queue_worker[11337] debug: ./work_queue_worker version 8.0.0 DEVELOPMENT (released 2020-09-20 11:39:44 -0400)
+2020/09/21 12:02:55.51 work_queue_worker[11337] debug: Built by nkremerh@disc01.crc.nd.edu on 2020-09-20 11:39:44 -0400
+2020/09/21 12:02:55.51 work_queue_worker[11337] debug: System: Linux disc01.crc.nd.edu 3.10.0-1127.19.1.el7.x86_64 #1 SMP Tue Aug 11 19:12:04 EDT 2020 x86_64 x86_64 x86_64 GNU/Linux
+2020/09/21 12:02:55.51 work_queue_worker[11337] debug: Configuration: --strict --prefix ../cctools --tcp-low-port 9000 --tcp-high-port 9500
+2020/09/21 12:02:55.52 work_queue_worker[11337] wq: WORK_QUEUE_SANDBOX set to /var/condor/execute/dir_11217/worker-213124-11337.
+2020/09/21 12:02:55.53 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:02:55.53 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:02:55.53 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:02:55.53 work_queue_worker[11337] dns: looking up name catalog.cse.nd.edu
+2020/09/21 12:02:55.53 work_queue_worker[11337] dns: catalog.cse.nd.edu is 129.74.152.177
+2020/09/21 12:02:55.53 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:02:55.53 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:02:55.53 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:02:55.53 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:02:55.53 work_queue_worker[11337] http: Date: Mon Sep 21 12:02:55 2020
+2020/09/21 12:02:55.53 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:02:55.53 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:02:55.53 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:02:55.53 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:02:55.53 work_queue_worker[11337] http:
+2020/09/21 12:02:55.56 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:02:55.56 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:02:55.56 work_queue_worker[11337] dns: looking up name 10.32.74.140
+2020/09/21 12:02:55.56 work_queue_worker[11337] dns: 10.32.74.140 is 10.32.74.140
+2020/09/21 12:02:55.56 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:02:55.56 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:02:55.56 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:02:55.56 work_queue_worker[11337] dns: looking up name 129.74.128.103
+2020/09/21 12:02:55.56 work_queue_worker[11337] dns: 129.74.128.103 is 129.74.128.103
+2020/09/21 12:02:55.56 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:02:55.56 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:02:55.56 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:02:57.56 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:02:57.56 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:02:57.56 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:02:57.56 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:02:57.56 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:02:57.56 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:02:57.56 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:03:01.56 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:03:01.56 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:03:01.56 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:03:01.56 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:03:01.56 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:03:01.56 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:03:01.56 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:03:01.56 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:03:09.56 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:03:09.56 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:03:09.56 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:03:09.56 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:03:09.57 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:03:09.57 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:03:09.57 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:03:09.57 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:03:25.57 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:03:25.57 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:03:25.57 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:03:25.57 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:03:25.57 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:03:25.57 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:03:25.57 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:03:25.57 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:03:57.57 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:03:57.57 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:03:57.57 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:03:57.57 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:03:57.57 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:03:57.57 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:03:57.57 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:03:57.57 work_queue_worker[11337] http: Date: Mon Sep 21 12:03:57 2020
+2020/09/21 12:03:57.57 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:03:57.57 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:03:57.57 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:03:57.57 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:03:57.57 work_queue_worker[11337] http:
+2020/09/21 12:03:57.59 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:03:57.60 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:03:57.60 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:03:57.60 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:03:57.60 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:03:57.60 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:03:57.60 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:03:57.60 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:04:57.60 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:04:57.60 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:04:57.60 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:04:57.60 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:04:57.60 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:04:57.60 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:04:57.60 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:04:57.60 work_queue_worker[11337] http: Date: Mon Sep 21 12:04:57 2020
+2020/09/21 12:04:57.60 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:04:57.60 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:04:57.60 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:04:57.60 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:04:57.60 work_queue_worker[11337] http:
+2020/09/21 12:04:57.63 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:04:57.63 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:04:57.63 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:04:57.63 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:04:57.63 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:04:57.63 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:04:57.63 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:04:57.63 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:05:57.64 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:05:57.64 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:05:57.64 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:05:57.64 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:05:57.64 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:05:57.64 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:05:57.64 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:05:57.64 work_queue_worker[11337] http: Date: Mon Sep 21 12:05:57 2020
+2020/09/21 12:05:57.64 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:05:57.64 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:05:57.64 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:05:57.64 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:05:57.64 work_queue_worker[11337] http:
+2020/09/21 12:05:57.68 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:05:57.69 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:05:57.69 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:05:57.69 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:05:57.69 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:05:57.69 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:05:57.69 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:05:57.69 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:06:57.69 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:06:57.69 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:06:57.69 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:06:57.69 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:06:57.69 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:06:57.69 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:06:57.69 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:06:57.69 work_queue_worker[11337] http: Date: Mon Sep 21 12:06:57 2020
+2020/09/21 12:06:57.69 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:06:57.69 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:06:57.69 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:06:57.69 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:06:57.69 work_queue_worker[11337] http:
+2020/09/21 12:06:57.71 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:06:57.72 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:06:57.72 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:06:57.72 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:06:57.72 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:06:57.72 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:06:57.72 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:06:57.72 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:07:57.72 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:07:57.72 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:07:57.72 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:07:57.72 work_queue_worker[11337] dns: looking up name catalog.cse.nd.edu
+2020/09/21 12:07:57.72 work_queue_worker[11337] dns: catalog.cse.nd.edu is 129.74.152.177
+2020/09/21 12:07:57.72 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:07:57.72 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:07:57.72 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:07:57.72 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:07:57.72 work_queue_worker[11337] http: Date: Mon Sep 21 12:07:57 2020
+2020/09/21 12:07:57.72 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:07:57.72 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:07:57.72 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:07:57.72 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:07:57.72 work_queue_worker[11337] http:
+2020/09/21 12:07:57.75 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:07:57.75 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:07:57.75 work_queue_worker[11337] dns: looking up name 10.32.74.140
+2020/09/21 12:07:57.75 work_queue_worker[11337] dns: 10.32.74.140 is 10.32.74.140
+2020/09/21 12:07:57.75 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:07:57.75 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:07:57.75 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:07:57.75 work_queue_worker[11337] dns: looking up name 129.74.128.103
+2020/09/21 12:07:57.75 work_queue_worker[11337] dns: 129.74.128.103 is 129.74.128.103
+2020/09/21 12:07:57.75 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:07:57.75 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:07:57.75 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:08:57.75 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:08:57.75 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:08:57.75 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:08:57.75 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:08:57.76 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:08:57.76 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:08:57.76 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:08:57.76 work_queue_worker[11337] http: Date: Mon Sep 21 12:08:57 2020
+2020/09/21 12:08:57.76 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:08:57.76 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:08:57.76 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:08:57.76 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:08:57.76 work_queue_worker[11337] http:
+2020/09/21 12:08:57.79 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:08:57.80 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:08:57.81 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:08:57.81 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:08:57.81 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:08:57.81 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:08:57.81 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:08:57.81 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:09:57.81 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:09:57.81 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:09:57.81 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:09:57.81 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:09:57.81 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:09:57.81 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:09:57.81 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:09:57.81 work_queue_worker[11337] http: Date: Mon Sep 21 12:09:57 2020
+2020/09/21 12:09:57.81 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:09:57.81 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:09:57.81 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:09:57.81 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:09:57.81 work_queue_worker[11337] http:
+2020/09/21 12:09:57.85 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:09:57.86 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:09:57.86 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:09:57.86 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:09:57.86 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:09:57.86 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:09:57.86 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:09:57.86 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:10:57.86 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:10:57.86 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:10:57.86 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:10:57.86 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:10:57.86 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:10:57.86 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:10:57.86 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:10:57.86 work_queue_worker[11337] http: Date: Mon Sep 21 12:10:57 2020
+2020/09/21 12:10:57.86 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:10:57.86 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:10:57.86 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:10:57.86 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:10:57.86 work_queue_worker[11337] http:
+2020/09/21 12:10:57.90 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:10:57.91 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:10:57.91 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:10:57.91 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:10:57.91 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:10:57.91 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:10:57.91 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:10:57.91 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:11:57.92 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:11:57.92 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:11:57.92 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:11:57.92 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:11:57.92 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:11:57.92 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:11:57.92 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:11:57.92 work_queue_worker[11337] http: Date: Mon Sep 21 12:11:57 2020
+2020/09/21 12:11:57.92 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:11:57.92 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:11:57.92 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:11:57.92 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:11:57.92 work_queue_worker[11337] http:
+2020/09/21 12:11:57.96 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:11:57.97 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:11:57.97 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:11:57.97 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:11:57.97 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:11:57.97 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:11:57.97 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:11:57.97 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:12:57.97 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:12:57.97 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:12:57.97 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:12:57.97 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:12:57.97 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:12:57.97 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:12:57.98 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:12:57.98 work_queue_worker[11337] http: Date: Mon Sep 21 12:12:57 2020
+2020/09/21 12:12:57.98 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:12:57.98 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:12:57.98 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:12:57.98 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:12:57.98 work_queue_worker[11337] http:
+2020/09/21 12:12:58.02 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:12:58.02 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:12:58.02 work_queue_worker[11337] dns: looking up name 10.32.74.140
+2020/09/21 12:12:58.02 work_queue_worker[11337] dns: 10.32.74.140 is 10.32.74.140
+2020/09/21 12:12:58.03 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:12:58.03 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:12:58.03 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:12:58.03 work_queue_worker[11337] dns: looking up name 129.74.128.103
+2020/09/21 12:12:58.03 work_queue_worker[11337] dns: 129.74.128.103 is 129.74.128.103
+2020/09/21 12:12:58.03 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:12:58.03 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:12:58.03 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:13:58.03 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:13:58.03 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:13:58.03 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:13:58.03 work_queue_worker[11337] dns: looking up name catalog.cse.nd.edu
+2020/09/21 12:13:58.03 work_queue_worker[11337] dns: catalog.cse.nd.edu is 129.74.152.177
+2020/09/21 12:13:58.03 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:13:58.03 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:13:58.03 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:13:58.03 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:13:58.03 work_queue_worker[11337] http: Date: Mon Sep 21 12:13:58 2020
+2020/09/21 12:13:58.03 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:13:58.03 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:13:58.03 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:13:58.03 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:13:58.03 work_queue_worker[11337] http:
+2020/09/21 12:13:58.07 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:13:58.08 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:13:58.08 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:13:58.08 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:13:58.08 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:13:58.08 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:13:58.08 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:13:58.08 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:14:58.08 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:14:58.08 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:14:58.08 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:14:58.08 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:14:58.08 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:14:58.08 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:14:58.08 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:14:58.08 work_queue_worker[11337] http: Date: Mon Sep 21 12:14:58 2020
+2020/09/21 12:14:58.08 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:14:58.08 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:14:58.08 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:14:58.08 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:14:58.08 work_queue_worker[11337] http:
+2020/09/21 12:14:58.11 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:14:58.11 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:14:58.11 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:14:58.11 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:14:58.11 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:14:58.11 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:14:58.11 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:14:58.11 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:15:58.11 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:15:58.11 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:15:58.11 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:15:58.11 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:15:58.11 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:15:58.11 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:15:58.12 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:15:58.12 work_queue_worker[11337] http: Date: Mon Sep 21 12:15:58 2020
+2020/09/21 12:15:58.12 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:15:58.12 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:15:58.12 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:15:58.12 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:15:58.12 work_queue_worker[11337] http:
+2020/09/21 12:15:58.15 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:15:58.16 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:15:58.16 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:15:58.16 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:15:58.16 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:15:58.16 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:15:58.16 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:15:58.16 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:16:58.16 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:16:58.16 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:16:58.16 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:16:58.16 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:16:58.16 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:16:58.16 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:16:58.16 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:16:58.16 work_queue_worker[11337] http: Date: Mon Sep 21 12:16:58 2020
+2020/09/21 12:16:58.16 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:16:58.16 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:16:58.16 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:16:58.16 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:16:58.16 work_queue_worker[11337] http:
+2020/09/21 12:16:58.18 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:16:58.19 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:16:58.19 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:16:58.19 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:16:58.19 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:16:58.19 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:16:58.19 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:16:58.19 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:17:58.19 work_queue_worker[11337] debug: error reading disk usage on directory: ./cache.
+2020/09/21 12:17:58.19 work_queue_worker[11337] wq: querying catalog for masters with project=wq_trace
+2020/09/21 12:17:58.19 work_queue_worker[11337] http: connect catalog.cse.nd.edu port 9097
+2020/09/21 12:17:58.19 work_queue_worker[11337] tcp: connecting to 129.74.152.177 port 9097
+2020/09/21 12:17:58.19 work_queue_worker[11337] tcp: made connection to 129.74.152.177 port 9097
+2020/09/21 12:17:58.19 work_queue_worker[11337] http: GET /query.json HTTP/1.1
+Connection: close
+Host: catalog.cse.nd.edu
+User-Agent: Mozilla/5.0 (compatible; CCTools 8.0.0 DEVELOPMENT Parrot; http://ccl.cse.nd.edu/)
+2020/09/21 12:17:58.19 work_queue_worker[11337] http: HTTP/1.1 200 OK
+2020/09/21 12:17:58.19 work_queue_worker[11337] http: Date: Mon Sep 21 12:17:58 2020
+2020/09/21 12:17:58.19 work_queue_worker[11337] http: Server: catalog_server
+2020/09/21 12:17:58.19 work_queue_worker[11337] http: Connection: close
+2020/09/21 12:17:58.19 work_queue_worker[11337] http: Access-Control-Allow-Origin: *
+2020/09/21 12:17:58.19 work_queue_worker[11337] http: Content-type: text/plain
+2020/09/21 12:17:58.19 work_queue_worker[11337] http:
+2020/09/21 12:17:58.23 work_queue_worker[11337] tcp: disconnected from 129.74.152.177 port 9097
+2020/09/21 12:17:58.24 work_queue_worker[11337] wq: project name wq_trace matches 1 masters
+2020/09/21 12:17:58.24 work_queue_worker[11337] tcp: connecting to 10.32.74.140 port 9000
+2020/09/21 12:17:58.24 work_queue_worker[11337] tcp: connection to 10.32.74.140 port 9000 failed (Connection refused)
+2020/09/21 12:17:58.24 work_queue_worker[11337] tcp: disconnected from 10.32.74.140 port 9000
+2020/09/21 12:17:58.24 work_queue_worker[11337] tcp: connecting to 129.74.128.103 port 9000
+2020/09/21 12:17:58.24 work_queue_worker[11337] tcp: connection to 129.74.128.103 port 9000 failed (Connection refused)
+2020/09/21 12:17:58.24 work_queue_worker[11337] tcp: disconnected from 129.74.128.103 port 9000
+2020/09/21 12:17:58.24 work_queue_worker[11337] notice: stopping: could not connect after 900 seconds.

@@ -156,9 +156,9 @@ while(defined(my $input = $term->readline($prompt))) {
         if(!-e "./jx_test") { system("cp ../cctools-source/dttools/src/jx_test ."); }
         $result = system("./jx_test");
         print(STDOUT "$result\n");
-        print_result("JX", $result);
         my $request_end = time();
         if($timing) { $total_request += $request_end - $request_start; }
+        print_result("JX", $result);
         next; 
     }
 
@@ -166,23 +166,25 @@ while(defined(my $input = $term->readline($prompt))) {
     elsif($action eq "HTTP" and $url) {
         my $request_start = time();
         $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("HTTP", $url, 0));
-        print_result("HTTP $url", $result);
         my $request_end = time();
         if($timing) { $total_request += $request_end - $request_start; }
+        print_result("HTTP $url", $result);
         next;
     }
     elsif($action eq "LIST") {
         my $request_start = time();
         if($url) {
             $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("LIST", $url, 0));
+            my $request_end = time();
+            if($timing) { $total_request += $request_end - $request_start; }
             print_result("LIST $url", $result);
         }
         else {
             foreach my $l (keys(%logs)) { $result = $result . "$l =>\n  command: $logs{$l}{command},\n  host: $logs{$l}{host},\n  json: $logs{$l}{json},\n  jx: $logs{$l}{jx},\n  log: $logs{$l}{log},\n  rm: $logs{$l}{rm},\n  query: $logs{$l}{query}\n\n"; }
+            my $request_end = time();
+            if($timing) { $total_request += $request_end - $request_start; }
             print_result("LIST local", $result);
         }
-        my $request_end = time();
-        if($timing) { $total_request += $request_end - $request_start; }
         next;
     }
     elsif($action eq "QUERY" and $query) {
@@ -193,9 +195,9 @@ while(defined(my $input = $term->readline($prompt))) {
             $i++;
         }
         $result = URI::Encode->new( { encode_reserved => 0 } )->decode(request("QUERY", $url, request_to_json($query)));
-        print_result("QUERY $url $query", $result);
         my $request_end = time();
         if($timing) { $total_request += $request_end - $request_start; }
+        print_result("QUERY $url $query", $result);
         next;
     }
     else { print_command_help(); } 

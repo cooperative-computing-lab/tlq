@@ -1,0 +1,966 @@
+{
+   "messages" : [
+      {
+         "timestamp" : "0.000000",
+         "pid" : 12517,
+         "linenum" : 1,
+         "message" : "libjli.so->getenv(\"_JAVA_LAUNCHER_DEBUG\") = nil"
+      },
+      {
+         "timestamp" : "0.001196",
+         "pid" : 12517,
+         "linenum" : 2,
+         "message" : "libjli.so->getenv(\"_JAVA_VERSION_SET\") = nil"
+      },
+      {
+         "timestamp" : "0.000499",
+         "pid" : 12517,
+         "linenum" : 3,
+         "message" : "libjli.so->fopen(\"/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre/lib/amd64/jvm.cfg\", \"r\") = 0x56215cff70e0"
+      },
+      {
+         "timestamp" : "0.000542",
+         "pid" : 12517,
+         "linenum" : 4,
+         "message" : "libjli.so->getenv(\"JDK_ALTERNATE_VM\") = nil"
+      },
+      {
+         "timestamp" : "0.000203",
+         "pid" : 12517,
+         "linenum" : 5,
+         "message" : "libjli.so->__xstat(1, \"/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre/lib/amd64/server/libjvm.so\", 0x7ffcd39b6a30) = 0"
+      },
+      {
+         "timestamp" : "0.000481",
+         "pid" : 12517,
+         "linenum" : 6,
+         "message" : "libjli.so->getenv(\"LD_LIBRARY_PATH\") = \"/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/ruby/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/graphviz/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/git/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/clang/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/lib:/opt/crc/usr/local/lib\""
+      },
+      {
+         "timestamp" : "0.001414",
+         "pid" : 12517,
+         "linenum" : 7,
+         "message" : "libjli.so->dlopen(\"/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre/lib/amd64/server/libjvm.so\", 258 <unfinished ...>"
+      },
+      {
+         "timestamp" : "0.024815",
+         "pid" : 12517,
+         "linenum" : 8,
+         "message" : "libjvm.so->getenv(\"NMT_LEVEL_12517\") = nil"
+      },
+      {
+         "timestamp" : "0.001139",
+         "pid" : 12517,
+         "linenum" : 9,
+         "message" : "<... dlopen resumed> )          = 0x56215cff74b0"
+      },
+      {
+         "timestamp" : "0.000045",
+         "pid" : 12517,
+         "linenum" : 10,
+         "message" : "libjli.so->getenv(\"CLASSPATH\")  = nil"
+      },
+      {
+         "timestamp" : "0.000202",
+         "pid" : 12517,
+         "linenum" : 11,
+         "message" : "libjli.so->getenv(\"_JAVA_SPLASH_JAR\") = nil"
+      },
+      {
+         "timestamp" : "0.000197",
+         "pid" : 12517,
+         "linenum" : 12,
+         "message" : "libjli.so->getenv(\"_JAVA_SPLASH_FILE\") = nil"
+      },
+      {
+         "timestamp" : "0.000267",
+         "pid" : 12517,
+         "linenum" : 13,
+         "message" : "libjli.so->pthread_attr_setdetachstate(0x7ffcd39b69e0, 0, 0x7ffcd39b6a70, 0) = 0"
+      },
+      {
+         "timestamp" : "0.000300",
+         "pid" : 12517,
+         "linenum" : 14,
+         "message" : "libpthread.so.0->__clone(0x2b5fea607de0, 0x2b5fea51afc0, 0x3d0f00, 0x2b5fea51b700) = 0x30ea"
+      },
+      {
+         "timestamp" : "0.001593",
+         "pid" : 12522,
+         "linenum" : 15,
+         "message" : "libjvm.so->dlopen(0x2b5febde69ae, 1, 0xfffffffffff42c48, 4096) = 0x2b5ff0000990"
+      },
+      {
+         "timestamp" : "0.001695",
+         "pid" : 12522,
+         "linenum" : 16,
+         "message" : "libjvm.so->getenv(0x2b5febe0183e, 0, 115, 0x65737361) = 0x7ffcd39bc64f"
+      },
+      {
+         "timestamp" : "0.000293",
+         "pid" : 12522,
+         "linenum" : 17,
+         "message" : "libjvm.so->fopen(0x2b5fea519c10, 0x2b5febd9dccb, 0x6f732e79666972, 0x2b5feaedfab0) = 0x2b5ff0001440"
+      },
+      {
+         "timestamp" : "0.002139",
+         "pid" : 12522,
+         "linenum" : 18,
+         "message" : "libjvm.so->dlopen(0x2b5fea519c10, 1, 0xffffffff, 0x2b5ff0002b00) = 0x2b5ff0001440"
+      },
+      {
+         "timestamp" : "0.004828",
+         "pid" : 12522,
+         "linenum" : 19,
+         "message" : "libjvm.so->fopen(0x2b5fea519c10, 0x2b5febd9dccb, 111, 0x732e6176) = 0x2b5ff0001b10"
+      },
+      {
+         "timestamp" : "0.001158",
+         "pid" : 12522,
+         "linenum" : 20,
+         "message" : "libjvm.so->dlopen(0x2b5fea519c10, 1, 0xffffffff, 0x2b5ff0001a00) = 0x2b5ff0001b10"
+      },
+      {
+         "timestamp" : "0.001229",
+         "pid" : 12522,
+         "linenum" : 21,
+         "message" : "libjvm.so->__xstat(1, 0x2b5fea51a360, 0x2b5fea51aba0, 0x746f7073746f682e) = -1"
+      },
+      {
+         "timestamp" : "0.000376",
+         "pid" : 12522,
+         "linenum" : 22,
+         "message" : "libjvm.so->getenv(0x2b5febd96541, 0x2b5fea51a6d0, 1024, 0x2b5fec25061b) = 0"
+      },
+      {
+         "timestamp" : "0.000376",
+         "pid" : 12522,
+         "linenum" : 23,
+         "message" : "libjvm.so->getenv(0x2b5febd96533, 0x2b5fea51a6d0, 1024, 0) = 0"
+      },
+      {
+         "timestamp" : "0.000350",
+         "pid" : 12522,
+         "linenum" : 24,
+         "message" : "libjvm.so->fopen(0x2b5febde6315, 0x2b5febd9dccb, 4095, 0xffffd4a014269b03) = 0x2b5ff00032f0"
+      },
+      {
+         "timestamp" : "0.000788",
+         "pid" : 12522,
+         "linenum" : 25,
+         "message" : "libjvm.so->fopen(0x2b5febde6361, 0x2b5febd9dccb, 0x2b5ff0000078, 0x2b5ff00032e0) = 0x2b5ff00032f0"
+      },
+      {
+         "timestamp" : "0.000535",
+         "pid" : 12522,
+         "linenum" : 26,
+         "message" : "libjvm.so->fopen(0x2b5fea5149b0, 0x2b5febd9dccb, 4014, 3995) = 0x2b5ff00032f0"
+      },
+      {
+         "timestamp" : "0.000506",
+         "pid" : 12522,
+         "linenum" : 27,
+         "message" : "libjvm.so->opendir(0x2b5ff0002b40, 0x2b5ff0002b40, 13, 16) = 0"
+      },
+      {
+         "timestamp" : "0.000369",
+         "pid" : 12522,
+         "linenum" : 28,
+         "message" : "libjvm.so->__xstat(1, 0x2b5fea5198f0, 0x2b5fea518860, 0x6f732e7477616d62) = -1"
+      },
+      {
+         "timestamp" : "0.000372",
+         "pid" : 12522,
+         "linenum" : 29,
+         "message" : "libjvm.so->__xstat(1, 0x2b5fea5198f0, 0x2b5fea518860, 0x5f74776162696c2f) = 0"
+      },
+      {
+         "timestamp" : "0.000403",
+         "pid" : 12522,
+         "linenum" : 30,
+         "message" : "libjvm.so->fopen(0x2b5fea518b90, 0x2b5febd9dccb, 4009, 3994) = 0x2b5ff00037d0"
+      },
+      {
+         "timestamp" : "0.000491",
+         "pid" : 12522,
+         "linenum" : 31,
+         "message" : "libjvm.so->fopen(0x2b5fea518b90, 0x2b5febd9dccb, 4009, 3994) = 0x2b5ff00037d0"
+      },
+      {
+         "timestamp" : "0.000480",
+         "pid" : 12522,
+         "linenum" : 32,
+         "message" : "libjvm.so->fopen(0x2b5fea518b90, 0x2b5febd9dccb, 4009, 4002) = 0x2b5ff00037d0"
+      },
+      {
+         "timestamp" : "0.000514",
+         "pid" : 12522,
+         "linenum" : 33,
+         "message" : "libjvm.so->fopen(0x2b5fea518b20, 0x2b5febd9dccb, 4009, 3994) = 0x2b5ff00037d0"
+      },
+      {
+         "timestamp" : "0.000480",
+         "pid" : 12522,
+         "linenum" : 34,
+         "message" : "libjvm.so->fopen(0x2b5fea518b20, 0x2b5febd9dccb, 4009, 3994) = 0x2b5ff00037d0"
+      },
+      {
+         "timestamp" : "0.001766",
+         "pid" : 12522,
+         "linenum" : 35,
+         "message" : "libjvm.so->fopen(0x2b5fea518b20, 0x2b5febd9dccb, 4009, 4002) = 0x2b5ff00037d0"
+      },
+      {
+         "timestamp" : "0.000490",
+         "pid" : 12522,
+         "linenum" : 36,
+         "message" : "libjvm.so->fopen(0x2b5fea518b50, 0x2b5febd9dccb, 4014, 3995) = 0x2b5ff00037d0"
+      },
+      {
+         "timestamp" : "0.000621",
+         "pid" : 12522,
+         "linenum" : 37,
+         "message" : "libjvm.so->getenv(0x2b5febde70ff, 4096, 3, -1) = 0"
+      },
+      {
+         "timestamp" : "0.000686",
+         "pid" : 12522,
+         "linenum" : 38,
+         "message" : "libjvm.so->fopen(0x2b5febde6998, 0x2b5febd9dccb, 0x2b5fea5fe908, 0x2b5fea5fddf0) = 0x2b5ff00037d0"
+      },
+      {
+         "timestamp" : "0.003406",
+         "pid" : 12522,
+         "linenum" : 39,
+         "message" : "libjvm.so->open(0x2b5ff004a5c0, 0x20000, 0, 0x2b5ff004a609) = 3"
+      },
+      {
+         "timestamp" : "0.000368",
+         "pid" : 12522,
+         "linenum" : 40,
+         "message" : "libjvm.so->__fxstat(1, 3, 0x2b5fea51aa00, -1) = 0"
+      },
+      {
+         "timestamp" : "0.001214",
+         "pid" : 12522,
+         "linenum" : 41,
+         "message" : "libjvm.so->opendir(0x2b5ff004a5c0, 0x2b5fea51aa00, 0x4000, -1) = 0x2b5ff004b4d0"
+      },
+      {
+         "timestamp" : "0.000357",
+         "pid" : 12522,
+         "linenum" : 42,
+         "message" : "libjvm.so->__fxstat(1, 3, 0x2b5fea51a8a0, 0x2b5ff004b4d0) = 0"
+      },
+      {
+         "timestamp" : "0.000280",
+         "pid" : 12522,
+         "linenum" : 43,
+         "message" : "libjvm.so->__fxstat(1, 5, 0x2b5fea51a930, -1) = 0"
+      },
+      {
+         "timestamp" : "0.000295",
+         "pid" : 12522,
+         "linenum" : 44,
+         "message" : "libjvm.so->open(0x2b5febdb49dc, 0, 0, 0) = 3"
+      },
+      {
+         "timestamp" : "0.000442",
+         "pid" : 12522,
+         "linenum" : 45,
+         "message" : "libjvm.so->__lxstat(1, 0x2b5ff004a5c0, 0x2b5fea51ab50, -144) = 0"
+      },
+      {
+         "timestamp" : "0.000299",
+         "pid" : 12522,
+         "linenum" : 46,
+         "message" : "libjvm.so->open(0x2b5ff004a5c0, 0x20000, 0x4000, -1) = 3"
+      },
+      {
+         "timestamp" : "0.000289",
+         "pid" : 12522,
+         "linenum" : 47,
+         "message" : "libjvm.so->__fxstat(1, 3, 0x2b5fea51aa00, -1) = 0"
+      },
+      {
+         "timestamp" : "0.000300",
+         "pid" : 12522,
+         "linenum" : 48,
+         "message" : "libjvm.so->opendir(0x2b5ff004a5c0, 0x2b5fea51aa00, 0x4000, -1) = 0x2b5ff004b4d0"
+      },
+      {
+         "timestamp" : "0.000280",
+         "pid" : 12522,
+         "linenum" : 49,
+         "message" : "libjvm.so->__fxstat(1, 3, 0x2b5fea51a8a0, 0x2b5ff004b4d0) = 0"
+      },
+      {
+         "timestamp" : "0.000278",
+         "pid" : 12522,
+         "linenum" : 50,
+         "message" : "libjvm.so->__fxstat(1, 5, 0x2b5fea51a930, -1) = 0"
+      },
+      {
+         "timestamp" : "0.000331",
+         "pid" : 12522,
+         "linenum" : 51,
+         "message" : "libjvm.so->open(0x2b5febdb49dc, 0, 0, 0) = 3"
+      },
+      {
+         "timestamp" : "0.000301",
+         "pid" : 12522,
+         "linenum" : 52,
+         "message" : "libjvm.so->open(0x2b5ff004a609, 0x20042, 384, -1) = 7"
+      },
+      {
+         "timestamp" : "0.000479",
+         "pid" : 12522,
+         "linenum" : 53,
+         "message" : "libjvm.so->__fxstat(1, 7, 0x2b5fea51ab50, -1) = 0"
+      },
+      {
+         "timestamp" : "0.001111",
+         "pid" : 12522,
+         "linenum" : 54,
+         "message" : "libjvm.so->fopen(0x2b5fea519b60, 0x2b5febd9dccb, 4, 0x6f732e70) = 0x2b5ff0057c20"
+      },
+      {
+         "timestamp" : "0.000947",
+         "pid" : 12522,
+         "linenum" : 55,
+         "message" : "libjvm.so->dlopen(0x2b5fea519b60, 1, 0xffffffff, 0x2b5ff0057b00) = 0x2b5ff0057c20"
+      },
+      {
+         "timestamp" : "0.000908",
+         "pid" : 12522,
+         "linenum" : 56,
+         "message" : "libjvm.so->__xstat(1, 0x2b5fea51a120, 0x2b5fea51a950, 2048) = 0"
+      },
+      {
+         "timestamp" : "0.000295",
+         "pid" : 12522,
+         "linenum" : 57,
+         "message" : "libjvm.so->__xstat(1, 0x2b5fea51a120, 0x2b5fea51a950, 2048) = 0"
+      },
+      {
+         "timestamp" : "0.000280",
+         "pid" : 12522,
+         "linenum" : 58,
+         "message" : "libjvm.so->__xstat(1, 0x2b5fea51a120, 0x2b5fea51a950, 2048) = -1"
+      },
+      {
+         "timestamp" : "0.000277",
+         "pid" : 12522,
+         "linenum" : 59,
+         "message" : "libjvm.so->__xstat(1, 0x2b5fea51a120, 0x2b5fea51a950, 2048) = 0"
+      },
+      {
+         "timestamp" : "0.000288",
+         "pid" : 12522,
+         "linenum" : 60,
+         "message" : "libjvm.so->__xstat(1, 0x2b5fea51a120, 0x2b5fea51a950, 2048) = 0"
+      },
+      {
+         "timestamp" : "0.000281",
+         "pid" : 12522,
+         "linenum" : 61,
+         "message" : "libjvm.so->__xstat(1, 0x2b5fea51a120, 0x2b5fea51a950, 2048) = 0"
+      },
+      {
+         "timestamp" : "0.000278",
+         "pid" : 12522,
+         "linenum" : 62,
+         "message" : "libjvm.so->__xstat(1, 0x2b5fea51a120, 0x2b5fea51a950, 2048) = 0"
+      },
+      {
+         "timestamp" : "0.000278",
+         "pid" : 12522,
+         "linenum" : 63,
+         "message" : "libjvm.so->__xstat(1, 0x2b5fea51a120, 0x2b5fea51a950, 2048) = -1"
+      },
+      {
+         "timestamp" : "0.000296",
+         "pid" : 12522,
+         "linenum" : 64,
+         "message" : "libjvm.so->fopen(0x2b5ff0002520, 0x2b5febd9dccb, 0, 0) = 0x2b5ff0058ac0"
+      },
+      {
+         "timestamp" : "0.006289",
+         "pid" : 12522,
+         "linenum" : 65,
+         "message" : "libjvm.so->open64(0x2b5fea519410, 0, 0, 16) = 3"
+      },
+      {
+         "timestamp" : "0.000316",
+         "pid" : 12522,
+         "linenum" : 66,
+         "message" : "libjvm.so->__fxstat64(1, 3, 0x2b5fea519240, -1) = 0"
+      },
+      {
+         "timestamp" : "0.024263",
+         "pid" : 12522,
+         "linenum" : 67,
+         "message" : "libjvm.so->__xstat(1, 0x2b5fea519f20, 0x2b5fea51a750, 2048) = -1"
+      },
+      {
+         "timestamp" : "0.000383",
+         "pid" : 12522,
+         "linenum" : 68,
+         "message" : "libjvm.so->fopen(0x2b5fea518b20, 0x2b5febd9dccb, 4009, 3994) = 0x2b5ff00b5d40"
+      },
+      {
+         "timestamp" : "0.000423",
+         "pid" : 12522,
+         "linenum" : 69,
+         "message" : "libjvm.so->fopen(0x2b5fea518b20, 0x2b5febd9dccb, 4009, 3994) = 0x2b5ff00b5d40"
+      },
+      {
+         "timestamp" : "0.000403",
+         "pid" : 12522,
+         "linenum" : 70,
+         "message" : "libjvm.so->fopen(0x2b5fea518b20, 0x2b5febd9dccb, 4009, 4002) = 0x2b5ff00b5d40"
+      },
+      {
+         "timestamp" : "0.002918",
+         "pid" : 12522,
+         "linenum" : 71,
+         "message" : "libjvm.so->pthread_attr_setdetachstate(0x2b5fea51ac00, 1, 0, 0) = 0"
+      },
+      {
+         "timestamp" : "0.000333",
+         "pid" : 12522,
+         "linenum" : 72,
+         "message" : "libpthread.so.0->__clone(0x2b5fea607de0, 0x2b5fefe8bfc0, 0x3d0f00, 0x2b5fefe8c700) = 0x30ec"
+      },
+      {
+         "timestamp" : "0.010249",
+         "pid" : 12522,
+         "linenum" : 73,
+         "message" : "libjvm.so->pthread_attr_setdetachstate(0x2b5fea51a290, 1, 0, 0) = 0"
+      },
+      {
+         "timestamp" : "0.000435",
+         "pid" : 12522,
+         "linenum" : 74,
+         "message" : "libpthread.so.0->__clone(0x2b5fea607de0, 0x2b5feff8cfc0, 0x3d0f00, 0x2b5feff8d700) = 0x30ed"
+      },
+      {
+         "timestamp" : "0.004735",
+         "pid" : 12522,
+         "linenum" : 75,
+         "message" : "libjvm.so->pthread_attr_setdetachstate(0x2b5fea51a610, 1, 0, 0) = 0"
+      },
+      {
+         "timestamp" : "0.000513",
+         "pid" : 12522,
+         "linenum" : 76,
+         "message" : "libpthread.so.0->__clone(0x2b5fea607de0, 0x2b60030fffc0, 0x3d0f00, 0x2b6003100700) = 0x30ee"
+      },
+      {
+         "timestamp" : "0.026504",
+         "pid" : 12522,
+         "linenum" : 77,
+         "message" : "libjvm.so->fopen(0x2b5ff00f1810, 0x2b5febd9dccb, 4, 0x6f732e70) = 0x2b5ff00f1d10"
+      },
+      {
+         "timestamp" : "0.001377",
+         "pid" : 12522,
+         "linenum" : 78,
+         "message" : "libjvm.so->dlopen(0x2b5ff00f1810, 1, 0xffffffff, 0x2b5ff00e8c00) = 0x2b5ff0057c20"
+      },
+      {
+         "timestamp" : "0.003320",
+         "pid" : 12522,
+         "linenum" : 79,
+         "message" : "libjvm.so->open64(0x2b5fea519510, 0, 0, 16) = 5"
+      },
+      {
+         "timestamp" : "0.000624",
+         "pid" : 12522,
+         "linenum" : 80,
+         "message" : "libjvm.so->__fxstat64(1, 5, 0x2b5fea519340, -1) = 0"
+      },
+      {
+         "timestamp" : "0.012969",
+         "pid" : 12522,
+         "linenum" : 81,
+         "message" : "libjvm.so->fopen(0x2b5fea516130, 0x2b5febd9dccb, 4009, 3994) = 0x2b5ff00fcce0"
+      },
+      {
+         "timestamp" : "0.000747",
+         "pid" : 12522,
+         "linenum" : 82,
+         "message" : "libjvm.so->fopen(0x2b5fea516130, 0x2b5febd9dccb, 4009, 3994) = 0x2b5ff00fcce0"
+      },
+      {
+         "timestamp" : "0.000683",
+         "pid" : 12522,
+         "linenum" : 83,
+         "message" : "libjvm.so->fopen(0x2b5fea516130, 0x2b5febd9dccb, 4009, 4002) = 0x2b5ff00fcce0"
+      },
+      {
+         "timestamp" : "0.011753",
+         "pid" : 12522,
+         "linenum" : 84,
+         "message" : "libjvm.so->pthread_attr_setdetachstate(0x2b5fea51ab50, 1, 0, 0) = 0"
+      },
+      {
+         "timestamp" : "0.000767",
+         "pid" : 12522,
+         "linenum" : 85,
+         "message" : "libpthread.so.0->__clone(0x2b5fea607de0, 0x2b6003200fc0, 0x3d0f00, 0x2b6003201700) = 0x30ef"
+      },
+      {
+         "timestamp" : "0.001069",
+         "pid" : 12522,
+         "linenum" : 86,
+         "message" : "libjvm.so->__xstat64(1, 0x2b5fea51abe0, 0x2b5fea51ab50, 19) = -1"
+      },
+      {
+         "timestamp" : "0.001071",
+         "pid" : 12522,
+         "linenum" : 87,
+         "message" : "libjvm.so->pthread_attr_setdetachstate(0x2b5fea51a950, 1, 0, 0) = 0"
+      },
+      {
+         "timestamp" : "0.001024",
+         "pid" : 12522,
+         "linenum" : 88,
+         "message" : "libpthread.so.0->__clone(0x2b5fea607de0, 0x2b6003301fc0, 0x3d0f00, 0x2b6003302700) = 0x30f0"
+      },
+      {
+         "timestamp" : "0.001389",
+         "pid" : 12522,
+         "linenum" : 89,
+         "message" : "libjvm.so->pthread_attr_setdetachstate(0x2b5fea51a950, 1, 0, 0) = 0"
+      },
+      {
+         "timestamp" : "0.000887",
+         "pid" : 12522,
+         "linenum" : 90,
+         "message" : "libpthread.so.0->__clone(0x2b5fea607de0, 0x2b6003402fc0, 0x3d0f00, 0x2b6003403700) = 0x30f1"
+      },
+      {
+         "timestamp" : "0.006505",
+         "pid" : 12522,
+         "linenum" : 91,
+         "message" : "libjvm.so->pthread_attr_setdetachstate(0x2b5fea51aaa0, 1, 0, 0) = 0"
+      },
+      {
+         "timestamp" : "0.001299",
+         "pid" : 12522,
+         "linenum" : 92,
+         "message" : "libpthread.so.0->__clone(0x2b5fea607de0, 0x2b6003503fc0, 0x3d0f00, 0x2b6003504700) = 0x30f2"
+      },
+      {
+         "timestamp" : "0.001653",
+         "pid" : 12522,
+         "linenum" : 93,
+         "message" : "libjvm.so->pthread_attr_setdetachstate(0x2b5fea51abb0, 1, 0, 0) = 0"
+      },
+      {
+         "timestamp" : "0.001051",
+         "pid" : 12522,
+         "linenum" : 94,
+         "message" : "libpthread.so.0->__clone(0x2b5fea607de0, 0x2b6003604fc0, 0x3d0f00, 0x2b6003605700) = 0x30f3"
+      },
+      {
+         "timestamp" : "0.011554",
+         "pid" : 12522,
+         "linenum" : 95,
+         "message" : "libjvm.so->open64(0x2b5ff013e9b0, 0, 0, 48) = 7"
+      },
+      {
+         "timestamp" : "0.001166",
+         "pid" : 12522,
+         "linenum" : 96,
+         "message" : "libjvm.so->__fxstat64(1, 7, 0x2b5fea517f60, -1) = 0"
+      },
+      {
+         "timestamp" : "0.020188",
+         "pid" : 12522,
+         "linenum" : 97,
+         "message" : "libjvm.so->fopen(0x2b5ff0164670, 0x2b5febd9dccb, 4, 0x6f732e6f) = 0x2b5ff0164730"
+      },
+      {
+         "timestamp" : "0.002451",
+         "pid" : 12522,
+         "linenum" : 98,
+         "message" : "libjvm.so->dlopen(0x2b5ff0164670, 1, 0xffffffff, 0x2b5ff0164600) = 0x2b5ff0164730"
+      },
+      {
+         "timestamp" : "0.037632",
+         "pid" : 12529,
+         "linenum" : 99,
+         "message" : "--- SIGSEGV (Segmentation fault) ---"
+      },
+      {
+         "timestamp" : "0.040248",
+         "pid" : 12522,
+         "linenum" : 100,
+         "message" : "libjvm.so->fopen(0x2b5fea514e40, 0x2b5febd9dccb, 0x6f732e, 0x6d766a62696c2f72) = 0x2b5ff0179ef0"
+      },
+      {
+         "timestamp" : "0.004405",
+         "pid" : 12522,
+         "linenum" : 101,
+         "message" : "libjvm.so->dlopen(0x2b5fea514e40, 1, 0xffffffff, 0x2b5ff0179e00) = 0x56215cff74b0"
+      },
+      {
+         "timestamp" : "0.001145",
+         "pid" : 12522,
+         "linenum" : 102,
+         "message" : "libjvm.so->fopen(0x2b5fea514e40, 0x2b5febd9dccb, 0x6f732e, 0x6d766a62696c2f72) = 0x2b5ff017a2f0"
+      },
+      {
+         "timestamp" : "0.003606",
+         "pid" : 12522,
+         "linenum" : 103,
+         "message" : "libjvm.so->dlopen(0x2b5fea514e40, 1, 0xffffffff, 0x2b5ff0179e00) = 0x56215cff74b0"
+      },
+      {
+         "timestamp" : "0.001113",
+         "pid" : 12522,
+         "linenum" : 104,
+         "message" : "libjvm.so->fopen(0x2b5fea514e40, 0x2b5febd9dccb, 0x6f732e, 0x6d766a62696c2f72) = 0x2b5ff0179ef0"
+      },
+      {
+         "timestamp" : "0.002624",
+         "pid" : 12522,
+         "linenum" : 105,
+         "message" : "libjvm.so->dlopen(0x2b5fea514e40, 1, 0xffffffff, 0x2b5ff0179e00) = 0x56215cff74b0"
+      },
+      {
+         "timestamp" : "0.001153",
+         "pid" : 12522,
+         "linenum" : 106,
+         "message" : "libjvm.so->fopen(0x2b5fea514e40, 0x2b5febd9dccb, 0x6f732e, 0x6d766a62696c2f72) = 0x2b5ff0179ef0"
+      },
+      {
+         "timestamp" : "0.002395",
+         "pid" : 12522,
+         "linenum" : 107,
+         "message" : "libjvm.so->dlopen(0x2b5fea514e40, 1, 0xffffffff, 0x2b5ff0179e00) = 0x56215cff74b0"
+      },
+      {
+         "timestamp" : "0.034670",
+         "pid" : 12522,
+         "linenum" : 108,
+         "message" : "libjvm.so->fopen(0x2b5ff01bf4b0, 0x2b5febd9dccb, 4, 0x6f732e74) = 0x2b5ff01cd340"
+      },
+      {
+         "timestamp" : "0.002272",
+         "pid" : 12522,
+         "linenum" : 109,
+         "message" : "libjvm.so->dlopen(0x2b5ff01bf4b0, 1, 0xffffffff, 0x2b5ff01b5600) = 0x2b5ff01cd340"
+      },
+      {
+         "timestamp" : "0.091472",
+         "pid" : 12522,
+         "linenum" : 110,
+         "message" : "libjvm.so->fopen(0x2b5ff0238560, 0x2b5febd9dccb, 0x6f732e7373656c, 0x656c646165685f74) = 0x2b5ff0238640"
+      },
+      {
+         "timestamp" : "0.006643",
+         "pid" : 12522,
+         "linenum" : 111,
+         "message" : "libjvm.so->dlopen(0x2b5ff0238560, 1, 0xffffffff, 0x2b5ff0238500) = 0x2b5ff0238640"
+      },
+      {
+         "timestamp" : "0.029023",
+         "pid" : 12531,
+         "linenum" : 112,
+         "message" : "+++ exited (status 0) +++"
+      },
+      {
+         "timestamp" : "0.000225",
+         "pid" : 12527,
+         "linenum" : 113,
+         "message" : "+++ exited (status 0) +++"
+      },
+      {
+         "timestamp" : "0.000177",
+         "pid" : 12524,
+         "linenum" : 114,
+         "message" : "+++ exited (status 0) +++"
+      },
+      {
+         "timestamp" : "0.000163",
+         "pid" : 12522,
+         "linenum" : 115,
+         "message" : "+++ exited (status 0) +++"
+      },
+      {
+         "timestamp" : "0.004111",
+         "pid" : 12530,
+         "linenum" : 116,
+         "message" : "+++ exited (status 1) +++"
+      },
+      {
+         "timestamp" : "0.000020",
+         "pid" : 12529,
+         "linenum" : 117,
+         "message" : "+++ exited (status 1) +++"
+      },
+      {
+         "timestamp" : "0.000009",
+         "pid" : 12526,
+         "linenum" : 118,
+         "message" : "+++ exited (status 1) +++"
+      },
+      {
+         "timestamp" : "0.000008",
+         "pid" : 12525,
+         "linenum" : 119,
+         "message" : "+++ exited (status 1) +++"
+      },
+      {
+         "timestamp" : "0.000142",
+         "pid" : 12528,
+         "linenum" : 120,
+         "message" : "+++ exited (status 1) +++"
+      },
+      {
+         "timestamp" : "0.000029",
+         "pid" : 12517,
+         "linenum" : 121,
+         "message" : "+++ exited (status 1) +++"
+      }
+   ],
+   "processes" : {
+      "12526" : {
+         "environment_variables" : "",
+         "exit" : "1",
+         "children" : ""
+      },
+      "12522" : {
+         "environment_variables" : "",
+         "exit" : "0",
+         "children" : [
+            "12524",
+            "12525",
+            "12526",
+            "12527",
+            "12528",
+            "12529",
+            "12530",
+            "12531"
+         ]
+      },
+      "12529" : {
+         "signal" : "SIGSEGV",
+         "environment_variables" : "",
+         "exit" : "1",
+         "children" : ""
+      },
+      "12517" : {
+         "files" : {
+            "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre/lib/amd64/server/libjvm.so" : {
+               "uses" : 1
+            },
+            "/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.262.b10-0.el7_8.x86_64/jre/lib/amd64/jvm.cfg" : {
+               "uses" : 1
+            }
+         },
+         "exit" : "1",
+         "environment_variables" : {
+            "_JAVA_SPLASH_FILE" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            },
+            "_JAVA_SPLASH_JAR" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            },
+            "LD_LIBRARY_PATH" : {
+               "uses" : 1,
+               "values" : [
+                  "\"/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/ruby/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/graphviz/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/git/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/clang/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/lib:/opt/crc/usr/local/lib\""
+               ]
+            },
+            "_JAVA_LAUNCHER_DEBUG" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            },
+            "JDK_ALTERNATE_VM" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            },
+            "NMT_LEVEL_12517" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            },
+            "_JAVA_VERSION_SET" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            },
+            "CLASSPATH" : {
+               "uses" : 1,
+               "values" : [
+                  "nil"
+               ]
+            }
+         },
+         "children" : [
+            "12522"
+         ]
+      },
+      "12527" : {
+         "environment_variables" : "",
+         "exit" : "0",
+         "children" : ""
+      },
+      "12530" : {
+         "environment_variables" : "",
+         "exit" : "1",
+         "children" : ""
+      },
+      "12525" : {
+         "environment_variables" : "",
+         "exit" : "1",
+         "children" : ""
+      },
+      "12524" : {
+         "environment_variables" : "",
+         "exit" : "0",
+         "children" : ""
+      },
+      "12528" : {
+         "environment_variables" : "",
+         "exit" : "1",
+         "children" : ""
+      },
+      "12531" : {
+         "environment_variables" : "",
+         "exit" : "0",
+         "children" : ""
+      }
+   },
+   "exit" : 1,
+   "uuid" : "f307c40b-4f88-4c3b-93ff-cc3555868d0c",
+   "environment" : {
+      "SSH_CLIENT" : "10.17.150.200 39500 22",
+      "HOST" : "disc01.crc.nd.edu",
+      "BASH_FUNC_module()" : "() {  unset _mlshdbg;",
+      "MAKEFLOW_MAX_LOCAL_JOBS" : "2",
+      "CCLPLATFORM" : "x86_64/redhat7",
+      "GLOBUS_GSSAPI_BACKWARD_COMPATIBLE_MIC" : "true",
+      "REMOTEHOST" : "10.17.150.200",
+      "_mlrv" : "\"MODULES_RUNENV_${_mlv}\";",
+      "LESSOPEN" : "||/usr/bin/lesspipe.sh %s",
+      "PWD" : "/var/condor/execute/dir_25344/worker-213124-25414/t.1543",
+      "SGE_LOAD_AVG" : "load_avg",
+      "CORES" : "2",
+      "LOGNAME" : "nkremerh",
+      "GROUP" : "campus",
+      "GLOBUS_GSSAPI_NAME_COMPATIBILITY" : "STRICT_RFC2818",
+      "PATH" : "/afs/crc.nd.edu/user/n/nkremerh/cctools/bin:/afs/crc.nd.edu/user/n/nkremerh/miniconda/bin:/afs/crc.nd.edu/group/ccl/software/git:/afs/crc.nd.edu/user/n/nkremerh/.local/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/povray/3.7/bin:/afs/crc.nd.edu/user/n/nkremerh/.perl5/bin:/afs/crc.nd.edu/user/n/nkremerh/pegasus/bin:/afs/crc.nd.edu/user/n/nkremerh/nodejs/bin:/afs/crc.nd.edu/user/n/nkremerh/montage/bin:/afs/crc.nd.edu/user/n/nkremerh/latexdiff:/afs/crc.nd.edu/user/n/nkremerh/envtrace:/afs/crc.nd.edu/user/n/nkremerh/endlines:/afs/crc.nd.edu/user/n/nkremerh/cctools/bin:/afs/crc.nd.edu/user/n/nkremerh/.cargo/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/ruby/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/graphviz/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/gnuplot/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/git/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/sbin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cmake/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/clang/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/sbin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/bin:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/bin:/afs/crc.nd.edu/x86_64_linux/Modules/4.5.0/bin:/opt/crc/usr/local/bin:/opt/sge/bin/lx-amd64:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/afs/crc.nd.edu/user/c/condor/software/bin:/afs/crc.nd.edu/user/c/condor/software/sbin",
+      "MANPATH_modshare" : "/usr/share/man/overrides:1:/usr/local/share/man:1:/usr/share/man:1:/opt/crc/usr/local/man:1:/opt/sge/man:1",
+      "IFS" : "$_mlIFS;",
+      "SGE_CLUSTER_NAME" : "CRC",
+      "_CONDOR_JOB_AD" : "/var/condor/execute/dir_25344/.job.ad",
+      "MODULES_LMALTNAME" : "CRC_default/1.1&CRC_default/default&CRC_default",
+      "TERM" : "xterm-256color",
+      "HISTSIZE" : "5000",
+      "_CONDOR_HIGHPORT" : "9999",
+      "_mlre=\"${_mlre:-}${_mlv}_modquar" : "'`eval 'echo ${'$_mlv'}'`' \";",
+      "_CONDOR_CHIRP_CONFIG" : "/var/condor/execute/dir_25344/.chirp.config",
+      "SSH_CONNECTION" : "10.17.150.200 39500 129.74.128.103 22",
+      "MANPATH" : "/afs/crc.nd.edu/user/n/nkremerh/cctools/share/man/:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/ruby/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/graphviz/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/gnuplot/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/git/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/clang/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/share/man:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/share/man:/afs/crc.nd.edu/x86_64_linux/Modules/4.5.0/share/man:/opt/crc/usr/local/man:/opt/sge/man:/usr/share/man/overrides:/usr/share/man:/usr/local/share/man",
+      "BATCH_SYSTEM" : "HTCondor",
+      "BASH_FUNC_ml()" : "() {  module ml \"$@\"",
+      "_mlshdbg" : "''",
+      "_CONDOR_ANCESTOR_3574" : "25344:1600703217:4040868674",
+      "_CHIRP_DELAYED_UPDATE_PREFIX" : "Chirp*",
+      "MAIL" : "/var/spool/mail/nkremerh",
+      "WORK_QUEUE_SANDBOX" : "/var/condor/execute/dir_25344/worker-213124-25414",
+      "_mlIFS" : "$IFS;",
+      "_CONDOR_SCRATCH_DIR" : "/var/condor/execute/dir_25344",
+      "LOADEDMODULES" : "CRC_default/1.1",
+      "MODULES_LMALTNAME_modshare" : "CRC_default/1.1&CRC_default/default&CRC_default:1",
+      "XDG_RUNTIME_DIR" : "/run/user/213124",
+      "SGE_EXECD_PORT" : "6445",
+      "HOSTNAME" : "disc01.crc.nd.edu",
+      "_" : "/usr/bin/printenv",
+      "GREP_OPTIONS=--color" : "auto",
+      "LOADEDMODULES_modshare" : "CRC_default/1.1:1",
+      "MACHTYPE" : "x86_64",
+      "SHELL" : "/bin/tcsh",
+      "SGE_ROOT" : "/opt/sge",
+      "TMP" : "/var/condor/execute/dir_25344/worker-213124-25414/t.1543/cctools-temp-t.1543.7OJMW7",
+      "PATH_modshare" : "/opt/crc/usr/local/bin:1:/opt/sge/bin/lx-amd64:1:/usr/sbin:1:/usr/bin:1:/afs/crc.nd.edu/user/c/condor/software/sbin:1:/usr/local/sbin:1:/afs/crc.nd.edu/user/c/condor/software/bin:1:/usr/local/bin:1",
+      "HISTCONTROL" : "ignoreboth:erasedups",
+      "_LMFILES_" : "/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules/CRC_default/1.1",
+      "CCLHOME" : "/afs/crc.nd.edu/group/ccl",
+      "_CONDOR_SLOT" : "slot2_1",
+      "DISK" : "18248",
+      "LD_LIBRARY_PATH_modshare" : "/opt/crc/usr/local/lib:1",
+      "SGE_QMASTER_PORT" : "6444",
+      "USE_SYSTEMD" : "true",
+      "OSTYPE" : "linux",
+      "USER" : "nkremerh",
+      "LANG" : "en_US.UTF-8",
+      "SGE_CELL" : "crc",
+      "GLOBUS_GSSAPI_MAX_TLS_PROTOCOL" : "0",
+      "SHLVL" : "7",
+      "MAKELEVEL" : "1",
+      "ENV" : "/afs/crc.nd.edu/x86_64_linux/Modules/4.5.0/init/profile.sh",
+      "PERL5LIB" : "/afs/crc.nd.edu/user/n/nkremerh/cctools/lib/perl5/site_perl/5.16.3:/afs/crc.nd.edu/user/n/nkremerh/.perl5/lib/perl5",
+      "MODULEPATH" : "/afs/crc.nd.edu/x86_64_linux/Modules/modules/development_tools_and_libraries:/afs/crc.nd.edu/x86_64_linux/Modules/modules/general_software:/afs/crc.nd.edu/x86_64_linux/Modules/modules/restricted_software:/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules:/afs/crc.nd.edu/x86_64_linux/Modules/modules/deprecated_software:/afs/crc.nd.edu/x86_64_linux/Modules/current/modulefiles",
+      "OMP_NUM_THREADS" : "1",
+      "CCLSOFTWARE" : "/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7",
+      "HOSTTYPE" : "x86_64-linux",
+      "_CONDOR_ANCESTOR_3382" : "3574:1598183948:1170902758",
+      "_CONDOR_ANCESTOR_25344" : "25359:1600703218:1015133273",
+      "_CONDOR_MACHINE_AD" : "/var/condor/execute/dir_25344/.machine.ad",
+      "GLOBUS_GSSAPI_SERVER_CIPHER_ORDER" : "true",
+      "SSH_TTY" : "/dev/pts/0",
+      "_mlstatus" : "$?;",
+      "GLOBUS_GSSAPI_CIPHERS" : "HIGH",
+      "HOME" : "disc01.crc.nd.edu",
+      "TEMP" : "/var/condor/execute/dir_25344/worker-213124-25414/t.1543/cctools-temp-t.1543.7OJMW7",
+      "WORKER_TMPDIR" : "/var/condor/execute/dir_25344/worker-213124-25414/cache/tmp",
+      "LD_LIBRARY_PATH" : "/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/ruby/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/graphviz/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/git/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/clang/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/condor/current/lib:/afs/crc.nd.edu/group/ccl/software/x86_64/redhat7/cctools/current/lib:/opt/crc/usr/local/lib",
+      "PERL_LOCAL_LIB_ROOT" : "/afs/crc.nd.edu/user/n/nkremerh/.perl5/",
+      "MODULESHOME" : "/afs/crc.nd.edu/x86_64_linux/Modules/4.5.0",
+      "_CONDOR_LOWPORT" : "9100",
+      "MODULES_CMD" : "/afs/crc.nd.edu/x86_64_linux/Modules/4.5.0/libexec/modulecmd.tcl",
+      "HISTFILESIZE" : "10000",
+      "EDITOR" : "vim",
+      "GLOBUS_GSSAPI_MIN_TLS_PROTOCOL" : "TLS1_VERSION",
+      "XDG_SESSION_ID" : "5195",
+      "VENDOR" : "unknown",
+      "_CONDOR_JOB_IWD" : "/var/condor/execute/dir_25344",
+      "MODULEPATH_modshare" : "/afs/crc.nd.edu/x86_64_linux/Modules/modules/general_software:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/development_tools_and_libraries:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules:1:/afs/crc.nd.edu/x86_64_linux/Modules/current/modulefiles:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/restricted_software:1:/afs/crc.nd.edu/x86_64_linux/Modules/modules/deprecated_software:1",
+      "PERL_MB_OPT" : "--install_base '/afs/crc.nd.edu/user/n/nkremerh/.perl5/'",
+      "KRB5CCNAME" : "FILE:/tmp/krb5cc_213124_6nLDKQ",
+      "PERL_MM_OPT=INSTALL_BASE" : "/afs/crc.nd.edu/user/n/nkremerh/.perl5/",
+      "CCTOOLS" : "../cctools",
+      "_LMFILES__modshare" : "/afs/crc.nd.edu/x86_64_linux/Modules/modules/system_modules/CRC_default/1.1:1",
+      "BASH_ENV" : "/afs/crc.nd.edu/x86_64_linux/Modules/4.5.0/init/bash",
+      "PYTHONPATH" : "/afs/crc.nd.edu/user/n/nkremerh/cctools/lib/python3.6/site-packages/",
+      "_mlre=\"${_mlre:-}${_mlv}" : "'`eval 'echo ${'$_mlrv':-}'`' \";",
+      "TMPDIR" : "/var/condor/execute/dir_25344/worker-213124-25414/t.1543/cctools-temp-t.1543.7OJMW7",
+      "MEMORY" : "1948"
+   },
+   "runtime" : 0,
+   "pid" : 12515,
+   "ppid" : 12499,
+   "type" : "ltrace",
+   "log" : "/disk/d12/nkremerh/tlq/example_dataset/server_data/f307c40b-4f88-4c3b-93ff-cc3555868d0c.log",
+   "address" : "disc23.crc.nd.edu",
+   "command" : "java -cp ./tools/maxent.jar density.Project outputs/Herpetogramma_luctuosalis_Guen/Herpetogramma_luctuosalis_Guen.lambdas data/layers/worldclim outputs/Herpetogramma_luctuosalis_Guen_worldclim.asc nowarnings nocache autorun -z"
+}
+

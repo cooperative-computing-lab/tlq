@@ -1,0 +1,2636 @@
+{
+   "failures" : 0,
+   "messages" : [
+      {
+         "timestamp" : "12:16:22.61",
+         "date" : "2020/09/21",
+         "linenum" : 1,
+         "output_stream" : "debug",
+         "message" : "./work_queue_worker version 8.0.0 DEVELOPMENT (released 2020-09-20 11:39:44 -0400)"
+      },
+      {
+         "timestamp" : "12:16:22.61",
+         "date" : "2020/09/21",
+         "linenum" : 2,
+         "output_stream" : "debug",
+         "message" : "Built by nkremerh@disc01.crc.nd.edu on 2020-09-20 11:39:44 -0400"
+      },
+      {
+         "timestamp" : "12:16:22.61",
+         "date" : "2020/09/21",
+         "linenum" : 3,
+         "output_stream" : "debug",
+         "message" : "System: Linux disc01.crc.nd.edu 3.10.0-1127.19.1.el7.x86_64 #1 SMP Tue Aug 11 19:12:04 EDT 2020 x86_64 x86_64 x86_64 GNU/Linux"
+      },
+      {
+         "timestamp" : "12:16:22.61",
+         "date" : "2020/09/21",
+         "linenum" : 4,
+         "output_stream" : "debug",
+         "message" : "Configuration: --strict --prefix ../cctools --tcp-low-port 9000 --tcp-high-port 9500"
+      },
+      {
+         "timestamp" : "12:16:22.62",
+         "date" : "2020/09/21",
+         "linenum" : 5,
+         "output_stream" : "wq",
+         "message" : "WORK_QUEUE_SANDBOX set to /var/condor/execute/dir_24153/worker-213124-24197."
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 6,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 7,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 8,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 9,
+         "output_stream" : "dns",
+         "message" : "looking up name catalog.cse.nd.edu"
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 10,
+         "output_stream" : "dns",
+         "message" : "catalog.cse.nd.edu is 129.74.152.177"
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 11,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 12,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 13,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 17,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 18,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:16:22 2020"
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 19,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 20,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 21,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:16:22.63",
+         "date" : "2020/09/21",
+         "linenum" : 22,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:16:22.65",
+         "date" : "2020/09/21",
+         "linenum" : 24,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:16:22.66",
+         "date" : "2020/09/21",
+         "linenum" : 25,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:16:22.66",
+         "date" : "2020/09/21",
+         "linenum" : 26,
+         "output_stream" : "dns",
+         "message" : "looking up name 10.32.74.140"
+      },
+      {
+         "timestamp" : "12:16:22.66",
+         "date" : "2020/09/21",
+         "linenum" : 27,
+         "output_stream" : "dns",
+         "message" : "10.32.74.140 is 10.32.74.140"
+      },
+      {
+         "timestamp" : "12:16:22.66",
+         "date" : "2020/09/21",
+         "linenum" : 28,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:16:22.66",
+         "date" : "2020/09/21",
+         "linenum" : 29,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:16:22.66",
+         "date" : "2020/09/21",
+         "linenum" : 30,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:16:22.66",
+         "date" : "2020/09/21",
+         "linenum" : 31,
+         "output_stream" : "dns",
+         "message" : "looking up name 129.74.128.103"
+      },
+      {
+         "timestamp" : "12:16:22.66",
+         "date" : "2020/09/21",
+         "linenum" : 32,
+         "output_stream" : "dns",
+         "message" : "129.74.128.103 is 129.74.128.103"
+      },
+      {
+         "timestamp" : "12:16:22.66",
+         "date" : "2020/09/21",
+         "linenum" : 33,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:16:22.66",
+         "date" : "2020/09/21",
+         "linenum" : 34,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:16:22.66",
+         "date" : "2020/09/21",
+         "linenum" : 35,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:16:24.66",
+         "date" : "2020/09/21",
+         "linenum" : 36,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:16:24.66",
+         "date" : "2020/09/21",
+         "linenum" : 37,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:16:24.66",
+         "date" : "2020/09/21",
+         "linenum" : 38,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:16:24.66",
+         "date" : "2020/09/21",
+         "linenum" : 39,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:16:24.66",
+         "date" : "2020/09/21",
+         "linenum" : 40,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:16:24.66",
+         "date" : "2020/09/21",
+         "linenum" : 41,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:16:24.66",
+         "date" : "2020/09/21",
+         "linenum" : 42,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:16:28.66",
+         "date" : "2020/09/21",
+         "linenum" : 43,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:16:28.66",
+         "date" : "2020/09/21",
+         "linenum" : 44,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:16:28.66",
+         "date" : "2020/09/21",
+         "linenum" : 45,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:16:28.66",
+         "date" : "2020/09/21",
+         "linenum" : 46,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:16:28.66",
+         "date" : "2020/09/21",
+         "linenum" : 47,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:16:28.66",
+         "date" : "2020/09/21",
+         "linenum" : 48,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:16:28.66",
+         "date" : "2020/09/21",
+         "linenum" : 49,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:16:28.66",
+         "date" : "2020/09/21",
+         "linenum" : 50,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:16:36.66",
+         "date" : "2020/09/21",
+         "linenum" : 51,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:16:36.66",
+         "date" : "2020/09/21",
+         "linenum" : 52,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:16:36.66",
+         "date" : "2020/09/21",
+         "linenum" : 53,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:16:36.66",
+         "date" : "2020/09/21",
+         "linenum" : 54,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:16:36.66",
+         "date" : "2020/09/21",
+         "linenum" : 55,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:16:36.66",
+         "date" : "2020/09/21",
+         "linenum" : 56,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:16:36.66",
+         "date" : "2020/09/21",
+         "linenum" : 57,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:16:36.66",
+         "date" : "2020/09/21",
+         "linenum" : 58,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:16:52.67",
+         "date" : "2020/09/21",
+         "linenum" : 59,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:16:52.67",
+         "date" : "2020/09/21",
+         "linenum" : 60,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:16:52.67",
+         "date" : "2020/09/21",
+         "linenum" : 61,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:16:52.67",
+         "date" : "2020/09/21",
+         "linenum" : 62,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:16:52.67",
+         "date" : "2020/09/21",
+         "linenum" : 63,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:16:52.67",
+         "date" : "2020/09/21",
+         "linenum" : 64,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:16:52.67",
+         "date" : "2020/09/21",
+         "linenum" : 65,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:16:52.67",
+         "date" : "2020/09/21",
+         "linenum" : 66,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:17:24.67",
+         "date" : "2020/09/21",
+         "linenum" : 67,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:17:24.67",
+         "date" : "2020/09/21",
+         "linenum" : 68,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:17:24.67",
+         "date" : "2020/09/21",
+         "linenum" : 69,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:17:24.67",
+         "date" : "2020/09/21",
+         "linenum" : 70,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:17:24.67",
+         "date" : "2020/09/21",
+         "linenum" : 71,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:17:24.67",
+         "date" : "2020/09/21",
+         "linenum" : 72,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:17:24.67",
+         "date" : "2020/09/21",
+         "linenum" : 76,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:17:24.67",
+         "date" : "2020/09/21",
+         "linenum" : 77,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:17:24 2020"
+      },
+      {
+         "timestamp" : "12:17:24.67",
+         "date" : "2020/09/21",
+         "linenum" : 78,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:17:24.67",
+         "date" : "2020/09/21",
+         "linenum" : 79,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:17:24.67",
+         "date" : "2020/09/21",
+         "linenum" : 80,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:17:24.67",
+         "date" : "2020/09/21",
+         "linenum" : 81,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:17:24.69",
+         "date" : "2020/09/21",
+         "linenum" : 83,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:17:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 84,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:17:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 85,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:17:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 86,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:17:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 87,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:17:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 88,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:17:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 89,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:17:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 90,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:18:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 91,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:18:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 92,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:18:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 93,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:18:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 94,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:18:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 95,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:18:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 96,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:18:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 100,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:18:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 101,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:18:24 2020"
+      },
+      {
+         "timestamp" : "12:18:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 102,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:18:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 103,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:18:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 104,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:18:24.70",
+         "date" : "2020/09/21",
+         "linenum" : 105,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:18:24.73",
+         "date" : "2020/09/21",
+         "linenum" : 107,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:18:24.74",
+         "date" : "2020/09/21",
+         "linenum" : 108,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:18:24.74",
+         "date" : "2020/09/21",
+         "linenum" : 109,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:18:24.74",
+         "date" : "2020/09/21",
+         "linenum" : 110,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:18:24.74",
+         "date" : "2020/09/21",
+         "linenum" : 111,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:18:24.74",
+         "date" : "2020/09/21",
+         "linenum" : 112,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:18:24.74",
+         "date" : "2020/09/21",
+         "linenum" : 113,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:18:24.74",
+         "date" : "2020/09/21",
+         "linenum" : 114,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:19:24.75",
+         "date" : "2020/09/21",
+         "linenum" : 115,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:19:24.75",
+         "date" : "2020/09/21",
+         "linenum" : 116,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:19:24.75",
+         "date" : "2020/09/21",
+         "linenum" : 117,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:19:24.75",
+         "date" : "2020/09/21",
+         "linenum" : 118,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:19:24.75",
+         "date" : "2020/09/21",
+         "linenum" : 119,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:19:24.75",
+         "date" : "2020/09/21",
+         "linenum" : 120,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:19:24.75",
+         "date" : "2020/09/21",
+         "linenum" : 124,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:19:24.75",
+         "date" : "2020/09/21",
+         "linenum" : 125,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:19:24 2020"
+      },
+      {
+         "timestamp" : "12:19:24.75",
+         "date" : "2020/09/21",
+         "linenum" : 126,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:19:24.75",
+         "date" : "2020/09/21",
+         "linenum" : 127,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:19:24.75",
+         "date" : "2020/09/21",
+         "linenum" : 128,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:19:24.75",
+         "date" : "2020/09/21",
+         "linenum" : 129,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:19:24.77",
+         "date" : "2020/09/21",
+         "linenum" : 131,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:19:24.77",
+         "date" : "2020/09/21",
+         "linenum" : 132,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:19:24.77",
+         "date" : "2020/09/21",
+         "linenum" : 133,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:19:24.77",
+         "date" : "2020/09/21",
+         "linenum" : 134,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:19:24.77",
+         "date" : "2020/09/21",
+         "linenum" : 135,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:19:24.77",
+         "date" : "2020/09/21",
+         "linenum" : 136,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:19:24.77",
+         "date" : "2020/09/21",
+         "linenum" : 137,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:19:24.77",
+         "date" : "2020/09/21",
+         "linenum" : 138,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:20:24.78",
+         "date" : "2020/09/21",
+         "linenum" : 139,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:20:24.78",
+         "date" : "2020/09/21",
+         "linenum" : 140,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:20:24.78",
+         "date" : "2020/09/21",
+         "linenum" : 141,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:20:24.78",
+         "date" : "2020/09/21",
+         "linenum" : 142,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:20:24.78",
+         "date" : "2020/09/21",
+         "linenum" : 143,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:20:24.78",
+         "date" : "2020/09/21",
+         "linenum" : 144,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:20:24.78",
+         "date" : "2020/09/21",
+         "linenum" : 148,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:20:24.78",
+         "date" : "2020/09/21",
+         "linenum" : 149,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:20:24 2020"
+      },
+      {
+         "timestamp" : "12:20:24.78",
+         "date" : "2020/09/21",
+         "linenum" : 150,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:20:24.78",
+         "date" : "2020/09/21",
+         "linenum" : 151,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:20:24.78",
+         "date" : "2020/09/21",
+         "linenum" : 152,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:20:24.78",
+         "date" : "2020/09/21",
+         "linenum" : 153,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:20:24.80",
+         "date" : "2020/09/21",
+         "linenum" : 155,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:20:24.80",
+         "date" : "2020/09/21",
+         "linenum" : 156,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:20:24.80",
+         "date" : "2020/09/21",
+         "linenum" : 157,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:20:24.80",
+         "date" : "2020/09/21",
+         "linenum" : 158,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:20:24.80",
+         "date" : "2020/09/21",
+         "linenum" : 159,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:20:24.80",
+         "date" : "2020/09/21",
+         "linenum" : 160,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:20:24.80",
+         "date" : "2020/09/21",
+         "linenum" : 161,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:20:24.80",
+         "date" : "2020/09/21",
+         "linenum" : 162,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 163,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 164,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 165,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 166,
+         "output_stream" : "dns",
+         "message" : "looking up name catalog.cse.nd.edu"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 167,
+         "output_stream" : "dns",
+         "message" : "catalog.cse.nd.edu is 129.74.152.177"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 168,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 169,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 170,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 174,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 175,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:21:24 2020"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 176,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 177,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 178,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:21:24.81",
+         "date" : "2020/09/21",
+         "linenum" : 179,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:21:24.84",
+         "date" : "2020/09/21",
+         "linenum" : 181,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:21:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 182,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:21:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 183,
+         "output_stream" : "dns",
+         "message" : "looking up name 10.32.74.140"
+      },
+      {
+         "timestamp" : "12:21:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 184,
+         "output_stream" : "dns",
+         "message" : "10.32.74.140 is 10.32.74.140"
+      },
+      {
+         "timestamp" : "12:21:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 185,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:21:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 186,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:21:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 187,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:21:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 188,
+         "output_stream" : "dns",
+         "message" : "looking up name 129.74.128.103"
+      },
+      {
+         "timestamp" : "12:21:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 189,
+         "output_stream" : "dns",
+         "message" : "129.74.128.103 is 129.74.128.103"
+      },
+      {
+         "timestamp" : "12:21:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 190,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:21:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 191,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:21:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 192,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:22:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 193,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:22:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 194,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:22:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 195,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:22:24.85",
+         "date" : "2020/09/21",
+         "linenum" : 196,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:22:24.86",
+         "date" : "2020/09/21",
+         "linenum" : 197,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:22:24.86",
+         "date" : "2020/09/21",
+         "linenum" : 198,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:22:24.86",
+         "date" : "2020/09/21",
+         "linenum" : 202,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:22:24.86",
+         "date" : "2020/09/21",
+         "linenum" : 203,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:22:24 2020"
+      },
+      {
+         "timestamp" : "12:22:24.86",
+         "date" : "2020/09/21",
+         "linenum" : 204,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:22:24.86",
+         "date" : "2020/09/21",
+         "linenum" : 205,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:22:24.86",
+         "date" : "2020/09/21",
+         "linenum" : 206,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:22:24.86",
+         "date" : "2020/09/21",
+         "linenum" : 207,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:22:24.88",
+         "date" : "2020/09/21",
+         "linenum" : 209,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:22:24.88",
+         "date" : "2020/09/21",
+         "linenum" : 210,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:22:24.88",
+         "date" : "2020/09/21",
+         "linenum" : 211,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:22:24.88",
+         "date" : "2020/09/21",
+         "linenum" : 212,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:22:24.88",
+         "date" : "2020/09/21",
+         "linenum" : 213,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:22:24.88",
+         "date" : "2020/09/21",
+         "linenum" : 214,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:22:24.88",
+         "date" : "2020/09/21",
+         "linenum" : 215,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:22:24.88",
+         "date" : "2020/09/21",
+         "linenum" : 216,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:23:24.89",
+         "date" : "2020/09/21",
+         "linenum" : 217,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:23:24.89",
+         "date" : "2020/09/21",
+         "linenum" : 218,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:23:24.89",
+         "date" : "2020/09/21",
+         "linenum" : 219,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:23:24.89",
+         "date" : "2020/09/21",
+         "linenum" : 220,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:23:24.89",
+         "date" : "2020/09/21",
+         "linenum" : 221,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:23:24.89",
+         "date" : "2020/09/21",
+         "linenum" : 222,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:23:24.89",
+         "date" : "2020/09/21",
+         "linenum" : 226,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:23:24.89",
+         "date" : "2020/09/21",
+         "linenum" : 227,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:23:24 2020"
+      },
+      {
+         "timestamp" : "12:23:24.89",
+         "date" : "2020/09/21",
+         "linenum" : 228,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:23:24.89",
+         "date" : "2020/09/21",
+         "linenum" : 229,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:23:24.89",
+         "date" : "2020/09/21",
+         "linenum" : 230,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:23:24.89",
+         "date" : "2020/09/21",
+         "linenum" : 231,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:23:24.91",
+         "date" : "2020/09/21",
+         "linenum" : 233,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:23:24.91",
+         "date" : "2020/09/21",
+         "linenum" : 234,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:23:24.91",
+         "date" : "2020/09/21",
+         "linenum" : 235,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:23:24.91",
+         "date" : "2020/09/21",
+         "linenum" : 236,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:23:24.91",
+         "date" : "2020/09/21",
+         "linenum" : 237,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:23:24.91",
+         "date" : "2020/09/21",
+         "linenum" : 238,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:23:24.91",
+         "date" : "2020/09/21",
+         "linenum" : 239,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:23:24.91",
+         "date" : "2020/09/21",
+         "linenum" : 240,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:24:24.92",
+         "date" : "2020/09/21",
+         "linenum" : 241,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:24:24.92",
+         "date" : "2020/09/21",
+         "linenum" : 242,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:24:24.92",
+         "date" : "2020/09/21",
+         "linenum" : 243,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:24:24.92",
+         "date" : "2020/09/21",
+         "linenum" : 244,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:24:24.92",
+         "date" : "2020/09/21",
+         "linenum" : 245,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:24:24.92",
+         "date" : "2020/09/21",
+         "linenum" : 246,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:24:24.92",
+         "date" : "2020/09/21",
+         "linenum" : 250,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:24:24.92",
+         "date" : "2020/09/21",
+         "linenum" : 251,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:24:24 2020"
+      },
+      {
+         "timestamp" : "12:24:24.92",
+         "date" : "2020/09/21",
+         "linenum" : 252,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:24:24.92",
+         "date" : "2020/09/21",
+         "linenum" : 253,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:24:24.92",
+         "date" : "2020/09/21",
+         "linenum" : 254,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:24:24.92",
+         "date" : "2020/09/21",
+         "linenum" : 255,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:24:24.94",
+         "date" : "2020/09/21",
+         "linenum" : 257,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:24:24.94",
+         "date" : "2020/09/21",
+         "linenum" : 258,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:24:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 259,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:24:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 260,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:24:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 261,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:24:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 262,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:24:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 263,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:24:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 264,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:25:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 265,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:25:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 266,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:25:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 267,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:25:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 268,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:25:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 269,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:25:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 270,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:25:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 274,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:25:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 275,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:25:24 2020"
+      },
+      {
+         "timestamp" : "12:25:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 276,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:25:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 277,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:25:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 278,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:25:24.95",
+         "date" : "2020/09/21",
+         "linenum" : 279,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:25:24.98",
+         "date" : "2020/09/21",
+         "linenum" : 281,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:25:24.99",
+         "date" : "2020/09/21",
+         "linenum" : 282,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:25:24.99",
+         "date" : "2020/09/21",
+         "linenum" : 283,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:25:24.99",
+         "date" : "2020/09/21",
+         "linenum" : 284,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:25:24.99",
+         "date" : "2020/09/21",
+         "linenum" : 285,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:25:24.99",
+         "date" : "2020/09/21",
+         "linenum" : 286,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:25:24.99",
+         "date" : "2020/09/21",
+         "linenum" : 287,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:25:24.99",
+         "date" : "2020/09/21",
+         "linenum" : 288,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:26:24.99",
+         "date" : "2020/09/21",
+         "linenum" : 289,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:26:24.99",
+         "date" : "2020/09/21",
+         "linenum" : 290,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:26:24.99",
+         "date" : "2020/09/21",
+         "linenum" : 291,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:26:24.99",
+         "date" : "2020/09/21",
+         "linenum" : 292,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:26:25.00",
+         "date" : "2020/09/21",
+         "linenum" : 293,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:26:25.00",
+         "date" : "2020/09/21",
+         "linenum" : 294,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:26:25.00",
+         "date" : "2020/09/21",
+         "linenum" : 298,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:26:25.00",
+         "date" : "2020/09/21",
+         "linenum" : 299,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:26:25 2020"
+      },
+      {
+         "timestamp" : "12:26:25.00",
+         "date" : "2020/09/21",
+         "linenum" : 300,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:26:25.00",
+         "date" : "2020/09/21",
+         "linenum" : 301,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:26:25.00",
+         "date" : "2020/09/21",
+         "linenum" : 302,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:26:25.00",
+         "date" : "2020/09/21",
+         "linenum" : 303,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:26:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 305,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:26:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 306,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:26:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 307,
+         "output_stream" : "dns",
+         "message" : "looking up name 10.32.74.140"
+      },
+      {
+         "timestamp" : "12:26:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 308,
+         "output_stream" : "dns",
+         "message" : "10.32.74.140 is 10.32.74.140"
+      },
+      {
+         "timestamp" : "12:26:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 309,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:26:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 310,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:26:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 311,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:26:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 312,
+         "output_stream" : "dns",
+         "message" : "looking up name 129.74.128.103"
+      },
+      {
+         "timestamp" : "12:26:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 313,
+         "output_stream" : "dns",
+         "message" : "129.74.128.103 is 129.74.128.103"
+      },
+      {
+         "timestamp" : "12:26:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 314,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:26:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 315,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:26:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 316,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:27:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 317,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:27:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 318,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:27:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 319,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:27:25.02",
+         "date" : "2020/09/21",
+         "linenum" : 320,
+         "output_stream" : "dns",
+         "message" : "looking up name catalog.cse.nd.edu"
+      },
+      {
+         "timestamp" : "12:27:25.03",
+         "date" : "2020/09/21",
+         "linenum" : 321,
+         "output_stream" : "dns",
+         "message" : "catalog.cse.nd.edu is 129.74.152.177"
+      },
+      {
+         "timestamp" : "12:27:25.03",
+         "date" : "2020/09/21",
+         "linenum" : 322,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:27:25.03",
+         "date" : "2020/09/21",
+         "linenum" : 323,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:27:25.03",
+         "date" : "2020/09/21",
+         "linenum" : 324,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:27:25.03",
+         "date" : "2020/09/21",
+         "linenum" : 328,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:27:25.03",
+         "date" : "2020/09/21",
+         "linenum" : 329,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:27:25 2020"
+      },
+      {
+         "timestamp" : "12:27:25.03",
+         "date" : "2020/09/21",
+         "linenum" : 330,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:27:25.03",
+         "date" : "2020/09/21",
+         "linenum" : 331,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:27:25.03",
+         "date" : "2020/09/21",
+         "linenum" : 332,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:27:25.03",
+         "date" : "2020/09/21",
+         "linenum" : 333,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:27:25.05",
+         "date" : "2020/09/21",
+         "linenum" : 335,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:27:25.05",
+         "date" : "2020/09/21",
+         "linenum" : 336,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:27:25.05",
+         "date" : "2020/09/21",
+         "linenum" : 337,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:27:25.05",
+         "date" : "2020/09/21",
+         "linenum" : 338,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:27:25.05",
+         "date" : "2020/09/21",
+         "linenum" : 339,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:27:25.05",
+         "date" : "2020/09/21",
+         "linenum" : 340,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:27:25.05",
+         "date" : "2020/09/21",
+         "linenum" : 341,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:27:25.05",
+         "date" : "2020/09/21",
+         "linenum" : 342,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:28:25.06",
+         "date" : "2020/09/21",
+         "linenum" : 343,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:28:25.06",
+         "date" : "2020/09/21",
+         "linenum" : 344,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:28:25.06",
+         "date" : "2020/09/21",
+         "linenum" : 345,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:28:25.06",
+         "date" : "2020/09/21",
+         "linenum" : 346,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:28:25.06",
+         "date" : "2020/09/21",
+         "linenum" : 347,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:28:25.06",
+         "date" : "2020/09/21",
+         "linenum" : 348,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:28:25.06",
+         "date" : "2020/09/21",
+         "linenum" : 352,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:28:25.06",
+         "date" : "2020/09/21",
+         "linenum" : 353,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:28:25 2020"
+      },
+      {
+         "timestamp" : "12:28:25.06",
+         "date" : "2020/09/21",
+         "linenum" : 354,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:28:25.06",
+         "date" : "2020/09/21",
+         "linenum" : 355,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:28:25.06",
+         "date" : "2020/09/21",
+         "linenum" : 356,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:28:25.06",
+         "date" : "2020/09/21",
+         "linenum" : 357,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:28:25.09",
+         "date" : "2020/09/21",
+         "linenum" : 359,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:28:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 360,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:28:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 361,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:28:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 362,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:28:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 363,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:28:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 364,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:28:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 365,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:28:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 366,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:29:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 367,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:29:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 368,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:29:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 369,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:29:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 370,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:29:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 371,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:29:25.10",
+         "date" : "2020/09/21",
+         "linenum" : 372,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:29:25.11",
+         "date" : "2020/09/21",
+         "linenum" : 376,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:29:25.11",
+         "date" : "2020/09/21",
+         "linenum" : 377,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:29:25 2020"
+      },
+      {
+         "timestamp" : "12:29:25.11",
+         "date" : "2020/09/21",
+         "linenum" : 378,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:29:25.11",
+         "date" : "2020/09/21",
+         "linenum" : 379,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:29:25.11",
+         "date" : "2020/09/21",
+         "linenum" : 380,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:29:25.11",
+         "date" : "2020/09/21",
+         "linenum" : 381,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:29:25.14",
+         "date" : "2020/09/21",
+         "linenum" : 383,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:29:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 384,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:29:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 385,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:29:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 386,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:29:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 387,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:29:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 388,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:29:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 389,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:29:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 390,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:30:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 391,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:30:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 392,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:30:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 393,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:30:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 394,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:30:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 395,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:30:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 396,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:30:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 400,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:30:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 401,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:30:25 2020"
+      },
+      {
+         "timestamp" : "12:30:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 402,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:30:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 403,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:30:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 404,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:30:25.15",
+         "date" : "2020/09/21",
+         "linenum" : 405,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:30:25.19",
+         "date" : "2020/09/21",
+         "linenum" : 407,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:30:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 408,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:30:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 409,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:30:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 410,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:30:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 411,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:30:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 412,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:30:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 413,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:30:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 414,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:31:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 415,
+         "output_stream" : "debug",
+         "message" : "error reading disk usage on directory: ./cache."
+      },
+      {
+         "timestamp" : "12:31:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 416,
+         "output_stream" : "wq",
+         "message" : "querying catalog for masters with project=wq_trace"
+      },
+      {
+         "timestamp" : "12:31:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 417,
+         "output_stream" : "http",
+         "message" : "connect catalog.cse.nd.edu port 9097"
+      },
+      {
+         "timestamp" : "12:31:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 418,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:31:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 419,
+         "output_stream" : "tcp",
+         "message" : "made connection to 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:31:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 420,
+         "output_stream" : "http",
+         "message" : "GET /query.json HTTP/1.1\r"
+      },
+      {
+         "timestamp" : "12:31:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 424,
+         "output_stream" : "http",
+         "message" : "HTTP/1.1 200 OK"
+      },
+      {
+         "timestamp" : "12:31:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 425,
+         "output_stream" : "http",
+         "message" : "Date: Mon Sep 21 12:31:25 2020"
+      },
+      {
+         "timestamp" : "12:31:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 426,
+         "output_stream" : "http",
+         "message" : "Server: catalog_server"
+      },
+      {
+         "timestamp" : "12:31:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 427,
+         "output_stream" : "http",
+         "message" : "Connection: close"
+      },
+      {
+         "timestamp" : "12:31:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 428,
+         "output_stream" : "http",
+         "message" : "Access-Control-Allow-Origin: *"
+      },
+      {
+         "timestamp" : "12:31:25.20",
+         "date" : "2020/09/21",
+         "linenum" : 429,
+         "output_stream" : "http",
+         "message" : "Content-type: text/plain"
+      },
+      {
+         "timestamp" : "12:31:25.24",
+         "date" : "2020/09/21",
+         "linenum" : 431,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.152.177 port 9097"
+      },
+      {
+         "timestamp" : "12:31:25.25",
+         "date" : "2020/09/21",
+         "linenum" : 432,
+         "output_stream" : "wq",
+         "message" : "project name wq_trace matches 1 masters"
+      },
+      {
+         "timestamp" : "12:31:25.25",
+         "date" : "2020/09/21",
+         "linenum" : 433,
+         "output_stream" : "tcp",
+         "message" : "connecting to 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:31:25.25",
+         "date" : "2020/09/21",
+         "linenum" : 434,
+         "output_stream" : "tcp",
+         "message" : "connection to 10.32.74.140 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:31:25.25",
+         "date" : "2020/09/21",
+         "linenum" : 435,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 10.32.74.140 port 9000"
+      },
+      {
+         "timestamp" : "12:31:25.25",
+         "date" : "2020/09/21",
+         "linenum" : 436,
+         "output_stream" : "tcp",
+         "message" : "connecting to 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:31:25.25",
+         "date" : "2020/09/21",
+         "linenum" : 437,
+         "output_stream" : "tcp",
+         "message" : "connection to 129.74.128.103 port 9000 failed (Connection refused)"
+      },
+      {
+         "timestamp" : "12:31:25.25",
+         "date" : "2020/09/21",
+         "linenum" : 438,
+         "output_stream" : "tcp",
+         "message" : "disconnected from 129.74.128.103 port 9000"
+      },
+      {
+         "timestamp" : "12:31:25.25",
+         "date" : "2020/09/21",
+         "linenum" : 439,
+         "output_stream" : "notice",
+         "message" : "stopping: could not connect after 900 seconds."
+      }
+   ],
+   "pid" : "24197",
+   "log" : "/disk/d12/nkremerh/tlq/example_dataset/server_data/95d54010-16e0-4f24-8e18-a604f33ae26a.log",
+   "type" : "work-queue-worker",
+   "uuid" : "95d54010-16e0-4f24-8e18-a604f33ae26a",
+   "links" : []
+}
+
